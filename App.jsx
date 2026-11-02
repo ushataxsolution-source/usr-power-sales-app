@@ -1124,3 +1124,48 @@ export default function App() {
     </div>
   );
 }
+import React, { useState, useRef } from 'react';
+import { 
+  Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
+  Search, Filter, CheckCircle, Clock, Award, 
+  Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag,
+  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, CheckSquare
+} from 'lucide-react';
+
+// Product Lines & Business Verticals
+const BUSINESS_VERTICALS = [
+  'USR POWER LUBE',
+  'TURBO OIL',
+  'NUTRI TRIBE',
+  'TAX AND LEGAL',
+  'PUNCHKUTEER',
+  'CUSTOMIZED PACKAGING',
+  'DIGITAL MARKETING'
+];
+
+// Initial Staff Data with USR Employee IDs
+const INITIAL_EMPLOYEES = [
+  { id: 'USR-EMP-101', name: 'Rohan Sharma', territory: 'Patna Division', target: 800000, achieved: 640000, visitsToday: 6, status: 'Active', primaryVertical: 'USR POWER LUBE' },
+  { id: 'USR-EMP-102', name: 'Amit Kumar', territory: 'Gaya & South Bihar', target: 650000, achieved: 580000, visitsToday: 5, status: 'Active', primaryVertical: 'TURBO OIL' },
+  { id: 'USR-EMP-103', name: 'Priya Singh', territory: 'Muzaffarpur Cluster', target: 900000, achieved: 870000, visitsToday: 7, status: 'Active', primaryVertical: 'TAX AND LEGAL' },
+  { id: 'USR-EMP-104', name: 'Vikram Verma', territory: 'Bhagalpur Region', target: 500000, achieved: 320000, visitsToday: 3, status: 'Active', primaryVertical: 'DIGITAL MARKETING' }
+];
+
+// Initial Attendance Records
+const INITIAL_ATTENDANCE = [
+  { id: 'ATT-101', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', checkInTime: '09:15 AM', status: 'Present', location: 'Patna Division' },
+  { id: 'ATT-102', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', checkInTime: '09:30 AM', status: 'Present', location: 'Gaya Hub' },
+  { id: 'ATT-103', empId: 'USR-EMP-103', empName: 'Priya Singh', date: '2026-11-02', checkInTime: '09:45 AM', status: 'Present', location: 'Muzaffarpur Cluster' }
+];
+
+// Initial Leads
+const INITIAL_LEADS = [
+  { id: 'LD-101', clientName: 'Bihar Auto Spares & Lubricants', contactPerson: 'Suresh Prasad', phone: '9835012345', address: 'Baksoti Road, Gaya', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-03' },
+  { id: 'LD-102', clientName: 'Maheshwari Logistics & Fleet Services', contactPerson: 'Mahesh Gupta', phone: '9431098765', address: 'Exhibition Road, Patna', status: 'Warm', stage: 'Proposal Sent', estimatedValue: 350000, assignedToId: 'USR-EMP-101', assignedToName: 'Rohan Sharma', vertical: 'TURBO OIL', lastFollowup: '2026-10-31', nextFollowup: '2026-11-04' },
+  { id: 'LD-103', clientName: 'NutriCare Organic Foods', contactPerson: 'Ramanathan S.', phone: '9771122334', address: 'Kanti Industrial Area, Muzaffarpur', status: 'Hot', stage: 'Contract Signed', estimatedValue: 450000, assignedToId: 'USR-EMP-103', assignedToName: 'Priya Singh', vertical: 'NUTRI TRIBE', lastFollowup: '2026-11-02', nextFollowup: '2026-11-06' },
+  { id: 'LD-104', clientName: 'Punchkuteer Resort & Eco Stay', contactPerson: 'Deepak Roy', phone: '9934455667', address: 'NH-2 Dobhi, Gaya', status: 'Hot', stage: 'Closed Won', estimatedValue: 520000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'PUNCHKUTEER', lastFollowup: '2026-11-02', nextFollowup: '2026-11-10' },
+  { id: 'LD-105', clientName: 'Zenith Legal & Corporate Advisors', contactPerson: 'Sunil Malhotra', phone: '9811223344', address: 'Boreing Road, Patna', status: 'Warm', stage: 'Contacted', estimatedValue: 220000, assignedToId: 'USR-EMP-103', assignedToName: 'Priya Singh', vertical: 'TAX AND LEGAL', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
+];
+
+// Initial Daily Call Reports
+const INITIAL_
