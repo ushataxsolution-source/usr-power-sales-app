@@ -26,12 +26,12 @@ const CLIENT_TYPES = [
   'Corporate / Direct'
 ];
 
-// Initial Staff Data (Maharashtra Hubs)
+// Initial Staff Data (Maharashtra Hubs with failedAttempts & isBlocked status)
 const INITIAL_EMPLOYEES = [
-  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE' },
-  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL' },
-  { id: 'USR-EMP-103', pass: '1033', name: 'Priya Singh', joiningDate: '2025-09-01', totalLeaves: 18, usedLeaves: 5, territory: 'Thane & Kalyan Belt', target: 900000, achieved: 870000, primaryVertical: 'TAX AND LEGAL' },
-  { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', joiningDate: '2026-01-10', totalLeaves: 18, usedLeaves: 1, territory: 'Nagpur Industrial Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING' }
+  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
+  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false },
+  { id: 'USR-EMP-103', pass: '1033', name: 'Priya Singh', joiningDate: '2025-09-01', totalLeaves: 18, usedLeaves: 5, territory: 'Thane & Kalyan Belt', target: 900000, achieved: 870000, primaryVertical: 'TAX AND LEGAL', failedAttempts: 0, isBlocked: false },
+  { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', joiningDate: '2026-01-10', totalLeaves: 18, usedLeaves: 1, territory: 'Nagpur Industrial Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING', failedAttempts: 0, isBlocked: false }
 ];
 
 // Initial Attendance Records
@@ -46,7 +46,7 @@ const INITIAL_LEAVES = [
   { id: 'LEV-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', fromDate: '2026-11-15', toDate: '2026-11-15', reason: 'Medical Checkup in Pune', status: 'Pending' }
 ];
 
-// Initial Daily Travelling Logs (Maharashtra Routes)
+// Initial Daily Travelling Logs
 const INITIAL_DAILY_TRAVEL = [
   { id: 'DTRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-01', mode: 'Bike / Fuel', km: 45, amount: 350, route: 'Andheri to Thane Dealer Route', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' },
   { id: 'DTRV-2', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', mode: 'Bike / Fuel', km: 55, amount: 450, route: 'Dadar to Vashi APMC Hub', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' },
@@ -58,12 +58,12 @@ const INITIAL_TRAVEL_CLAIMS = [
   { id: 'TRV-101', empId: 'USR-EMP-101', empName: 'Rohan Sharma', weekRange: 'Nov 01 - Nov 07, 2026', totalKm: 100, totalAmount: 800, purpose: 'Mumbai & Thane Dealer Route Visits', status: 'Approved' }
 ];
 
-// Initial Leads (Maharashtra)
+// Initial Leads
 const INITIAL_LEADS = [
   { id: 'LD-101', clientName: 'Sahyadri Auto Spares & Lubricants', clientType: 'Distributor', contactPerson: 'Suresh Patil', phone: '9820012345', place: 'Vashi Turbhe Road, Navi Mumbai', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, investmentAmount: 250000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
 ];
 
-// Initial DCRs (Maharashtra)
+// Initial DCRs
 const INITIAL_DCR = [
   { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Pune Logistics & Fleet Services', clientType: 'Corporate / Direct', place: 'Mumbai-Pune Expressway, Hinjewadi', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract for heavy lube and Turbo Oil.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '18.5204 N', lng: '73.8567 E', address: 'Hinjewadi Phase 1, Pune', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' }
 ];
@@ -77,6 +77,11 @@ export default function App() {
   const [loginPassInput, setLoginPassInput] = useState('');
   const [loginError, setLoginError] = useState('');
 
+  // Captcha State for Employee Login
+  const [num1] = useState(Math.floor(Math.random() * 8) + 2);
+  const [num2] = useState(Math.floor(Math.random() * 8) + 2);
+  const [captchaInput, setCaptchaInput] = useState('');
+
   const [activeTab, setActiveTab] = useState('dashboard');
   const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
   const [attendanceList, setAttendanceList] = useState(INITIAL_ATTENDANCE);
@@ -87,12 +92,13 @@ export default function App() {
   const [dcrs, setDcrs] = useState(INITIAL_DCR);
 
   const [selectedEmpFilter, setSelectedEmpFilter] = useState('All');
-  const [selectedVerticalFilter, setSelectedVerticalFilter] = useState('All');
 
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isDcrModalOpen, setIsDcrModalOpen] = useState(false);
   const [isDailyTravelModalOpen, setIsDailyTravelModalOpen] = useState(false);
   const [isAddEmpModalOpen, setIsAddEmpModalOpen] = useState(false);
+  const [isEditEmpModalOpen, setIsEditEmpModalOpen] = useState(false);
+  const [editingEmp, setEditingEmp] = useState(null);
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [viewPhotoModal, setViewPhotoModal] = useState(null);
 
@@ -108,7 +114,6 @@ export default function App() {
     photoVerified: false, photoUrl: null
   });
 
-  // Daily Travel Log State (Maharashtra Defaults)
   const [newDailyTravel, setNewDailyTravel] = useState({
     date: new Date().toISOString().split('T')[0],
     mode: 'Bike / Fuel',
@@ -135,18 +140,53 @@ export default function App() {
     ? BUSINESS_VERTICALS 
     : BUSINESS_VERTICALS.filter(v => v === currentEmp.primaryVertical);
 
+  // Employee Login with Captcha & 6-Attempt Account Block Logic
   const handleEmployeeLogin = (e) => {
     e.preventDefault();
     setLoginError('');
-    const foundEmp = employees.find(emp => emp.id === loginIdInput.trim() && emp.pass === loginPassInput.trim());
-    if (foundEmp) {
+
+    // Verify Captcha
+    if (parseInt(captchaInput, 10) !== num1 + num2) {
+      setLoginError('Incorrect Captcha Sum! Please verify math calculation.');
+      return;
+    }
+
+    const foundEmp = employees.find(emp => emp.id === loginIdInput.trim());
+    if (!foundEmp) {
+      setLoginError('Employee ID not found in system!');
+      return;
+    }
+
+    if (foundEmp.isBlocked) {
+      setLoginError('Your Account is Blocked due to 6 incorrect attempts! Please contact Admin to regenerate password.');
+      return;
+    }
+
+    if (foundEmp.pass === loginPassInput.trim()) {
+      // Reset failed attempts on successful login
+      setEmployees(employees.map(emp => emp.id === foundEmp.id ? { ...emp, failedAttempts: 0 } : emp));
       setAuthRole('employee');
       setLoggedEmpId(foundEmp.id);
       setLoginIdInput('');
       setLoginPassInput('');
+      setCaptchaInput('');
       setActiveTab('dashboard');
     } else {
-      setLoginError('Invalid Employee ID or Password!');
+      // Increment failed attempts
+      const updatedAttempts = (foundEmp.failedAttempts || 0) + 1;
+      const isNowBlocked = updatedAttempts >= 6;
+
+      setEmployees(employees.map(emp => emp.id === foundEmp.id ? { 
+        ...emp, 
+        failedAttempts: updatedAttempts, 
+        isBlocked: isNowBlocked 
+      } : emp));
+
+      if (isNowBlocked) {
+        setLoginError('Account Blocked! You crossed 6 incorrect password attempts. Contact Admin to regenerate password.');
+      } else {
+        setLoginError(`Invalid Password! Attempt ${updatedAttempts} of 6. Account will lock after 6 failures.`);
+      }
     }
   };
 
@@ -263,6 +303,26 @@ export default function App() {
     alert('Weekly Travelling Claim Approved Successfully!');
   };
 
+  // Admin: Unblock & Regenerate Password for Employee
+  const handleRegeneratePassword = (empId) => {
+    const newRandomPass = Math.floor(1000 + Math.random() * 9000).toString();
+    setEmployees(employees.map(emp => emp.id === empId ? { 
+      ...emp, 
+      pass: newRandomPass, 
+      failedAttempts: 0, 
+      isBlocked: false 
+    } : emp));
+    alert(`Password Regenerated & Account Unblocked successfully for [${empId}]!\nNew Password: ${newRandomPass}`);
+  };
+
+  const handleUpdateEmployeeCredentials = (e) => {
+    e.preventDefault();
+    setEmployees(employees.map(emp => emp.id === editingEmp.id ? editingEmp : emp));
+    setIsEditEmpModalOpen(false);
+    setEditingEmp(null);
+    alert('Employee details and credentials updated successfully!');
+  };
+
   const captureRealGpsPhoto = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -357,7 +417,9 @@ export default function App() {
       territory: newEmp.territory,
       target: Number(newEmp.target) || 500000,
       achieved: 0,
-      primaryVertical: newEmp.primaryVertical
+      primaryVertical: newEmp.primaryVertical,
+      failedAttempts: 0,
+      isBlocked: false
     };
     setEmployees([...employees, createdEmp]);
     setIsAddEmpModalOpen(false);
@@ -380,28 +442,17 @@ export default function App() {
   };
 
   const visibleLeads = authRole === 'admin'
-    ? leads.filter(l => (selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || l.vertical === selectedVerticalFilter))
+    ? leads.filter(l => (selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter))
     : leads.filter(l => l.assignedToId === currentEmp.id || l.vertical === currentEmp.primaryVertical);
 
   const visibleDcrs = authRole === 'admin'
-    ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || d.vertical === selectedVerticalFilter))
+    ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter))
     : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
 
-  const visibleAttendance = authRole === 'admin'
-    ? attendanceList
-    : attendanceList.filter(a => a.empId === currentEmp.id);
-
-  const visibleLeaves = authRole === 'admin'
-    ? leaveList
-    : leaveList.filter(l => l.empId === currentEmp.id);
-
-  const visibleDailyTravel = authRole === 'admin'
-    ? dailyTravelList
-    : dailyTravelList.filter(d => d.empId === currentEmp.id);
-
-  const visibleTravelClaims = authRole === 'admin'
-    ? travelClaims
-    : travelClaims.filter(t => t.empId === currentEmp.id);
+  const visibleAttendance = authRole === 'admin' ? attendanceList : attendanceList.filter(a => a.empId === currentEmp.id);
+  const visibleLeaves = authRole === 'admin' ? leaveList : leaveList.filter(l => l.empId === currentEmp.id);
+  const visibleDailyTravel = authRole === 'admin' ? dailyTravelList : dailyTravelList.filter(d => d.empId === currentEmp.id);
+  const visibleTravelClaims = authRole === 'admin' ? travelClaims : travelClaims.filter(t => t.empId === currentEmp.id);
 
   const totalSalesTarget = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmp.target;
   const totalSalesAchieved = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
@@ -445,7 +496,7 @@ export default function App() {
             {loginType === 'employee' ? (
               <form onSubmit={handleEmployeeLogin} className="space-y-4 text-xs">
                 <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-indigo-900 text-[11px]">
-                  <strong>Employee Instructions:</strong> Enter your assigned Employee ID and Password given by Admin.
+                  <strong>Security Note:</strong> Accounts lock automatically after 6 failed login attempts.
                 </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Employee ID</label>
@@ -455,6 +506,16 @@ export default function App() {
                   <label className="font-semibold text-slate-700 block mb-1">Password</label>
                   <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter password..." className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
                 </div>
+
+                {/* Captcha Section */}
+                <div className="bg-slate-100 p-3 rounded-xl border border-slate-200 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-slate-700">Security Captcha Verification</span>
+                    <span className="font-mono bg-indigo-600 text-white px-2.5 py-1 rounded-lg text-sm font-extrabold tracking-wider">{num1} + {num2} = ?</span>
+                  </div>
+                  <input required type="number" value={captchaInput} onChange={e => setCaptchaInput(e.target.value)} placeholder="Enter sum answer..." className="w-full p-2.5 bg-white border border-slate-300 rounded-xl outline-none" />
+                </div>
+
                 {loginError && <p className="text-red-600 font-semibold text-[11px]">{loginError}</p>}
                 
                 <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition shadow-md flex items-center justify-center space-x-2">
@@ -465,7 +526,7 @@ export default function App() {
             ) : (
               <form onSubmit={handleAdminLogin} className="space-y-4 text-xs">
                 <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-amber-900 text-[11px]">
-                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, leave & weekly travel claim approvals.
+                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, editing passwords & unblocking accounts.
                 </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Admin Security Password / PIN</label>
@@ -588,7 +649,7 @@ export default function App() {
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              {authRole === 'admin' ? 'Managing Maharashtra employee credentials, leave approvals, and weekly travel claims.' : `Welcome ${currentEmp.name}. Territory: ${currentEmp.territory} | Vertical: ${currentEmp.primaryVertical}`}
+              {authRole === 'admin' ? 'Managing Maharashtra employee credentials, editing passwords & unblocking accounts.' : `Welcome ${currentEmp.name}. Territory: ${currentEmp.territory} | Vertical: ${currentEmp.primaryVertical}`}
             </p>
           </div>
 
@@ -691,7 +752,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: TRAVELLING (DAILY & WEEKLY MH) */}
+        {/* TAB: TRAVELLING */}
         {activeTab === 'travel' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -715,10 +776,9 @@ export default function App() {
               )}
             </div>
 
-            {/* DAILY REPORTED TRAVEL LOGS */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h4 className="font-bold text-slate-900 text-xs">Daily Reported Travel Entries ({authRole === 'admin' ? 'All MH Staff' : 'Your Logs'})</h4>
+                <h4 className="font-bold text-slate-900 text-xs">Daily Reported Travel Entries</h4>
                 <span className="text-[10px] text-slate-500">Example Route: Andheri to Thane, Dadar to Vashi</span>
               </div>
               <div className="overflow-x-auto">
@@ -743,11 +803,7 @@ export default function App() {
                         <td className="p-3 text-slate-600">{log.mode} <span className="text-[10px] text-slate-400 block">({log.km} KM)</span></td>
                         <td className="p-3 font-bold text-emerald-700">₹{(log.amount).toLocaleString('en-IN')}</td>
                         <td className="p-3 text-slate-600">{log.route}</td>
-                        <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${log.status === 'Submitted Weekly' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}`}>
-                            {log.status}
-                          </span>
-                        </td>
+                        <td className="p-3"><span className={`px-2 py-0.5 rounded text-[10px] font-bold ${log.status === 'Submitted Weekly' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}`}>{log.status}</span></td>
                       </tr>
                     ))}
                   </tbody>
@@ -755,7 +811,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* WEEKLY TRAVEL CLAIMS */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h4 className="font-bold text-slate-900 text-xs">Weekly Travel Claims (Admin Approval Status)</h4>
@@ -811,7 +866,7 @@ export default function App() {
         {activeTab === 'leads' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-slate-900 text-sm">Business Leads ({authRole === 'admin' ? 'All Leads' : currentEmp.primaryVertical})</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Business Leads</h3>
               <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Add Lead</button>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
@@ -1068,7 +1123,7 @@ export default function App() {
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center (Mumbai HQ)</h3>
-              <p className="text-xs text-amber-800">Create employee IDs, passwords, assign verticals, and approve leaves & weekly travel claims.</p>
+              <p className="text-xs text-amber-800">Edit employee credentials, unblock accounts after 6 failed attempts, regenerate passwords, and approve claims.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1090,12 +1145,12 @@ export default function App() {
               </div>
             </div>
 
-            {/* REGISTERED EMPLOYEES TABLE FOR ADMIN */}
+            {/* REGISTERED EMPLOYEES TABLE WITH EDIT & REGENERATE PASSWORD ACTIONS */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-3">
               <div className="p-5 border-b border-slate-100 flex justify-between items-center">
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Registered Maharashtra Employees, Assigned Verticals & Credentials</h4>
-                  <p className="text-xs text-slate-500">Only Admin can view all active employee credentials.</p>
+                  <h4 className="font-bold text-slate-900 text-sm">Registered Maharashtra Employees, Passwords & Block Status</h4>
+                  <p className="text-xs text-slate-500">Edit credentials or regenerate passwords if account is locked after 6 failed attempts.</p>
                 </div>
                 <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100">
                   Total Staff: {employees.length}
@@ -1108,10 +1163,10 @@ export default function App() {
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Employee Name & ID</th>
                       <th className="p-3">Password</th>
+                      <th className="p-3">Status / Failed Attempts</th>
                       <th className="p-3">Assigned Vertical</th>
-                      <th className="p-3">Joining Date</th>
-                      <th className="p-3">Leaves (Used / Total)</th>
                       <th className="p-3">MH Territory</th>
+                      <th className="p-3 text-center">Admin Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -1119,10 +1174,23 @@ export default function App() {
                       <tr key={emp.id} className="hover:bg-slate-50">
                         <td className="p-3 font-bold text-slate-900">{emp.name} <span className="font-mono text-indigo-600 text-[10px] block">[{emp.id}]</span></td>
                         <td className="p-3 font-mono font-bold text-amber-700 bg-amber-50/50 rounded">{emp.pass}</td>
+                        <td className="p-3">
+                          {emp.isBlocked ? (
+                            <span className="bg-red-100 text-red-800 px-2 py-0.5 rounded font-bold text-[10px]">🔒 Locked (6 Fails)</span>
+                          ) : (
+                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active ({emp.failedAttempts || 0}/6 fails)</span>
+                          )}
+                        </td>
                         <td className="p-3"><span className="bg-indigo-600 text-white px-2 py-0.5 rounded text-[10px] font-bold">{emp.primaryVertical}</span></td>
-                        <td className="p-3 font-semibold text-slate-700">{emp.joiningDate}</td>
-                        <td className="p-3"><span className="bg-indigo-50 text-indigo-800 px-2 py-0.5 rounded font-bold text-[10px]">{emp.usedLeaves} / {emp.totalLeaves} Leaves</span></td>
                         <td className="p-3 text-slate-600">{emp.territory}</td>
+                        <td className="p-3 text-center space-x-1.5">
+                          <button onClick={() => { setEditingEmp(emp); setIsEditEmpModalOpen(true); }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-2.5 py-1 rounded font-semibold text-[11px]">
+                            Edit
+                          </button>
+                          <button onClick={() => handleRegeneratePassword(emp.id)} className="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1 rounded font-semibold text-[11px]">
+                            Regenerate Pass
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -1135,252 +1203,58 @@ export default function App() {
 
       </main>
 
+      {/* MODAL: EDIT EMPLOYEE CREDENTIALS */}
+      {isEditEmpModalOpen && editingEmp && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">Edit Employee & Reset Password</h3>
+              <button onClick={() => setIsEditEmpModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleUpdateEmployeeCredentials} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Employee Name</label>
+                <input required type="text" value={editingEmp.name} onChange={e => setEditingEmp({...editingEmp, name: e.target.value})} className="w-full p-2 border rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Employee ID (Read-only)</label>
+                  <input readType="text" disabled value={editingEmp.id} className="w-full p-2 border bg-slate-100 rounded-xl font-mono text-slate-500" />
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Password</label>
+                  <input required type="text" value={editingEmp.pass} onChange={e => setEditingEmp({...editingEmp, pass: e.target.value})} className="w-full p-2 border rounded-xl font-mono" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold text-indigo-900 font-bold block mb-1">Business Vertical</label>
+                <select value={editingEmp.primaryVertical} onChange={e => setEditingEmp({...editingEmp, primaryVertical: e.target.value})} className="w-full p-2 border border-indigo-300 rounded-xl bg-indigo-50 font-bold text-indigo-900">
+                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Monthly Target (₹)</label>
+                  <input type="number" value={editingEmp.target} onChange={e => setEditingEmp({...editingEmp, target: Number(e.target.value)})} className="w-full p-2 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">MH Territory</label>
+                  <input type="text" value={editingEmp.territory} onChange={e => setEditingEmp({...editingEmp, territory: e.target.value})} className="w-full p-2 border rounded-xl" />
+                </div>
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsEditEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Update Credentials</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* MODAL: ADD EMPLOYEE */}
       {isAddEmpModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
               <h3 className="font-bold text-slate-900 text-sm">Create Employee & Assign Vertical</h3>
-              <button onClick={() => setIsAddEmpModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Employee Name</label>
-                <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="e.g. Santosh Shinde" className="w-full p-2 border rounded-xl" />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Employee ID</label>
-                  <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} placeholder="USR-EMP-105" className="w-full p-2 border rounded-xl font-mono" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Password</label>
-                  <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} placeholder="Secret Pass" className="w-full p-2 border rounded-xl font-mono" />
-                </div>
-              </div>
-              <div>
-                <label className="font-semibold text-indigo-900 font-bold block mb-1">Assign Business Vertical (Staff Access)</label>
-                <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2 border border-indigo-300 rounded-xl bg-indigo-50 font-bold text-indigo-900">
-                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Joining Date</label>
-                  <input required type="date" value={newEmp.joiningDate} onChange={e => setNewEmp({...newEmp, joiningDate: e.target.value})} className="w-full p-2 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Total Annual Leaves</label>
-                  <input required type="number" value={newEmp.totalLeaves} onChange={e => setNewEmp({...newEmp, totalLeaves: e.target.value})} className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Monthly Target (₹)</label>
-                  <input type="number" value={newEmp.target} onChange={e => setNewEmp({...newEmp, target: e.target.value})} placeholder="500000" className="w-full p-2 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">MH Territory</label>
-                  <input type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} placeholder="Pune & PCMC Cluster" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save Employee Credentials</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: LOG DAILY TRAVEL (MAHARASHTRA EXAMPLES) */}
-      {isDailyTravelModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Log Daily Travelling Expense (Maharashtra)</h3>
-              <button onClick={() => setIsDailyTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleAddDailyTravel} className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Travel Date</label>
-                  <input required type="date" value={newDailyTravel.date} onChange={e => setNewDailyTravel({...newDailyTravel, date: e.target.value})} className="w-full p-2 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Week Cycle</label>
-                  <input required type="text" value={newDailyTravel.weekCycle} onChange={e => setNewDailyTravel({...newDailyTravel, weekCycle: e.target.value})} placeholder="Nov 01 - Nov 07, 2026" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Mode of Transport</label>
-                  <select value={newDailyTravel.mode} onChange={e => setNewDailyTravel({...newDailyTravel, mode: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                    <option value="Bike / Fuel">Bike / Fuel</option>
-                    <option value="Bus / Public">Bus / Public</option>
-                    <option value="Train / Auto">Train / Auto</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Distance (KM)</label>
-                  <input required type="number" value={newDailyTravel.km} onChange={e => setNewDailyTravel({...newDailyTravel, km: e.target.value})} placeholder="45" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Daily Amount Claim (₹)</label>
-                <input required type="number" value={newDailyTravel.amount} onChange={e => setNewDailyTravel({...newDailyTravel, amount: e.target.value})} placeholder="350" className="w-full p-2 border rounded-xl" />
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Route / Visit Details (e.g. Andheri to Thane)</label>
-                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} placeholder="e.g. Andheri to Thane Route" className="w-full p-2 border rounded-xl" />
-              </div>
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsDailyTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">Save Daily Travel Log</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: ADD LEAD (MAHARASHTRA EXAMPLES) */}
-      {isLeadModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead (Maharashtra)</h3>
-              <button onClick={() => setIsLeadModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleAddLead} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
-                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="e.g. Sahyadri Auto Spares" className="w-full p-2 border rounded-xl" />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Types of Client</label>
-                  <select value={newLead.clientType} onChange={e => setNewLead({...newLead, clientType: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                    {CLIENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
-                  <input type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Place / City (MH)</label>
-                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="e.g. Vashi Turbhe, Navi Mumbai" className="w-full p-2 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Investment Amount (₹)</label>
-                  <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} placeholder="e.g. 250000" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Next Follow-up Date</label>
-                <input required type="date" value={newLead.nextFollowup} onChange={e => setNewLead({...newLead, nextFollowup: e.target.value})} className="w-full p-2 border rounded-xl" />
-              </div>
-              {authRole === 'admin' ? (
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Vertical</label>
-                  <select value={newLead.vertical} onChange={e => setNewLead({...newLead, vertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                    {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                  </select>
-                </div>
-              ) : (
-                <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-xl text-[11px] font-bold text-indigo-900">
-                  Assigned Vertical: {currentEmp.primaryVertical}
-                </div>
-              )}
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save Lead</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: SUBMIT DCR (MAHARASHTRA EXAMPLES) */}
-      {isDcrModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit DCR (Maharashtra Field Report)</h3>
-              <button onClick={() => setIsDcrModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
-                <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} placeholder="Dealer / Client Name" className="w-full p-2 border rounded-xl" />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Types of Client</label>
-                  <select value={newDcr.clientType} onChange={e => setNewDcr({...newDcr, clientType: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                    {CLIENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Place / City (MH)</label>
-                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} placeholder="e.g. Hinjewadi Phase 1, Pune" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Investment Amount (₹)</label>
-                  <input required type="number" value={newDcr.investmentAmount} onChange={e => setNewDcr({...newDcr, investmentAmount: e.target.value})} placeholder="e.g. 150000" className="w-full p-2 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Next Follow-up Date</label>
-                  <input required type="date" value={newDcr.nextDate} onChange={e => setNewDcr({...newDcr, nextDate: e.target.value})} className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Discussion Notes / Deal Outcome</label>
-                <textarea rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} placeholder="Meeting outcome notes..." className="w-full p-2 border rounded-xl"></textarea>
-              </div>
-
-              <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-700">Live GPS Photo Capture</span>
-                  <input type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={captureRealGpsPhoto} className="hidden" />
-                  <button type="button" onClick={() => fileInputRef.current.click()} disabled={capturingGpsPhoto} className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-[11px] font-semibold">
-                    {capturingGpsPhoto ? 'Getting GPS...' : 'Open Camera'}
-                  </button>
-                </div>
-                {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 font-bold">✓ MH Photo & GPS Tagged!</p>}
-              </div>
-
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">Submit DCR</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* VIEW PHOTO MODAL */}
-      {viewPhotoModal && (
-        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-5 w-full max-w-sm shadow-2xl space-y-3">
-            <div className="flex justify-between items-center border-b pb-2">
-              <h3 className="font-bold text-slate-900 text-xs">GPS Visit Photo (MH)</h3>
-              <button onClick={() => setViewPhotoModal(null)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <img src={viewPhotoModal.photoUrl} alt="Visit Proof" className="w-full h-64 object-cover rounded-xl border" />
-            <div className="text-xs space-y-1">
-              <p className="font-bold text-slate-900">{viewPhotoModal.clientName}</p>
-              <p className="text-slate-500 font-mono text-[10px]">{viewPhotoModal.place || viewPhotoModal.address}</p>
-            </div>
-            <button onClick={() => setViewPhotoModal(null)} className="w-full py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold">Close</button>
-          </div>
-        </div>
-      )}
-
-    </div>
-  );
-}
+              <button onClick={()
