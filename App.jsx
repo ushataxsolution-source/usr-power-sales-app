@@ -24,6 +24,14 @@ const CUSTOMER_TYPES = [
   'Fleet Owner'
 ];
 
+const CLIENT_TYPES = [
+  'Distributor',
+  'Dealer',
+  'Retailer',
+  'Fleet Owner',
+  'Corporate / Direct'
+];
+
 const INITIAL_EMPLOYEES = [
   { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', designation: 'Senior Sales Executive', phone: '9820012345', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
   { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', designation: 'Area Sales Manager', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false }
@@ -45,7 +53,7 @@ const INITIAL_CUSTOMERS = [
     initialInvestment: 1500000, 
     monthlyTarget: 800000, 
     monthlyAchieved: 650000,
-    activeScheme: 'Festival Bonanza: Extra 2.5% Cashback on orders above ₹5 Lakhs (Valid till Nov 30, 2026)',
+    activeScheme: 'Festival Bonanza: Extra 2.5% Cashback on orders above ₹5 Lakhs',
     yearlyScheme: 'Annual Target Gold Coin Reward on 100% Achievement',
     failedAttempts: 0, 
     isBlocked: false 
@@ -250,7 +258,7 @@ export default function App() {
     } else if (loginType === 'customer') {
       const foundCust = customers.find(cust => cust.id === loginIdInput.trim());
       if (!foundCust) {
-        setLoginError('Customer/Distributor ID not found!');
+        setLoginError('Customer ID not found!');
         refreshCaptcha();
         return;
       }
@@ -297,7 +305,7 @@ export default function App() {
     };
     setCustomers([...customers, createdCust]);
     setIsAddCustomerModalOpen(false);
-    alert(`Customer (${createdCust.name} - ${createdCust.customerType}) Created Successfully!`);
+    alert(`Customer (${createdCust.name}) Created Successfully!`);
   };
 
   const handleAddEmployee = (e) => {
@@ -320,7 +328,7 @@ export default function App() {
     };
     setEmployees([...employees, createdEmp]);
     setIsAddEmpModalOpen(false);
-    alert(`Employee (${createdEmp.name} - ${createdEmp.designation}) Created Successfully!`);
+    alert(`Employee (${createdEmp.name}) Created Successfully!`);
   };
 
   const handleAgreementSubmit = (e) => {
@@ -346,7 +354,7 @@ export default function App() {
     };
     setAgreements([createdAgreement, ...agreements]);
     setIsAgreementModalOpen(false);
-    alert('Partnership Agreement Form submitted successfully!');
+    alert('Agreement Form submitted successfully!');
   };
 
   const handleApproveAgreement = (agrId) => {
@@ -358,7 +366,7 @@ export default function App() {
     const todayStr = new Date().toISOString().split('T')[0];
     const alreadyMarked = attendanceList.some(a => a.empId === currentEmp.id && a.date === todayStr);
     if (alreadyMarked) {
-      alert('Attendance for today is already marked!');
+      alert('Attendance already marked for today!');
       return;
     }
     const newAtt = {
@@ -487,8 +495,8 @@ export default function App() {
     alert('Travelling Claim Approved Successfully!');
   };
 
-  const visibleLeads = authRole === 'admin' ? leads : authRole === 'employee' ? leads.filter(l => l.assignedToId === currentEmp.id) : [];
-  const visibleDcrs = authRole === 'admin' ? dcrs : authRole === 'employee' ? dcrs.filter(d => d.empId === currentEmp.id) : [];
+  const visibleLeads = authRole === 'admin' ? leads.filter(l => selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter) : authRole === 'employee' ? leads.filter(l => l.assignedToId === currentEmp.id) : [];
+  const visibleDcrs = authRole === 'admin' ? dcrs.filter(d => selectedEmpFilter === 'All' || d.empId === selectedEmpFilter) : authRole === 'employee' ? dcrs.filter(d => d.empId === currentEmp.id) : [];
   const visibleAgreements = authRole === 'admin' ? agreements : authRole === 'employee' ? agreements.filter(a => a.submittedEmpId === currentEmp.id) : agreements.filter(a => a.distributorName === currentCustomer.name);
   const visibleAttendance = authRole === 'admin' ? attendanceList : authRole === 'employee' ? attendanceList.filter(a => a.empId === currentEmp.id) : [];
   const visibleLeaves = authRole === 'admin' ? leaveList : authRole === 'employee' ? leaveList.filter(l => l.empId === currentEmp.id) : [];
