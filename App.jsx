@@ -117,7 +117,7 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // Complete Partnership Agreement Form State matching full PDF
+  // Complete Partnership Agreement Form State with Automatic Total Calculation
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -145,9 +145,16 @@ export default function App() {
     investmentFourStroke: '200000',
     investmentPassenger: '150000',
     investmentHeavyDuty: '100000',
-    investmentLcvHcv: '50000',
-    totalInvestment: '1500000'
+    investmentLcvHcv: '50000'
   });
+
+  // Calculate Total Initial Investment Automatically whenever sub-fields change
+  const calculatedTotalInvestment = 
+    (Number(newAgreement.investmentAutomotive) || 0) +
+    (Number(newAgreement.investmentFourStroke) || 0) +
+    (Number(newAgreement.investmentPassenger) || 0) +
+    (Number(newAgreement.investmentHeavyDuty) || 0) +
+    (Number(newAgreement.investmentLcvHcv) || 0);
 
   const [newLead, setNewLead] = useState({
     clientName: '', clientType: 'Dealer', contactPerson: '', phone: '', place: '',
@@ -305,7 +312,7 @@ export default function App() {
       investmentPassenger: Number(newAgreement.investmentPassenger) || 0,
       investmentHeavyDuty: Number(newAgreement.investmentHeavyDuty) || 0,
       investmentLcvHcv: Number(newAgreement.investmentLcvHcv) || 0,
-      totalInvestment: Number(newAgreement.totalInvestment) || 1500000,
+      totalInvestment: calculatedTotalInvestment,
       submittedBy: `${currentEmp.name} [${currentEmp.id}]`,
       date: new Date().toISOString().split('T')[0],
       status: 'Pending Verification'
@@ -313,7 +320,7 @@ export default function App() {
 
     setAgreements([createdAgreement, ...agreements]);
     setIsAgreementModalOpen(false);
-    alert('Official Partnership Agreement Form submitted successfully! Admin can review it from the panel.');
+    alert('Official Partnership Agreement Form submitted successfully! Total Investment: ₹' + calculatedTotalInvestment.toLocaleString('en-IN'));
   };
 
   const handleApproveAgreement = (agrId) => {
@@ -652,7 +659,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col md:flex-row">
       
-      {/* SIDEBAR (Hidden during print) */}
+      {/* SIDEBAR */}
       <aside className="w-full md:w-72 bg-slate-900 text-slate-100 flex-shrink-0 flex flex-col justify-between shadow-xl no-print">
         <div>
           <div className="p-5 border-b border-slate-800">
@@ -737,7 +744,7 @@ export default function App() {
 
       <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
         
-        {/* HEADER (Hidden during print) */}
+        {/* HEADER */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 no-print">
           <div>
             <div className="flex items-center space-x-2">
@@ -906,7 +913,7 @@ export default function App() {
           </div>
         )}
 
-        {/* OTHER TABS (Leads, DCR, Attendance, Leaves, Travelling, GPS) */}
+        {/* OTHER TABS */}
         {activeTab === 'leads' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
@@ -980,7 +987,6 @@ export default function App() {
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Daily Field Attendance & Punch-In</h3>
-                <p className="text-xs text-slate-500">Mark your attendance for today.</p>
               </div>
               {authRole !== 'admin' && (
                 <button onClick={markTodayAttendance} className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow">
@@ -1018,7 +1024,6 @@ export default function App() {
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Leave Management</h3>
-                <p className="text-xs text-slate-500">Apply for leaves and check status.</p>
               </div>
               {authRole !== 'admin' && (
                 <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">
@@ -1161,31 +1166,34 @@ export default function App() {
 
       </main>
 
-      {/* MODAL: COMPLETE OFFICIAL PARTNERSHIP AGREEMENT FORM (MATCHING PDF) */}
+      {/* MODAL: COMPLETE OFFICIAL PARTNERSHIP AGREEMENT FORM (WITH AUTO-CALCULATION & CLEAR LABELS) */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-4xl shadow-2xl space-y-6 my-8">
-            <div className="flex justify-between items-center border-b pb-3">
+          <div className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 my-8 border border-slate-200">
+            <div className="flex justify-between items-center border-b pb-4">
               <div>
-                <h3 className="font-extrabold text-sm text-slate-900">USR POWER INDUSTRIES PRIVATE LIMITED</h3>
-                <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider">OFFICIAL DISTRIBUTOR / DEALER AGREEMENT FORM</p>
+                <h3 className="font-extrabold text-base text-slate-900">USR POWER INDUSTRIES PRIVATE LIMITED</h3>
+                <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider mt-0.5">OFFICIAL DISTRIBUTOR / DEALER PARTNERSHIP AGREEMENT FORM</p>
               </div>
-              <button onClick={() => setIsAgreementModalOpen(false)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setIsAgreementModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition"><X className="w-5 h-5 text-slate-500" /></button>
             </div>
 
-            <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs">
+            <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs max-h-[75vh] overflow-y-auto pr-2">
               
               {/* SECTION I: BASIC INFORMATION */}
-              <div className="space-y-3 bg-slate-50 p-4 rounded-xl border">
-                <h4 className="font-bold text-slate-900 text-xs border-b pb-1 text-indigo-900">I. Basic Information & Constitution</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> I. Basic Information & Constitution
+                </h4>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-semibold block mb-1">1. Name of Distributor (Mr. / Mrs. / Ms.) *</label>
-                    <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} placeholder="e.g. Sahyadri Auto Spares" className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">1. Name of Distributor (Mr. / Mrs. / Ms.) *</label>
+                    <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} placeholder="e.g. Sahyadri Auto Spares" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">4. Constitution of Distributor *</label>
-                    <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
+                    <label className="font-semibold text-slate-700 block mb-1">4. Constitution of Distributor *</label>
+                    <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
                       <option value="Proprietorship">Proprietorship</option>
                       <option value="Partnership">Partnership</option>
                       <option value="Private Limited Co">Private Limited Co</option>
@@ -1195,58 +1203,62 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="font-semibold block mb-1">Proprietor / Partner Name *</label>
-                    <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} placeholder="Suresh Patil" className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">Proprietor / Partner Name *</label>
+                    <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} placeholder="Suresh Patil" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">Mobile No *</label>
-                    <input required type="text" value={newAgreement.phone} onChange={e => setNewAgreement({...newAgreement, phone: e.target.value})} placeholder="9820012345" className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">Mobile No *</label>
+                    <input required type="text" value={newAgreement.phone} onChange={e => setNewAgreement({...newAgreement, phone: e.target.value})} placeholder="9820012345" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-mono" />
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">Qualification</label>
-                    <input type="text" value={newAgreement.qualification} onChange={e => setNewAgreement({...newAgreement, qualification: e.target.value})} placeholder="Graduate / MBA" className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">Qualification</label>
+                    <input type="text" value={newAgreement.qualification} onChange={e => setNewAgreement({...newAgreement, qualification: e.target.value})} placeholder="Graduate / MBA" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-semibold block mb-1">2. Permanent & Showroom Address *</label>
-                    <textarea required rows="2" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} placeholder="Full address with town and PIN code..." className="w-full p-2.5 border rounded-xl bg-white"></textarea>
+                    <label className="font-semibold text-slate-700 block mb-1">2. Permanent & Showroom Address *</label>
+                    <textarea required rows="2" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} placeholder="Full address with town and PIN code..." className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm"></textarea>
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">3. Details of Immovable Properties (Owned)</label>
-                    <textarea rows="2" value={newAgreement.immovableProperties} onChange={e => setNewAgreement({...newAgreement, immovableProperties: e.target.value})} placeholder="Details of godown/office properties..." className="w-full p-2.5 border rounded-xl bg-white"></textarea>
+                    <label className="font-semibold text-slate-700 block mb-1">3. Details of Immovable Properties (Owned)</label>
+                    <textarea rows="2" value={newAgreement.immovableProperties} onChange={e => setNewAgreement({...newAgreement, immovableProperties: e.target.value})} placeholder="Details of godown/office properties..." className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm"></textarea>
                   </div>
                 </div>
               </div>
 
               {/* SECTION III: MANPOWER & SISTER CONCERN */}
-              <div className="space-y-3 bg-slate-50 p-4 rounded-xl border">
-                <h4 className="font-bold text-slate-900 text-xs border-b pb-1 text-indigo-900">III. Manpower & Sister Concerns</h4>
-                <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> III. Manpower & Sister Concerns
+                </h4>
+                
+                <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <label className="font-semibold block mb-1">Administrative Staffs (No.)</label>
-                    <input type="number" value={newAgreement.adminStaffCount} onChange={e => setNewAgreement({...newAgreement, adminStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">Administrative Staffs (No.)</label>
+                    <input type="number" value={newAgreement.adminStaffCount} onChange={e => setNewAgreement({...newAgreement, adminStaffCount: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">Sales Staff (No.)</label>
-                    <input type="number" value={newAgreement.salesStaffCount} onChange={e => setNewAgreement({...newAgreement, salesStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">Sales Staff (No.)</label>
+                    <input type="number" value={newAgreement.salesStaffCount} onChange={e => setNewAgreement({...newAgreement, salesStaffCount: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">Technical Staff (No.)</label>
-                    <input type="number" value={newAgreement.techStaffCount} onChange={e => setNewAgreement({...newAgreement, techStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">Technical Staff (No.)</label>
+                    <input type="number" value={newAgreement.techStaffCount} onChange={e => setNewAgreement({...newAgreement, techStaffCount: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-semibold block mb-1">6. Sister Concern / Allied Concern Name (if any)</label>
-                    <input type="text" value={newAgreement.sisterConcernName} onChange={e => setNewAgreement({...newAgreement, sisterConcernName: e.target.value})} placeholder="Sister firm name..." className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">6. Sister Concern / Allied Concern Name (if any)</label>
+                    <input type="text" value={newAgreement.sisterConcernName} onChange={e => setNewAgreement({...newAgreement, sisterConcernName: e.target.value})} placeholder="Sister firm name..." className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">12. Related to any employee of USR Power?</label>
-                    <select value={newAgreement.isRelatedToEmployee} onChange={e => setNewAgreement({...newAgreement, isRelatedToEmployee: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
+                    <label className="font-semibold text-slate-700 block mb-1">12. Related to any employee of USR Power?</label>
+                    <select value={newAgreement.isRelatedToEmployee} onChange={e => setNewAgreement({...newAgreement, isRelatedToEmployee: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
                       <option value="No">No</option>
                       <option value="Yes">Yes</option>
                     </select>
@@ -1255,27 +1267,30 @@ export default function App() {
               </div>
 
               {/* SECTION VII, VIII, IX: INFRASTRUCTURE, GOODS, TERRITORY */}
-              <div className="space-y-3 bg-slate-50 p-4 rounded-xl border">
-                <h4 className="font-bold text-slate-900 text-xs border-b pb-1 text-indigo-900">VII - IX. Infrastructure, Goods & Territory</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> VII - IX. Infrastructure, Goods & Territory
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="font-semibold block mb-1">21. GSTN No *</label>
-                    <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} placeholder="27AAAAA0000A1Z5" className="w-full p-2.5 border rounded-xl bg-white font-mono" />
+                    <label className="font-semibold text-slate-700 block mb-1">21. GSTN No *</label>
+                    <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} placeholder="27AAAAA0000A1Z5" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-mono uppercase" />
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">22. Transport Company Name *</label>
-                    <input required type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} placeholder="VRL Logistics / Bank Approved" className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">22. Transport Company Name *</label>
+                    <input required type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} placeholder="VRL Logistics / Bank Approved" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">24. Nearest Railway Station / Agency *</label>
-                    <input required type="text" value={newAgreement.railwayStation} onChange={e => setNewAgreement({...newAgreement, railwayStation: e.target.value})} placeholder="e.g. Vashi Railway Station" className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">24. Nearest Railway Station / Agency *</label>
+                    <input required type="text" value={newAgreement.railwayStation} onChange={e => setNewAgreement({...newAgreement, railwayStation: e.target.value})} placeholder="e.g. Vashi Railway Station" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-semibold block mb-1">25. Interested in C&FA for Product Line *</label>
-                    <select value={newAgreement.verticalInterested} onChange={e => setNewAgreement({...newAgreement, verticalInterested: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
+                    <label className="font-semibold text-slate-700 block mb-1">25. Interested in C&FA for Product Line *</label>
+                    <select value={newAgreement.verticalInterested} onChange={e => setNewAgreement({...newAgreement, verticalInterested: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
                       <option value="Automotive Engine Oil">Automotive Engine Oil</option>
                       <option value="Four Stroke Engine Oils">Four Stroke Engine Oils</option>
                       <option value="Passenger Car Oils">Passenger Car Oils</option>
@@ -1284,63 +1299,71 @@ export default function App() {
                     </select>
                   </div>
                   <div>
-                    <label className="font-semibold block mb-1">26. Territory (State / Region / Districts) *</label>
-                    <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} placeholder="e.g. Pune & PCMC Cluster" className="w-full p-2.5 border rounded-xl bg-white" />
+                    <label className="font-semibold text-slate-700 block mb-1">26. Territory (State / Region / Districts) *</label>
+                    <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} placeholder="e.g. Pune & PCMC Cluster" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                 </div>
               </div>
 
-              {/* SECTION X: INVESTMENT BREAKDOWN */}
-              <div className="space-y-3 bg-indigo-50/60 p-4 rounded-xl border border-indigo-200">
-                <h4 className="font-bold text-indigo-900 text-xs border-b border-indigo-200 pb-1">X. Investment Plan (As per PDF Form)</h4>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              {/* SECTION X: INVESTMENT BREAKDOWN (AUTO-CALCULATED) */}
+              <div className="space-y-4 bg-indigo-50/70 p-5 rounded-2xl border border-indigo-200">
+                <h4 className="font-bold text-indigo-900 text-xs border-b border-indigo-200 pb-2 flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> X. Initial Investment Plan (Auto-Calculated)[cite: 5]
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                   <div>
-                    <label className="text-[10px] font-bold block mb-1">Automotive Oil (₹)</label>
-                    <input type="number" value={newAgreement.investmentAutomotive} onChange={e => setNewAgreement({...newAgreement, investmentAutomotive: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Automotive Oil (₹)</label>
+                    <input type="number" value={newAgreement.investmentAutomotive} onChange={e => setNewAgreement({...newAgreement, investmentAutomotive: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold block mb-1">4-Stroke Oil (₹)</label>
-                    <input type="number" value={newAgreement.investmentFourStroke} onChange={e => setNewAgreement({...newAgreement, investmentFourStroke: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1">4-Stroke Oil (₹)</label>
+                    <input type="number" value={newAgreement.investmentFourStroke} onChange={e => setNewAgreement({...newAgreement, investmentFourStroke: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold block mb-1">Passenger Car (₹)</label>
-                    <input type="number" value={newAgreement.investmentPassenger} onChange={e => setNewAgreement({...newAgreement, investmentPassenger: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Passenger Car (₹)</label>
+                    <input type="number" value={newAgreement.investmentPassenger} onChange={e => setNewAgreement({...newAgreement, investmentPassenger: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold block mb-1">Heavy Duty (₹)</label>
-                    <input type="number" value={newAgreement.investmentHeavyDuty} onChange={e => setNewAgreement({...newAgreement, investmentHeavyDuty: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Heavy Duty (₹)</label>
+                    <input type="number" value={newAgreement.investmentHeavyDuty} onChange={e => setNewAgreement({...newAgreement, investmentHeavyDuty: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold block mb-1">LCV-HCV Oils (₹)</label>
-                    <input type="number" value={newAgreement.investmentLcvHcv} onChange={e => setNewAgreement({...newAgreement, investmentLcvHcv: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1">LCV-HCV Oils (₹)</label>
+                    <input type="number" value={newAgreement.investmentLcvHcv} onChange={e => setNewAgreement({...newAgreement, investmentLcvHcv: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
                   </div>
                 </div>
-                <div className="flex justify-between items-center pt-2 border-t border-indigo-200 font-bold text-indigo-950">
-                  <span>Total Initial Minimum Investment for Stock:</span>
-                  <input type="number" value={newAgreement.totalInvestment} onChange={e => setNewAgreement({...newAgreement, totalInvestment: e.target.value})} className="p-2 border border-indigo-300 rounded-xl bg-white text-emerald-700 font-extrabold" />
+
+                <div className="flex flex-col sm:flex-row justify-between items-center pt-3 border-t border-indigo-200 gap-2">
+                  <span className="font-bold text-indigo-950 text-sm">Total Initial Minimum Investment for Stock[cite: 5]:</span>
+                  <div className="bg-white px-5 py-2.5 rounded-xl border border-indigo-300 shadow-inner text-emerald-700 font-extrabold text-base font-mono">
+                    ₹ {calculatedTotalInvestment.toLocaleString('en-IN')}
+                  </div>
                 </div>
               </div>
 
               {/* DECLARATION */}
-              <div className="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-xl border">
+              <div className="text-[11px] text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-200">
                 <p><strong>XIII. Declaration:</strong> I/we state that all information as mentioned in this Application Form is true & correct. I/we bind ourselves into a legal contract with the company as per the Indian Contract Act, 1872[cite: 15].</p>
               </div>
 
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsAgreementModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Submit Official Agreement Form</button>
+              <div className="pt-2 flex justify-end space-x-3">
+                <button type="button" onClick={() => setIsAgreementModalOpen(false)} className="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition">Cancel</button>
+                <button type="submit" className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg transition flex items-center space-x-2">
+                  <Check className="w-4 h-4" />
+                  <span>Submit Official Agreement Form</span>
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* MODAL: VIEW & PRINT CLEAN AGREEMENT FORM (SOLO PRINT VIEW) */}
+      {/* MODAL: VIEW & PRINT CLEAN AGREEMENT FORM */}
       {viewAgreementDetail && (
         <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-2xl w-full max-w-3xl shadow-2xl space-y-6 my-8 overflow-hidden">
+          <div className="bg-white rounded-3xl w-full max-w-3xl shadow-2xl space-y-6 my-8 overflow-hidden">
             
-            {/* Modal Top Action Bar (Hidden during print) */}
             <div className="bg-slate-900 text-white p-4 flex justify-between items-center no-print">
               <h3 className="font-bold text-xs uppercase tracking-widest">Official Agreement Preview & Print</h3>
               <div className="space-x-2">
@@ -1352,7 +1375,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Printable Agreement Document Container */}
             <div id="printable-agreement" className="p-8 space-y-6 text-slate-900 bg-white">
               <div className="text-center space-y-1 border-b-2 border-slate-900 pb-4">
                 <h2 className="text-lg font-extrabold tracking-wide">USR POWER INDUSTRIES PRIVATE LIMITED</h2>
@@ -1387,7 +1409,7 @@ export default function App() {
                   </div>
                   <p><strong>26. Allotted Territory:</strong> {viewAgreementDetail.territory}</p>
                   <div className="bg-slate-100 p-3 rounded-lg font-bold text-emerald-800 mt-2">
-                    Total Initial Minimum Investment: ₹{(viewAgreementDetail.totalInvestment || 1500000).toLocaleString('en-IN')}
+                    Total Initial Minimum Investment: ₹{(viewAgreementDetail.totalInvestment || 1500000).toLocaleString('en-IN')}[cite: 5]
                   </div>
                 </div>
 
@@ -1551,7 +1573,7 @@ export default function App() {
         </div>
       )}
 
-      {/* CSS Print Styles Rule to print ONLY agreement form */}
+      {/* PRINT STYLES */}
       <style>{`
         @media print {
           body * {
