@@ -3,7 +3,7 @@ import {
   Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
   Search, Filter, CheckCircle, Clock, Award, 
   Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag,
-  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare, ArrowRight, CalendarDays
+  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare, ArrowRight, CalendarDays, Bus
 } from 'lucide-react';
 
 // Business Verticals List
@@ -17,7 +17,7 @@ const BUSINESS_VERTICALS = [
   'DIGITAL MARKETING'
 ];
 
-// Initial Staff Data with Passwords, IDs & Assigned Verticals
+// Initial Staff Data
 const INITIAL_EMPLOYEES = [
   { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Patna Division', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE' },
   { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Gaya & South Bihar', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL' },
@@ -35,6 +35,12 @@ const INITIAL_ATTENDANCE = [
 const INITIAL_LEAVES = [
   { id: 'LEV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', fromDate: '2026-11-10', toDate: '2026-11-11', reason: 'Family Function', status: 'Approved' },
   { id: 'LEV-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', fromDate: '2026-11-15', toDate: '2026-11-15', reason: 'Medical Checkup', status: 'Pending' }
+];
+
+// Initial Travelling Expense Claims
+const INITIAL_TRAVEL = [
+  { id: 'TRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', weekRange: 'Nov 01 - Nov 07, 2026', mode: 'Bike / Fuel', totalKm: 140, amount: 1200, purpose: 'Patna - Hajipur Dealer Visits', status: 'Approved' },
+  { id: 'TRV-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', weekRange: 'Nov 01 - Nov 07, 2026', mode: 'Bus / Public', totalKm: 95, amount: 850, purpose: 'Gaya - Dobhi Hub Field Survey', status: 'Pending' }
 ];
 
 // Initial Leads
@@ -62,6 +68,7 @@ export default function App() {
   const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
   const [attendanceList, setAttendanceList] = useState(INITIAL_ATTENDANCE);
   const [leaveList, setLeaveList] = useState(INITIAL_LEAVES);
+  const [travelList, setTravelList] = useState(INITIAL_TRAVEL);
   const [leads, setLeads] = useState(INITIAL_LEADS);
   const [dcrs, setDcrs] = useState(INITIAL_DCR);
 
@@ -72,6 +79,7 @@ export default function App() {
   const [isDcrModalOpen, setIsDcrModalOpen] = useState(false);
   const [isAddEmpModalOpen, setIsAddEmpModalOpen] = useState(false);
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
+  const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
   const [viewPhotoModal, setViewPhotoModal] = useState(null);
 
   const [newLead, setNewLead] = useState({
@@ -94,12 +102,15 @@ export default function App() {
     fromDate: '', toDate: '', reason: ''
   });
 
+  const [newTravel, setNewTravel] = useState({
+    weekRange: 'Nov 01 - Nov 07, 2026', mode: 'Bike / Fuel', totalKm: '', amount: '', purpose: ''
+  });
+
   const [capturingGpsPhoto, setCapturingGpsPhoto] = useState(false);
   const fileInputRef = useRef(null);
 
   const currentEmp = employees.find(e => e.id === loggedEmpId) || employees[0];
 
-  // Filtering Business Verticals based on Role
   const accessibleVerticals = authRole === 'admin' 
     ? BUSINESS_VERTICALS 
     : BUSINESS_VERTICALS.filter(v => v === currentEmp.primaryVertical);
@@ -169,6 +180,35 @@ export default function App() {
     setIsLeaveModalOpen(false);
     setNewLeave({ fromDate: '', toDate: '', reason: '' });
     alert('Leave Application Submitted Successfully!');
+  };
+
+  // Admin Leave Approval
+  const handleApproveLeave = (leaveId) => {
+    setLeaveList(leaveList.map(l => l.id === leaveId ? { ...l, status: 'Approved' } : l));
+    alert('Leave Approved Successfully!');
+  };
+
+  const handleApplyTravel = (e) => {
+    e.preventDefault();
+    const createdTravel = {
+      id: `TRV-${Date.now()}`,
+      empId: currentEmp.id,
+      empName: currentEmp.name,
+      ...newTravel,
+      totalKm: Number(newTravel.totalKm) || 0,
+      amount: Number(newTravel.amount) || 0,
+      status: 'Pending'
+    };
+    setTravelList([createdTravel, ...travelList]);
+    setIsTravelModalOpen(false);
+    setNewTravel({ weekRange: 'Nov 01 - Nov 07, 2026', mode: 'Bike / Fuel', totalKm: '', amount: '', purpose: '' });
+    alert('Weekly Travelling Expense Claim Submitted Successfully!');
+  };
+
+  // Admin Travel Approval
+  const handleApproveTravel = (travelId) => {
+    setTravelList(travelList.map(t => t.id === travelId ? { ...t, status: 'Approved' } : t));
+    alert('Weekly Travelling Claim Approved Successfully!');
   };
 
   const captureRealGpsPhoto = (e) => {
@@ -301,6 +341,10 @@ export default function App() {
     ? leaveList
     : leaveList.filter(l => l.empId === currentEmp.id);
 
+  const visibleTravel = authRole === 'admin'
+    ? travelList
+    : travelList.filter(t => t.empId === currentEmp.id);
+
   const totalSalesTarget = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmp.target;
   const totalSalesAchieved = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
   const totalLeadsValue = visibleLeads.reduce((acc, curr) => acc + curr.estimatedValue, 0);
@@ -363,7 +407,7 @@ export default function App() {
             ) : (
               <form onSubmit={handleAdminLogin} className="space-y-4 text-xs">
                 <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-amber-900 text-[11px]">
-                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, vertical assignments, and leave tracking.
+                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, leave & weekly travel approvals.
                 </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Admin Security Password / PIN</label>
@@ -415,6 +459,7 @@ export default function App() {
               { id: 'dashboard', label: 'Dashboard Overview', icon: TrendingUp },
               { id: 'attendance', label: 'Attendance & Punch-In', icon: CheckSquare, badge: visibleAttendance.length },
               { id: 'leaves', label: 'Leave Management', icon: CalendarDays, badge: visibleLeaves.length },
+              { id: 'travel', label: 'Travelling Expenses', icon: Bus, badge: visibleTravel.length },
               { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
               { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
               { id: 'gps', label: 'GPS Photo Verification', icon: Camera },
@@ -485,7 +530,7 @@ export default function App() {
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              {authRole === 'admin' ? 'Managing employee credentials, assigned verticals, and leave records.' : `Welcome ${currentEmp.name}. Joined: ${currentEmp.joiningDate} | Assigned Vertical: ${currentEmp.primaryVertical}`}
+              {authRole === 'admin' ? 'Managing employee credentials, leave approvals, and weekly travel claims.' : `Welcome ${currentEmp.name}. Joined: ${currentEmp.joiningDate} | Assigned Vertical: ${currentEmp.primaryVertical}`}
             </p>
           </div>
 
@@ -552,13 +597,13 @@ export default function App() {
 
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">Today's Attendance</p>
+                  <p className="text-xs font-medium text-slate-500">Travelling Expense</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">
-                    {attendanceList.some(a => a.empId === currentEmp.id && a.date === new Date().toISOString().split('T')[0]) ? 'Marked Present' : 'Not Marked'}
+                    {visibleTravel.filter(t => t.status === 'Approved').length} Approved
                   </h3>
-                  <button onClick={() => setActiveTab('attendance')} className="text-[11px] text-indigo-600 font-bold hover:underline mt-1 block">Go to Attendance &rarr;</button>
+                  <button onClick={() => setActiveTab('travel')} className="text-[11px] text-indigo-600 font-bold hover:underline mt-1 block">View Claims &rarr;</button>
                 </div>
-                <div className="p-3 bg-teal-50 text-teal-600 rounded-xl"><CheckSquare className="w-6 h-6" /></div>
+                <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><Bus className="w-6 h-6" /></div>
               </div>
             </div>
 
@@ -587,7 +632,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: VERTICALS (ONLY ASSIGNED VERTICAL SHOWN TO EMPLOYEE) */}
+        {/* TAB: VERTICALS */}
         {activeTab === 'verticals' && (
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <div className="border-b pb-3">
@@ -611,6 +656,7 @@ export default function App() {
           </div>
         )}
 
+        {/* TAB: ATTENDANCE */}
         {activeTab === 'attendance' && (
           <div className="space-y-4">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -656,13 +702,14 @@ export default function App() {
           </div>
         )}
 
+        {/* TAB: LEAVES (WITH ADMIN APPROVAL) */}
         {activeTab === 'leaves' && (
           <div className="space-y-4">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">Leave Management & History</h3>
+                <h3 className="font-bold text-slate-900 text-sm">Leave Management & Approval Status</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  {authRole === 'admin' ? 'View all employee leave applications.' : `Your Leaves: Used ${currentEmp.usedLeaves} | Remaining ${currentEmp.totalLeaves - currentEmp.usedLeaves} of ${currentEmp.totalLeaves}`}
+                  {authRole === 'admin' ? 'Review and approve employee leave requests below.' : `Your Leaves: Used ${currentEmp.usedLeaves} | Remaining ${currentEmp.totalLeaves - currentEmp.usedLeaves} of ${currentEmp.totalLeaves}`}
                 </p>
               </div>
               {authRole !== 'admin' && (
@@ -680,20 +727,100 @@ export default function App() {
                   <thead>
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Employee Name</th>
-                      <th className="p-3">From Date</th>
-                      <th className="p-3">To Date</th>
+                      <th className="p-3">From - To Date</th>
                       <th className="p-3">Reason</th>
                       <th className="p-3">Status</th>
+                      {authRole === 'admin' && <th className="p-3">Action</th>}
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {visibleLeaves.map(lev => (
                       <tr key={lev.id} className="hover:bg-slate-50">
                         <td className="p-3 font-bold text-slate-900">{lev.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{lev.empId}]</span></td>
-                        <td className="p-3 text-slate-600">{lev.fromDate}</td>
-                        <td className="p-3 text-slate-600">{lev.toDate}</td>
+                        <td className="p-3 text-slate-600">{lev.fromDate} to {lev.toDate}</td>
                         <td className="p-3 text-slate-700">{lev.reason}</td>
-                        <td className="p-3"><span className={`px-2 py-0.5 rounded text-[10px] font-bold ${lev.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>{lev.status}</span></td>
+                        <td className="p-3">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${lev.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                            {lev.status}
+                          </span>
+                        </td>
+                        {authRole === 'admin' && (
+                          <td className="p-3">
+                            {lev.status === 'Pending' ? (
+                              <button onClick={() => handleApproveLeave(lev.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-[11px] font-semibold">
+                                Approve
+                              </button>
+                            ) : (
+                              <span className="text-emerald-700 font-bold text-[11px]">✓ Approved</span>
+                            )}
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: TRAVELLING EXPENSES & WEEKLY APPROVAL */}
+        {activeTab === 'travel' && (
+          <div className="space-y-4">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Weekly Travelling Allowance & Expense Claims</h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {authRole === 'admin' ? 'Review weekly field travel claims submitted by sales staff.' : 'Submit your weekly travel costs and check approval status here.'}
+                </p>
+              </div>
+              {authRole !== 'admin' && (
+                <button onClick={() => setIsTravelModalOpen(true)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2">
+                  <Bus className="w-4 h-4" />
+                  <span>+ Submit Weekly Travel Claim</span>
+                </button>
+              )}
+            </div>
+
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="p-4 border-b border-slate-100 font-bold text-xs text-slate-700">Travelling Expense Claims History</div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Employee Name</th>
+                      <th className="p-3">Week Cycle</th>
+                      <th className="p-3">Mode & Distance</th>
+                      <th className="p-3">Claim Amount (₹)</th>
+                      <th className="p-3">Purpose</th>
+                      <th className="p-3">Approval Status</th>
+                      {authRole === 'admin' && <th className="p-3">Action</th>}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleTravel.map(trv => (
+                      <tr key={trv.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold text-slate-900">{trv.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{trv.empId}]</span></td>
+                        <td className="p-3 font-semibold text-slate-700">{trv.weekRange}</td>
+                        <td className="p-3 text-slate-600">{trv.mode} <span className="text-[10px] text-slate-400 block">({trv.totalKm} KM)</span></td>
+                        <td className="p-3 font-bold text-slate-900">₹{(trv.amount).toLocaleString('en-IN')}</td>
+                        <td className="p-3 text-slate-600">{trv.purpose}</td>
+                        <td className="p-3">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${trv.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                            {trv.status === 'Approved' ? '✓ Approved by Admin' : 'Pending Approval'}
+                          </span>
+                        </td>
+                        {authRole === 'admin' && (
+                          <td className="p-3">
+                            {trv.status === 'Pending' ? (
+                              <button onClick={() => handleApproveTravel(trv.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-[11px] font-semibold">
+                                Approve Claim
+                              </button>
+                            ) : (
+                              <span className="text-emerald-700 font-bold text-[11px]">✓ Settled</span>
+                            )}
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -816,7 +943,7 @@ export default function App() {
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
-              <p className="text-xs text-amber-800">Create employee IDs, passwords, select assigned verticals, joining dates, and review leave records.</p>
+              <p className="text-xs text-amber-800">Create employee IDs, passwords, assign verticals, and approve leaves & weekly travel claims.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -832,7 +959,7 @@ export default function App() {
                 <h4 className="font-bold text-slate-900 text-xs uppercase">Export Master Data (CSV)</h4>
                 <div className="flex gap-2">
                   <button onClick={() => exportToCSV(dcrs, 'USR_DCR')} className="bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export DCRs</button>
-                  <button onClick={() => exportToCSV(employees, 'USR_Employees')} className="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Staff List</button>
+                  <button onClick={() => exportToCSV(travelList, 'USR_Travelling')} className="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Travel Claims</button>
                 </div>
               </div>
             </div>
@@ -940,7 +1067,7 @@ export default function App() {
         </div>
       )}
 
-      {/* LEAVE APPLICATION MODAL (EMPLOYEE) */}
+      {/* LEAVE APPLICATION MODAL */}
       {isLeaveModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
@@ -966,6 +1093,50 @@ export default function App() {
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsLeaveModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
                 <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Submit Application</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* TRAVELLING CLAIM MODAL */}
+      {isTravelModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">Submit Weekly Travelling Expense Claim</h3>
+              <button onClick={() => setIsTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleApplyTravel} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Week Cycle Range</label>
+                <input required type="text" value={newTravel.weekRange} onChange={e => setNewTravel({...newTravel, weekRange: e.target.value})} placeholder="e.g. Nov 01 - Nov 07, 2026" className="w-full p-2 border rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Mode of Transport</label>
+                  <select value={newTravel.mode} onChange={e => setNewTravel({...newTravel, mode: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                    <option value="Bike / Fuel">Bike / Fuel</option>
+                    <option value="Bus / Public">Bus / Public</option>
+                    <option value="Train / Auto">Train / Auto</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Total Distance (KM)</label>
+                  <input required type="number" value={newTravel.totalKm} onChange={e => setNewTravel({...newTravel, totalKm: e.target.value})} placeholder="120" className="w-full p-2 border rounded-xl" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Total Claim Amount (₹)</label>
+                <input required type="number" value={newTravel.amount} onChange={e => setNewTravel({...newTravel, amount: e.target.value})} placeholder="1500" className="w-full p-2 border rounded-xl" />
+              </div>
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Travel Purpose / Route Details</label>
+                <textarea required rows="2" value={newTravel.purpose} onChange={e => setNewTravel({...newTravel, purpose: e.target.value})} placeholder="e.g. Weekly dealer visits in Patna and Hajipur route" className="w-full p-2 border rounded-xl"></textarea>
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold">Submit Weekly Claim</button>
               </div>
             </form>
           </div>
