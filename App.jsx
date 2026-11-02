@@ -48,11 +48,11 @@ const INITIAL_TRAVEL_CLAIMS = [
 ];
 
 const INITIAL_LEADS = [
-  { id: 'LD-101', clientName: 'Sahyadri Auto Spares & Lubricants', clientType: 'Distributor', contactPerson: 'Suresh Patil', phone: '9820012345', place: 'Vashi Turbhe Road, Navi Mumbai', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, investmentAmount: 250000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
+  { id: 'LD-101', clientName: 'Sahyadri Auto Spares & Lubricants', clientType: 'Distributor', contactPerson: 'Suresh Patil', phone: '9820012345', place: 'Vashi Turbhe Road, Navi Mumbai', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, investmentAmount: 250000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05', remark: 'High interest in bulk lubricant dealership.' }
 ];
 
 const INITIAL_DCR = [
-  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Pune Logistics & Fleet Services', clientType: 'Corporate / Direct', place: 'Hinjewadi', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '18.5204 N', lng: '73.8567 E', address: 'Hinjewadi Phase 1, Pune', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' }
+  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Pune Logistics & Fleet Services', clientType: 'Corporate / Direct', place: 'Hinjewadi', phone: '9821123456', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '18.5204 N', lng: '73.8567 E', address: 'Hinjewadi Phase 1, Pune', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80', remark: 'Client agreed to advance payment terms.' }
 ];
 
 const INITIAL_AGREEMENTS = [
@@ -117,7 +117,7 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // Agreement Form State
+  // Agreement Form State (Manual Input without Auto-Fetch)
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -148,29 +148,6 @@ export default function App() {
     investmentLcvHcv: '50000'
   });
 
-  const [gstFetching, setGstFetching] = useState(false);
-  const [gstFetchedStatus, setGstFetchedStatus] = useState(false);
-
-  // Reliable GST Details Auto-Fetch Handler
-  const handleGstnBlur = () => {
-    const gstVal = newAgreement.gstn.trim();
-    if (gstVal.length >= 10) {
-      setGstFetching(true);
-      setTimeout(() => {
-        setNewAgreement(prev => ({
-          ...prev,
-          distributorName: prev.distributorName || 'Shree Ganesh Auto & Lubricants Corp',
-          proprietorName: prev.proprietorName || 'Rajesh Sharma',
-          proprietorAddress: prev.proprietorAddress || 'Industrial Area Phase 2, Near Highway, Maharashtra',
-          transportCompany: prev.transportCompany || 'VRL Logistics Ltd',
-          railwayStation: prev.railwayStation || 'Central Railway Goods Terminal'
-        }));
-        setGstFetching(false);
-        setGstFetchedStatus(true);
-      }, 600);
-    }
-  };
-
   const calculatedTotalInvestment = 
     (Number(newAgreement.investmentAutomotive) || 0) +
     (Number(newAgreement.investmentFourStroke) || 0) +
@@ -178,16 +155,28 @@ export default function App() {
     (Number(newAgreement.investmentHeavyDuty) || 0) +
     (Number(newAgreement.investmentLcvHcv) || 0);
 
+  // Updated Lead Form State with Phone, Place, Investment, Follow-up & Remark
   const [newLead, setNewLead] = useState({
     clientName: '', clientType: 'Dealer', contactPerson: '', phone: '', place: '',
-    status: 'Hot', stage: 'Contacted', estimatedValue: '', investmentAmount: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: ''
+    status: 'Hot', stage: 'Contacted', investmentAmount: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: '', remark: ''
   });
 
+  // Updated DCR Form State with Phone, Place, Investment, Date & Remark
   const [newDcr, setNewDcr] = useState({
-    empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
+    empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', phone: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
     outcome: 'Follow Up Required', notes: '', investmentAmount: '', nextDate: '',
     lat: '19.0760 N', lng: '72.8777 E', address: 'Andheri West, Mumbai',
-    photoVerified: false, photoUrl: null
+    photoVerified: false, photoUrl: null, remark: ''
+  });
+
+  // Daily Travel State for Travelling Section
+  const [newDailyTravel, setNewDailyTravel] = useState({
+    date: new Date().toISOString().split('T')[0],
+    mode: 'Bike / Fuel',
+    km: '',
+    amount: '',
+    route: '',
+    weekCycle: 'Nov 01 - Nov 07, 2026'
   });
 
   const [newEmp, setNewEmp] = useState({
@@ -334,7 +323,6 @@ export default function App() {
 
     setAgreements([createdAgreement, ...agreements]);
     setIsAgreementModalOpen(false);
-    setGstFetchedStatus(false);
     alert('Official Partnership Agreement Form submitted successfully! Total Investment: ₹' + calculatedTotalInvestment.toLocaleString('en-IN'));
   };
 
@@ -458,11 +446,11 @@ export default function App() {
       vertical: authRole === 'admin' ? newLead.vertical : currentEmp.primaryVertical,
       id: `LD-${Math.floor(Math.random() * 900 + 100)}`,
       lastFollowup: new Date().toISOString().split('T')[0],
-      estimatedValue: Number(newLead.estimatedValue) || 0,
       investmentAmount: Number(newLead.investmentAmount) || 0
     };
     setLeads([createdLead, ...leads]);
     setIsLeadModalOpen(false);
+    setNewLead({ clientName: '', clientType: 'Dealer', contactPerson: '', phone: '', place: '', status: 'Hot', stage: 'Contacted', investmentAmount: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: '', remark: '' });
     alert('Lead Added Successfully!');
   };
 
@@ -481,7 +469,57 @@ export default function App() {
     };
     setDcrs([createdDcr, ...dcrs]);
     setIsDcrModalOpen(false);
+    setNewDcr({ empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', phone: '', vertical: 'USR POWER LUBE', callType: 'Field Visit', outcome: 'Follow Up Required', notes: '', investmentAmount: '', nextDate: '', lat: '19.0760 N', lng: '72.8777 E', address: 'Andheri West, Mumbai', photoVerified: false, photoUrl: null, remark: '' });
     alert('DCR Submitted Successfully!');
+  };
+
+  const handleAddDailyTravel = (e) => {
+    e.preventDefault();
+    const createdLog = {
+      id: `DTRV-${Date.now()}`,
+      empId: currentEmp.id,
+      empName: currentEmp.name,
+      ...newDailyTravel,
+      km: Number(newDailyTravel.km) || 0,
+      amount: Number(newDailyTravel.amount) || 0,
+      status: 'Pending Submit'
+    };
+    setDailyTravelList([createdLog, ...dailyTravelList]);
+    setIsDailyTravelModalOpen(false);
+    setNewDailyTravel({ date: new Date().toISOString().split('T')[0], mode: 'Bike / Fuel', km: '', amount: '', route: '', weekCycle: 'Nov 01 - Nov 07, 2026' });
+    alert('Daily Travel Log Saved Successfully!');
+  };
+
+  const submitWeeklyTravelClaim = (weekCycleName) => {
+    const empDailyLogs = dailyTravelList.filter(d => d.empId === currentEmp.id && d.weekCycle === weekCycleName && d.status === 'Pending Submit');
+    if (empDailyLogs.length === 0) {
+      alert('No pending daily travel logs found for this week!');
+      return;
+    }
+
+    const totalKmSum = empDailyLogs.reduce((acc, curr) => acc + curr.km, 0);
+    const totalAmtSum = empDailyLogs.reduce((acc, curr) => acc + curr.amount, 0);
+    const routesCombined = empDailyLogs.map(l => l.route).join(' | ');
+
+    const newClaim = {
+      id: `TRV-${Date.now()}`,
+      empId: currentEmp.id,
+      empName: currentEmp.name,
+      weekRange: weekCycleName,
+      totalKm: totalKmSum,
+      totalAmount: totalAmtSum,
+      purpose: routesCombined,
+      status: 'Pending'
+    };
+
+    setTravelClaims([newClaim, ...travelClaims]);
+    setDailyTravelList(dailyTravelList.map(d => (d.empId === currentEmp.id && d.weekCycle === weekCycleName) ? { ...d, status: 'Submitted Weekly' } : d));
+    alert(`Weekly Travelling Claim submitted successfully! Amount: ₹${totalAmtSum}`);
+  };
+
+  const handleApproveTravelClaim = (claimId) => {
+    setTravelClaims(travelClaims.map(t => t.id === claimId ? { ...t, status: 'Approved' } : t));
+    alert('Weekly Travelling Claim Approved Successfully!');
   };
 
   const exportToCSV = (data, filename) => {
@@ -513,6 +551,8 @@ export default function App() {
 
   const visibleAttendance = authRole === 'admin' ? attendanceList : attendanceList.filter(a => a.empId === currentEmp.id);
   const visibleLeaves = authRole === 'admin' ? leaveList : leaveList.filter(l => l.empId === currentEmp.id);
+  const visibleDailyTravel = authRole === 'admin' ? dailyTravelList : dailyTravelList.filter(d => d.empId === currentEmp.id);
+  const visibleTravelClaims = authRole === 'admin' ? travelClaims : travelClaims.filter(t => t.empId === currentEmp.id);
 
   const totalSalesTarget = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmp.target;
   const totalSalesAchieved = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
@@ -652,6 +692,7 @@ export default function App() {
               { id: 'agreements', label: 'Partnership Agreements (PDF)', icon: FileText, badge: visibleAgreements.length },
               { id: 'attendance', label: 'Attendance & Punch-In', icon: CheckSquare, badge: visibleAttendance.length },
               { id: 'leaves', label: 'Leave Management', icon: CalendarDays, badge: visibleLeaves.length },
+              { id: 'travel', label: 'Travelling Claims', icon: Bus, badge: visibleTravelClaims.length },
               { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
               { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
               { id: 'gps', label: 'GPS Photo Verification', icon: Camera },
@@ -875,34 +916,43 @@ export default function App() {
           </div>
         )}
 
-        {/* OTHER TABS */}
-        {activeTab === 'leads' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
-              <h3 className="font-bold text-slate-900 text-sm">Business Leads</h3>
-              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">+ Add Lead</button>
+        {/* TAB: LEAVES MANAGEMENT WITH FULL FILL FORM */}
+        {activeTab === 'leaves' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Leave Management & Application Portal</h3>
+                <p className="text-xs text-slate-500 mt-1">Apply for official leave and track approval status.</p>
+              </div>
+              {authRole !== 'admin' && (
+                <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5">
+                  <Plus className="w-4 h-4" />
+                  <span>+ Apply New Leave</span>
+                </button>
+              )}
             </div>
+
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Client Name</th>
-                    <th className="p-3">Client Type</th>
-                    <th className="p-3">Place</th>
-                    <th className="p-3">Investment</th>
-                    <th className="p-3">Assigned Staff</th>
+                    <th className="p-3">Employee Name</th>
+                    <th className="p-3">From Date - To Date</th>
+                    <th className="p-3">Reason</th>
                     <th className="p-3">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
-                  {visibleLeads.map(lead => (
-                    <tr key={lead.id}>
-                      <td className="p-3 font-bold">{lead.clientName}</td>
-                      <td className="p-3">{lead.clientType}</td>
-                      <td className="p-3">{lead.place}</td>
-                      <td className="p-3 font-bold text-emerald-700">₹{(lead.investmentAmount || 0).toLocaleString('en-IN')}</td>
-                      <td className="p-3">{lead.assignedToName}</td>
-                      <td className="p-3"><span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">{lead.status}</span></td>
+                  {visibleLeaves.map(lev => (
+                    <tr key={lev.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold text-slate-900">{lev.empName}</td>
+                      <td className="p-3 font-mono">{lev.fromDate} to {lev.toDate}</td>
+                      <td className="p-3 text-slate-700">{lev.reason}</td>
+                      <td className="p-3">
+                        <span className={`px-2.5 py-1 rounded text-[10px] font-bold ${lev.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                          {lev.status}
+                        </span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -911,31 +961,136 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'dcr' && (
+        {/* TAB: TRAVELLING CLAIMS */}
+        {activeTab === 'travel' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Travelling Allowance & Expense Claims</h3>
+                <p className="text-xs text-slate-500 mt-1">Log daily field travel routes & submit weekly expense claim settlements.</p>
+              </div>
+              {authRole !== 'admin' && (
+                <div className="flex gap-2">
+                  <button onClick={() => setIsDailyTravelModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">
+                    + Log Daily Travel
+                  </button>
+                  <button onClick={() => submitWeeklyTravelClaim('Nov 01 - Nov 07, 2026')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">
+                    Submit Weekly Claim
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="p-4 border-b font-bold text-xs bg-slate-50 text-slate-700">Submitted Weekly Travel Claims</div>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Staff Name</th>
+                    <th className="p-3">Week Range</th>
+                    <th className="p-3">Total Distance</th>
+                    <th className="p-3">Total Amount</th>
+                    <th className="p-3">Purpose / Routes</th>
+                    <th className="p-3">Status</th>
+                    {authRole === 'admin' && <th className="p-3">Action</th>}
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleTravelClaims.map(trv => (
+                    <tr key={trv.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold">{trv.empName}</td>
+                      <td className="p-3 font-mono">{trv.weekRange}</td>
+                      <td className="p-3">{trv.totalKm} KM</td>
+                      <td className="p-3 font-bold text-emerald-700">₹{(trv.totalAmount).toLocaleString('en-IN')}</td>
+                      <td className="p-3 text-slate-600">{trv.purpose}</td>
+                      <td className="p-3">
+                        <span className={`px-2.5 py-1 rounded text-[10px] font-bold ${trv.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                          {trv.status}
+                        </span>
+                      </td>
+                      {authRole === 'admin' && trv.status === 'Pending' && (
+                        <td className="p-3">
+                          <button onClick={() => handleApproveTravelClaim(trv.id)} className="bg-emerald-600 text-white px-3 py-1 rounded font-bold">Approve</button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: LEADS MANAGEMENT WITH PHONE, PLACE, INVESTMENT, FOLLOWUP & REMARK */}
+        {activeTab === 'leads' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
-              <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR)</h3>
-              <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">+ Submit DCR</button>
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Business Leads Pipeline</h3>
+                <p className="text-xs text-slate-500 mt-1">Track prospective distributor and dealer leads with investment & remarks.</p>
+              </div>
+              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">+ Add New Lead</button>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Staff</th>
-                    <th className="p-3">Client Name</th>
+                    <th className="p-3">Client Name & Type</th>
+                    <th className="p-3">Phone & Place</th>
+                    <th className="p-3">Investment (₹)</th>
+                    <th className="p-3">Next Follow-up</th>
+                    <th className="p-3">Assigned Staff</th>
+                    <th className="p-3">Remark / Notes</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleLeads.map(lead => (
+                    <tr key={lead.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold text-slate-900">{lead.clientName} <span className="block font-normal text-[10px] text-indigo-600">{lead.clientType}</span></td>
+                      <td className="p-3"><strong className="font-mono">+{lead.phone}</strong><span className="block text-slate-500 text-[10px]">{lead.place}</span></td>
+                      <td className="p-3 font-bold text-emerald-700">₹{(lead.investmentAmount || 0).toLocaleString('en-IN')}</td>
+                      <td className="p-3 font-mono text-indigo-700 font-bold">{lead.nextFollowup || 'N/A'}</td>
+                      <td className="p-3 font-semibold">{lead.assignedToName}</td>
+                      <td className="p-3 text-slate-600 italic">{lead.remark || lead.stage}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: DCR WITH PHONE, PLACE, INVESTMENT, DATE & REMARK */}
+        {activeTab === 'dcr' && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR)</h3>
+                <p className="text-xs text-slate-500 mt-1">Field visit logs with customer details, investment & remarks.</p>
+              </div>
+              <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">+ Submit DCR</button>
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Staff Name</th>
+                    <th className="p-3">Client Name & Phone</th>
                     <th className="p-3">Place</th>
-                    <th className="p-3">Investment</th>
-                    <th className="p-3">Notes</th>
+                    <th className="p-3">Investment (₹)</th>
+                    <th className="p-3">Next Date</th>
+                    <th className="p-3">Remark / Notes</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {visibleDcrs.map(dcr => (
-                    <tr key={dcr.id}>
+                    <tr key={dcr.id} className="hover:bg-slate-50">
                       <td className="p-3 font-bold">{dcr.empName}</td>
-                      <td className="p-3">{dcr.clientName}</td>
-                      <td className="p-3">{dcr.place || dcr.address}</td>
+                      <td className="p-3 font-bold text-slate-900">{dcr.clientName} <span className="block font-mono text-[10px] text-slate-500">+{dcr.phone || '9820012345'}</span></td>
+                      <td className="p-3 text-slate-700">{dcr.place || dcr.address}</td>
                       <td className="p-3 font-bold text-emerald-700">₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</td>
-                      <td className="p-3">{dcr.notes}</td>
+                      <td className="p-3 font-mono text-indigo-700">{dcr.nextDate || 'N/A'}</td>
+                      <td className="p-3 text-slate-600 italic">{dcr.remark || dcr.notes}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -973,43 +1128,6 @@ export default function App() {
                       <td className="p-3">{att.date}</td>
                       <td className="p-3 text-emerald-700 font-bold">{att.checkInTime}</td>
                       <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">{att.status}</span></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'leaves' && (
-          <div className="space-y-4">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Leave Management</h3>
-              </div>
-              {authRole !== 'admin' && (
-                <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">
-                  + Apply Leave
-                </button>
-              )}
-            </div>
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Employee</th>
-                    <th className="p-3">From - To</th>
-                    <th className="p-3">Reason</th>
-                    <th className="p-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleLeaves.map(lev => (
-                    <tr key={lev.id}>
-                      <td className="p-3 font-bold">{lev.empName}</td>
-                      <td className="p-3">{lev.fromDate} to {lev.toDate}</td>
-                      <td className="p-3">{lev.reason}</td>
-                      <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">{lev.status}</span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -1088,7 +1206,7 @@ export default function App() {
 
       </main>
 
-      {/* MODAL: COMPLETE OFFICIAL PARTNERSHIP AGREEMENT FORM */}
+      {/* MODAL: AGREEMENT FORM WITHOUT AUTO-FETCH */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
           <div className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 my-8 border border-slate-200 max-h-[90vh] flex flex-col">
@@ -1102,25 +1220,22 @@ export default function App() {
 
             <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs overflow-y-auto pr-2 flex-1">
               
-              {/* SECTION I: BASIC INFORMATION & GST AUTO-FETCH */}
+              {/* SECTION I: BASIC INFORMATION (MANUAL GSTN ENTRY) */}
               <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center justify-between">
-                  <span className="flex items-center"><span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> I. Basic Information & GST Auto-Fetch</span>
-                  {gstFetching && <span className="text-indigo-600 animate-pulse font-bold text-[11px]">Fetching GSTN Details...</span>}
-                  {gstFetchedStatus && <span className="text-emerald-600 font-bold text-[11px]">✓ GST Details Auto-Filled!</span>}
+                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> I. Basic Information & GST Details
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">GSTN No * (Enter to Auto-Fetch)</label>
+                    <label className="font-semibold text-slate-700 block mb-1">GSTN No *</label>
                     <input 
                       required 
                       type="text" 
                       value={newAgreement.gstn} 
                       onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} 
-                      onBlur={handleGstnBlur}
                       placeholder="e.g. 27AAAAA0000A1Z5" 
-                      className="w-full p-3 border border-indigo-300 rounded-xl bg-white shadow-sm font-mono uppercase text-indigo-900 font-bold" 
+                      className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-mono uppercase text-indigo-900 font-bold" 
                     />
                   </div>
                   <div>
@@ -1166,7 +1281,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* SECTION VII, VIII, IX: INFRASTRUCTURE, GOODS, TERRITORY (UPDATED LABEL) */}
+              {/* SECTION VII, VIII, IX: INFRASTRUCTURE, GOODS, TERRITORY */}
               <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                 <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> VII - IX. Infrastructure, Goods & Territory
@@ -1245,6 +1360,84 @@ export default function App() {
                   <Check className="w-4 h-4" />
                   <span>Submit Official Agreement Form</span>
                 </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: APPLY LEAVE FILL FORM */}
+      {isLeaveModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">Apply Official Leave</h3>
+              <button onClick={() => setIsLeaveModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleApplyLeave} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">From Date *</label>
+                  <input required type="date" value={newLeave.fromDate} onChange={e => setNewLeave({...newLeave, fromDate: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">To Date *</label>
+                  <input required type="date" value={newLeave.toDate} onChange={e => setNewLeave({...newLeave, toDate: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Reason for Leave *</label>
+                <textarea required rows="3" value={newLeave.reason} onChange={e => setNewLeave({...newLeave, reason: e.target.value})} placeholder="Specify reason for leave..." className="w-full p-2.5 border rounded-xl"></textarea>
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsLeaveModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Submit Leave Application</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: LOG DAILY TRAVEL */}
+      {isDailyTravelModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">Log Daily Field Travel</h3>
+              <button onClick={() => setIsDailyTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleAddDailyTravel} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Travel Date</label>
+                  <input required type="date" value={newDailyTravel.date} onChange={e => setNewDailyTravel({...newDailyTravel, date: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Mode</label>
+                  <select value={newDailyTravel.mode} onChange={e => setNewDailyTravel({...newDailyTravel, mode: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="Bike / Fuel">Bike / Fuel</option>
+                    <option value="Car / Cab">Car / Cab</option>
+                    <option value="Train / Bus">Train / Bus</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Distance (KM)</label>
+                  <input required type="number" value={newDailyTravel.km} onChange={e => setNewDailyTravel({...newDailyTravel, km: e.target.value})} placeholder="45" className="w-full p-2.5 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Claim Amount (₹)</label>
+                  <input required type="number" value={newDailyTravel.amount} onChange={e => setNewDailyTravel({...newDailyTravel, amount: e.target.value})} placeholder="350" className="w-full p-2.5 border rounded-xl" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Route Description</label>
+                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} placeholder="Andheri to Thane Dealer Route" className="w-full p-2.5 border rounded-xl" />
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsDailyTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Save Travel Log</button>
               </div>
             </form>
           </div>
@@ -1355,7 +1548,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD EMPLOYEE WITH VERTICAL ALLOCATION */}
+      {/* MODAL: ADD EMPLOYEE */}
       {isAddEmpModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
@@ -1397,61 +1590,115 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD LEAD */}
+      {/* MODAL: ADD LEAD WITH PHONE, PLACE, INVESTMENT, FOLLOW-UP & REMARK */}
       {isLeadModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
               <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead</h3>
               <button onClick={() => setIsLeadModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddLead} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold block mb-1">Client Name</label>
-                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="Sahyadri Auto Spares" className="w-full p-2 border rounded-xl" />
-              </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold block mb-1">Client Type</label>
-                  <select value={newLead.clientType} onChange={e => setNewLead({...newLead, clientType: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                  <label className="font-semibold block mb-1">Client / Business Name *</label>
+                  <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="Sahyadri Auto Spares" className="w-full p-2.5 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Client Type *</label>
+                  <select value={newLead.clientType} onChange={e => setNewLead({...newLead, clientType: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
                     {CLIENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold block mb-1">Place / City</label>
-                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="Navi Mumbai" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Phone Number *</label>
+                  <input required type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="9820012345" className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Place / City *</label>
+                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="Navi Mumbai" className="w-full p-2.5 border rounded-xl" />
                 </div>
               </div>
-              <div>
-                <label className="font-semibold block mb-1">Investment Amount (₹)</label>
-                <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} placeholder="250000" className="w-full p-2 border rounded-xl" />
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Investment Amount (₹) *</label>
+                  <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} placeholder="250000" className="w-full p-2.5 border rounded-xl font-bold text-emerald-700" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Next Follow-up Date *</label>
+                  <input required type="date" value={newLead.nextFollowup} onChange={e => setNewLead({...newLead, nextFollowup: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                </div>
               </div>
+
+              <div>
+                <label className="font-semibold block mb-1">Remark / Notes *</label>
+                <textarea required rows="2" value={newLead.remark} onChange={e => setNewLead({...newLead, remark: e.target.value})} placeholder="Enter detailed remark about client discussion..." className="w-full p-2.5 border rounded-xl"></textarea>
+              </div>
+
               <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Lead</button>
+                <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Lead</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* MODAL: SUBMIT DCR */}
+      {/* MODAL: SUBMIT DCR WITH PHONE, PLACE, INVESTMENT, DATE & REMARK */}
       {isDcrModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit DCR (Field Report)</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Submit DCR (Field Visit Report)</h3>
               <button onClick={() => setIsDcrModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold block mb-1">Client Name</label>
-                <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} placeholder="Client Name" className="w-full p-2 border rounded-xl" />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Client Name *</label>
+                  <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} placeholder="Pune Logistics Corp" className="w-full p-2.5 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Phone Number *</label>
+                  <input required type="text" value={newDcr.phone} onChange={e => setNewDcr({...newDcr, phone: e.target.value})} placeholder="9821123456" className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
               </div>
-              <div>
-                <label className="font-semibold block mb-1">Notes / Outcome</label>
-                <textarea rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} placeholder="Meeting notes..." className="w-full p-2 border rounded-xl"></textarea>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Place / Location *</label>
+                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} placeholder="Hinjewadi, Pune" className="w-full p-2.5 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Investment (₹) *</label>
+                  <input required type="number" value={newDcr.investmentAmount} onChange={e => setNewDcr({...newDcr, investmentAmount: e.target.value})} placeholder="300000" className="w-full p-2.5 border rounded-xl font-bold text-emerald-700" />
+                </div>
               </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Next Follow-up Date *</label>
+                  <input required type="date" value={newDcr.nextDate} onChange={e => setNewDcr({...newDcr, nextDate: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Call Type</label>
+                  <select value={newDcr.callType} onChange={e => setNewDcr({...newDcr, callType: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="Field Visit">Field Visit</option>
+                    <option value="Dealer Meet">Dealer Meet</option>
+                    <option value="Distributor Pitch">Distributor Pitch</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="font-semibold block mb-1">Remark / Notes *</label>
+                <textarea required rows="2" value={newDcr.remark} onChange={e => setNewDcr({...newDcr, remark: e.target.value})} placeholder="Enter visit outcome and discussion remark..." className="w-full p-2.5 border rounded-xl"></textarea>
+              </div>
+
               <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-700">Live GPS Photo Capture</span>
@@ -1462,9 +1709,10 @@ export default function App() {
                 </div>
                 {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 font-bold">✓ Photo & GPS Tagged!</p>}
               </div>
+
               <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold">Submit DCR</button>
+                <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Submit DCR Report</button>
               </div>
             </form>
           </div>
