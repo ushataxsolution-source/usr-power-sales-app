@@ -3,7 +3,7 @@ import {
   Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
   Search, Filter, CheckCircle, Clock, Award, 
   Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag,
-  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User
+  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare
 } from 'lucide-react';
 
 // Product Lines & Business Verticals
@@ -17,46 +17,48 @@ const BUSINESS_VERTICALS = [
   'DIGITAL MARKETING'
 ];
 
-// Initial Staff Data with USR Employee IDs
+// Initial Staff Data with Passwords & IDs
 const INITIAL_EMPLOYEES = [
-  { id: 'USR-EMP-101', name: 'Rohan Sharma', territory: 'Patna Division', target: 800000, achieved: 640000, visitsToday: 6, status: 'Active', primaryVertical: 'USR POWER LUBE' },
-  { id: 'USR-EMP-102', name: 'Amit Kumar', territory: 'Gaya & South Bihar', target: 650000, achieved: 580000, visitsToday: 5, status: 'Active', primaryVertical: 'TURBO OIL' },
-  { id: 'USR-EMP-103', name: 'Priya Singh', territory: 'Muzaffarpur Cluster', target: 900000, achieved: 870000, visitsToday: 7, status: 'Active', primaryVertical: 'TAX AND LEGAL' },
-  { id: 'USR-EMP-104', name: 'Vikram Verma', territory: 'Bhagalpur Region', target: 500000, achieved: 320000, visitsToday: 3, status: 'Active', primaryVertical: 'DIGITAL MARKETING' }
+  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', territory: 'Patna Division', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE' },
+  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', territory: 'Gaya & South Bihar', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL' },
+  { id: 'USR-EMP-103', pass: '1033', name: 'Priya Singh', territory: 'Muzaffarpur Cluster', target: 900000, achieved: 870000, primaryVertical: 'TAX AND LEGAL' },
+  { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', territory: 'Bhagalpur Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING' }
+];
+
+// Initial Attendance Records
+const INITIAL_ATTENDANCE = [
+  { id: 'ATT-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', checkInTime: '09:15 AM', status: 'Present', location: 'Patna Hub' },
+  { id: 'ATT-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', checkInTime: '09:30 AM', status: 'Present', location: 'Gaya Hub' },
+  { id: 'ATT-3', empId: 'USR-EMP-103', empName: 'Priya Singh', date: '2026-11-02', checkInTime: '09:05 AM', status: 'Present', location: 'Muzaffarpur Hub' }
 ];
 
 // Initial Leads
 const INITIAL_LEADS = [
   { id: 'LD-101', clientName: 'Bihar Auto Spares & Lubricants', contactPerson: 'Suresh Prasad', phone: '9835012345', address: 'Baksoti Road, Gaya', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-03' },
-  { id: 'LD-102', clientName: 'Maheshwari Logistics & Fleet Services', contactPerson: 'Mahesh Gupta', phone: '9431098765', address: 'Exhibition Road, Patna', status: 'Warm', stage: 'Proposal Sent', estimatedValue: 350000, assignedToId: 'USR-EMP-101', assignedToName: 'Rohan Sharma', vertical: 'TURBO OIL', lastFollowup: '2026-10-31', nextFollowup: '2026-11-04' },
-  { id: 'LD-103', clientName: 'NutriCare Organic Foods', contactPerson: 'Ramanathan S.', phone: '9771122334', address: 'Kanti Industrial Area, Muzaffarpur', status: 'Hot', stage: 'Contract Signed', estimatedValue: 450000, assignedToId: 'USR-EMP-103', assignedToName: 'Priya Singh', vertical: 'NUTRI TRIBE', lastFollowup: '2026-11-02', nextFollowup: '2026-11-06' },
-  { id: 'LD-104', clientName: 'Punchkuteer Resort & Eco Stay', contactPerson: 'Deepak Roy', phone: '9934455667', address: 'NH-2 Dobhi, Gaya', status: 'Hot', stage: 'Closed Won', estimatedValue: 520000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'PUNCHKUTEER', lastFollowup: '2026-11-02', nextFollowup: '2026-11-10' },
-  { id: 'LD-105', clientName: 'Zenith Legal & Corporate Advisors', contactPerson: 'Sunil Malhotra', phone: '9811223344', address: 'Boreing Road, Patna', status: 'Warm', stage: 'Contacted', estimatedValue: 220000, assignedToId: 'USR-EMP-103', assignedToName: 'Priya Singh', vertical: 'TAX AND LEGAL', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
+  { id: 'LD-102', clientName: 'Maheshwari Logistics & Fleet Services', contactPerson: 'Mahesh Gupta', phone: '9431098765', address: 'Exhibition Road, Patna', status: 'Warm', stage: 'Proposal Sent', estimatedValue: 350000, assignedToId: 'USR-EMP-101', assignedToName: 'Rohan Sharma', vertical: 'TURBO OIL', lastFollowup: '2026-10-31', nextFollowup: '2026-11-04' }
 ];
 
 // Initial Daily Call Reports
 const INITIAL_DCR = [
   { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Punchkuteer Resort & Eco Stay', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract for heavy lube and Turbo Oil.', nextDate: '2026-11-10', lat: '24.5821 N', lng: '84.9754 E', address: 'NH-2 Dobhi, Gaya', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' },
-  { id: 'DCR-502', empId: 'USR-EMP-101', empName: 'Rohan Sharma', vertical: 'DIGITAL MARKETING', clientName: 'Bihar Auto Spares', visitTime: '12:15 PM', callType: 'Phone Call', outcome: 'Follow Up Required', notes: 'Pitched customized packaging & digital promotional campaign bundle.', nextDate: '2026-11-04', lat: '25.6121 N', lng: '85.1412 E', address: 'Exhibition Road, Patna', photoVerified: false, photoUrl: null },
-  { id: 'DCR-503', empId: 'USR-EMP-103', empName: 'Priya Singh', vertical: 'TAX AND LEGAL', clientName: 'Zenith Corporate Advisors', visitTime: '02:45 PM', callType: 'Field Visit', outcome: 'Demo Provided', notes: 'Demonstrated tax compliance audit package and legal advisory workflow.', nextDate: '2026-11-05', lat: '26.1209 N', lng: '85.3647 E', address: 'Boreing Road, Patna', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=400&q=80' }
+  { id: 'DCR-502', empId: 'USR-EMP-101', empName: 'Rohan Sharma', vertical: 'DIGITAL MARKETING', clientName: 'Bihar Auto Spares', visitTime: '12:15 PM', callType: 'Phone Call', outcome: 'Follow Up Required', notes: 'Pitched customized packaging & digital promotional campaign bundle.', nextDate: '2026-11-04', lat: '25.6121 N', lng: '85.1412 E', address: 'Exhibition Road, Patna', photoVerified: false, photoUrl: null }
 ];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
+  const [attendanceList, setAttendanceList] = useState(INITIAL_ATTENDANCE);
   const [leads, setLeads] = useState(INITIAL_LEADS);
   const [dcrs, setDcrs] = useState(INITIAL_DCR);
   
-  // Authentication & Role State
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
-  const [adminPasswordInput, setAdminPasswordInput] = useState('');
-  const [adminError, setAdminError] = useState('');
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  // Login State (Either Admin or Employee)
+  const [role, setRole] = useState('employee'); // 'admin' or 'employee'
+  const [loggedEmpId, setLoggedEmpId] = useState('USR-EMP-101');
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [loginIdInput, setLoginIdInput] = useState('');
+  const [loginPassInput, setLoginPassInput] = useState('');
+  const [loginError, setLoginError] = useState('');
 
-  // Employee Portal Login State (For restriction per employee)
-  const [loggedInEmployeeId, setLoggedInEmployeeId] = useState('USR-EMP-101'); // Default logged in staff
-  const [isEmpLoginModalOpen, setIsEmpLoginModalOpen] = useState(false);
-  
   // Filters
   const [selectedEmpFilter, setSelectedEmpFilter] = useState('All');
   const [selectedVerticalFilter, setSelectedVerticalFilter] = useState('All');
@@ -70,51 +72,86 @@ export default function App() {
   // New Lead State
   const [newLead, setNewLead] = useState({
     clientName: '', contactPerson: '', phone: '', address: '',
-    status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: loggedInEmployeeId, vertical: 'USR POWER LUBE', nextFollowup: ''
+    status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: ''
   });
 
   // New DCR State
   const [newDcr, setNewDcr] = useState({
-    empId: loggedInEmployeeId, clientName: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
+    empId: 'USR-EMP-101', clientName: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
     outcome: 'Follow Up Required', notes: '', nextDate: '',
     lat: '25.5941 N', lng: '85.1376 E', address: 'Main Market, Patna',
     photoVerified: false, photoUrl: null
   });
 
-  // New Employee State (Admin)
+  // New Employee State (Admin Creator)
   const [newEmp, setNewEmp] = useState({
-    id: '', name: '', territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE'
+    id: '', pass: '', name: '', territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE'
   });
 
   // Real Camera & Live GPS State
   const [capturingGpsPhoto, setCapturingGpsPhoto] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Get current logged-in employee object
-  const currentEmpObj = employees.find(e => e.id === loggedInEmployeeId) || employees[0];
+  // Current logged in staff object
+  const currentEmp = employees.find(e => e.id === loggedEmpId) || employees[0];
 
-  // Admin Login Handler
-  const handleAdminLogin = (e) => {
+  // Handle Login (Employee ID + Password OR Admin PIN)
+  const handleLoginSubmit = (e) => {
     e.preventDefault();
-    if (adminPasswordInput === '70212@Usrpowermhadmin') {
-      setIsAdminLoggedIn(true);
-      setIsAdminModalOpen(false);
-      setAdminError('');
-      setAdminPasswordInput('');
+    setLoginError('');
+
+    // Check if Admin Login
+    if (loginIdInput.toLowerCase() === 'admin' && loginPassInput === '70212@Usrpowermhadmin') {
+      setRole('admin');
+      setLoginModalOpen(false);
+      setLoginIdInput('');
+      setLoginPassInput('');
       setActiveTab('admin-manage');
-    } else {
-      setAdminError('Invalid Admin Password!');
+      return;
     }
-  };
 
-  const handleAdminLogout = () => {
-    setIsAdminLoggedIn(false);
-    if (activeTab === 'admin-manage') {
+    // Check Employee Login
+    const foundEmp = employees.find(emp => emp.id === loginIdInput.trim() && emp.pass === loginPassInput.trim());
+    if (foundEmp) {
+      setRole('employee');
+      setLoggedEmpId(foundEmp.id);
+      setLoginModalOpen(false);
+      setLoginIdInput('');
+      setLoginPassInput('');
       setActiveTab('dashboard');
+    } else {
+      setLoginError('Invalid ID or Password! (For Admin use ID: admin, Password: 70212@Usrpowermhadmin)');
     }
   };
 
-  // REAL LIVE GPS & CAMERA CAPTURE FUNCTION
+  const handleLogout = () => {
+    setRole('employee');
+    setLoggedEmpId('USR-EMP-101');
+    setActiveTab('dashboard');
+  };
+
+  // Mark Attendance Function for Employee
+  const markTodayAttendance = () => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const alreadyMarked = attendanceList.some(a => a.empId === currentEmp.id && a.date === todayStr);
+    if (alreadyMarked) {
+      alert('Attendance for today is already marked!');
+      return;
+    }
+    const newAtt = {
+      id: `ATT-${Date.now()}`,
+      empId: currentEmp.id,
+      empName: currentEmp.name,
+      date: todayStr,
+      checkInTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      status: 'Present',
+      location: currentEmp.territory
+    };
+    setAttendanceList([newAtt, ...attendanceList]);
+    alert('Attendance Marked Successfully for Today!');
+  };
+
+  // Real Camera & Live GPS Capture for DCR
   const captureRealGpsPhoto = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -160,69 +197,60 @@ export default function App() {
       );
     } else {
       setCapturingGpsPhoto(false);
-      alert('Geolocation is not supported by this browser.');
+      alert('Geolocation is not supported.');
     }
   };
 
   const handleAddLead = (e) => {
     e.preventDefault();
-    const targetEmpId = isAdminLoggedIn ? newLead.assignedToId : loggedInEmployeeId;
-    const empObj = employees.find(emp => emp.id === targetEmpId);
+    const assignedId = role === 'admin' ? newLead.assignedToId : currentEmp.id;
+    const empObj = employees.find(emp => emp.id === assignedId);
     const createdLead = {
       ...newLead,
-      assignedToId: targetEmpId,
+      assignedToId: assignedId,
+      assignedToName: empObj ? empObj.name : currentEmp.name,
       id: `LD-${Math.floor(Math.random() * 900 + 100)}`,
-      assignedToName: empObj ? empObj.name : currentEmpObj.name,
       lastFollowup: new Date().toISOString().split('T')[0],
       estimatedValue: Number(newLead.estimatedValue) || 0
     };
     setLeads([createdLead, ...leads]);
     setIsLeadModalOpen(false);
-    setNewLead({
-      clientName: '', contactPerson: '', phone: '', address: '',
-      status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: loggedInEmployeeId, vertical: currentEmpObj.primaryVertical, nextFollowup: ''
-    });
   };
 
   const handleAddDcr = (e) => {
     e.preventDefault();
-    const targetEmpId = isAdminLoggedIn ? newDcr.empId : loggedInEmployeeId;
-    const empObj = employees.find(emp => emp.id === targetEmpId);
+    const targetId = role === 'admin' ? newDcr.empId : currentEmp.id;
+    const empObj = employees.find(emp => emp.id === targetId);
     const createdDcr = {
       ...newDcr,
-      empId: targetEmpId,
+      empId: targetId,
+      empName: empObj ? empObj.name : currentEmp.name,
       id: `DCR-${Math.floor(Math.random() * 900 + 100)}`,
-      empName: empObj ? empObj.name : currentEmpObj.name,
       visitTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
     setDcrs([createdDcr, ...dcrs]);
     setIsDcrModalOpen(false);
-    setNewDcr({
-      empId: loggedInEmployeeId, clientName: '', vertical: currentEmpObj.primaryVertical, callType: 'Field Visit',
-      outcome: 'Follow Up Required', notes: '', nextDate: '',
-      lat: '25.5941 N', lng: '85.1376 E', address: 'Main Market, Patna',
-      photoVerified: false, photoUrl: null
-    });
   };
 
+  // Admin creates new employee ID and Password
   const handleAddEmployee = (e) => {
     e.preventDefault();
     const createdEmp = {
       id: newEmp.id || `USR-EMP-${Math.floor(Math.random() * 900 + 100)}`,
+      pass: newEmp.pass || '1234',
       name: newEmp.name,
       territory: newEmp.territory,
       target: Number(newEmp.target) || 500000,
       achieved: 0,
-      visitsToday: 0,
-      status: 'Active',
       primaryVertical: newEmp.primaryVertical
     };
     setEmployees([...employees, createdEmp]);
     setIsAddEmpModalOpen(false);
-    setNewEmp({ id: '', name: '', territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE' });
+    setNewEmp({ id: '', pass: '', name: '', territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE' });
+    alert(`Employee ID (${createdEmp.id}) & Password Created Successfully!`);
   };
 
-  // CSV Export Utility
+  // CSV Export
   const exportToCSV = (data, filename) => {
     if (!data || !data.length) return;
     const headers = Object.keys(data[0]).join(',');
@@ -237,30 +265,29 @@ export default function App() {
     document.body.removeChild(link);
   };
 
-  // --- ROLE-BASED DATA FILTERING ---
-  // If Admin is logged in, show all data (or filtered by admin selection).
-  // If regular Employee is logged in, strictly show ONLY their ID data and their assigned vertical.
-  const visibleLeads = isAdminLoggedIn 
+  // RBAC Filtering
+  const visibleLeads = role === 'admin'
     ? leads.filter(l => (selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || l.vertical === selectedVerticalFilter))
-    : leads.filter(l => l.assignedToId === loggedInEmployeeId || l.vertical === currentEmpObj.primaryVertical);
+    : leads.filter(l => l.assignedToId === currentEmp.id || l.vertical === currentEmp.primaryVertical);
 
-  const visibleDcrs = isAdminLoggedIn
+  const visibleDcrs = role === 'admin'
     ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || d.vertical === selectedVerticalFilter))
-    : dcrs.filter(d => d.empId === loggedInEmployeeId || d.vertical === currentEmpObj.primaryVertical);
+    : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
 
-  // Metrics Calculations based on Role
-  const totalSalesTarget = isAdminLoggedIn ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmpObj.target;
-  const totalSalesAchieved = isAdminLoggedIn ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmpObj.achieved;
+  const visibleAttendance = role === 'admin'
+    ? attendanceList
+    : attendanceList.filter(a => a.empId === currentEmp.id);
+
+  const totalSalesTarget = role === 'admin' ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmp.target;
+  const totalSalesAchieved = role === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
   const totalLeadsValue = visibleLeads.reduce((acc, curr) => acc + curr.estimatedValue, 0);
-  const gpsVerifiedVisitsCount = visibleDcrs.filter(d => d.photoVerified).length;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col md:flex-row">
       
-      {/* SIDEBAR NAVIGATION */}
+      {/* SIDEBAR */}
       <aside className="w-full md:w-72 bg-slate-900 text-slate-100 flex-shrink-0 flex flex-col justify-between shadow-xl">
         <div>
-          {/* Company Branding */}
           <div className="p-5 border-b border-slate-800">
             <div className="flex items-center space-x-3 mb-2">
               <div className="p-2 bg-gradient-to-tr from-indigo-600 to-blue-500 rounded-xl text-white shadow-lg">
@@ -274,21 +301,21 @@ export default function App() {
               </div>
             </div>
             
-            {/* Role Badge Indicator */}
             <div className="mt-2 bg-slate-800/80 px-2.5 py-1.5 rounded-lg text-[11px] text-slate-300 flex items-center justify-between border border-slate-700/50">
               <span className="text-slate-400">
-                {isAdminLoggedIn ? '👑 Admin Master Mode' : `👤 Staff: ${currentEmpObj.name}`}
+                {role === 'admin' ? '👑 Admin Master Mode' : `👤 Staff: ${currentEmp.name}`}
               </span>
-              <span className={`w-2 h-2 rounded-full ${isAdminLoggedIn ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
+              <span className={`w-2 h-2 rounded-full ${role === 'admin' ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
             </div>
           </div>
 
           <nav className="p-4 space-y-1">
             {[
               { id: 'dashboard', label: 'Dashboard Overview', icon: TrendingUp },
+              { id: 'attendance', label: 'Attendance & Punch-In', icon: CheckSquare, badge: visibleAttendance.length },
               { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
               { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
-              { id: 'gps', label: 'GPS Photo Verification', icon: Camera, badge: gpsVerifiedVisitsCount },
+              { id: 'gps', label: 'GPS Photo Verification', icon: Camera },
               { id: 'verticals', label: 'Business Verticals', icon: Tag, badge: BUSINESS_VERTICALS.length },
               { id: 'performance', label: 'Staff Performance', icon: Award },
             ].map((item) => {
@@ -299,9 +326,7 @@ export default function App() {
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
-                    isActive 
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/40' 
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                    isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/40' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
@@ -309,9 +334,7 @@ export default function App() {
                     <span className="text-xs">{item.label}</span>
                   </div>
                   {item.badge !== undefined && (
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                      isActive ? 'bg-white text-indigo-800' : 'bg-slate-800 text-slate-300'
-                    }`}>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${isActive ? 'bg-white text-indigo-800' : 'bg-slate-800 text-slate-300'}`}>
                       {item.badge}
                     </span>
                   )}
@@ -319,8 +342,7 @@ export default function App() {
               );
             })}
 
-            {/* Admin Dedicated Section */}
-            {isAdminLoggedIn && (
+            {role === 'admin' && (
               <button
                 onClick={() => setActiveTab('admin-manage')}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-xs mt-3 transition-all ${
@@ -334,54 +356,35 @@ export default function App() {
           </nav>
         </div>
 
-        {/* AUTHENTICATION / SWITCH USER BAR */}
+        {/* LOGIN / AUTH BAR */}
         <div className="p-4 border-t border-slate-800 space-y-2">
-          {!isAdminLoggedIn && (
-            <div className="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/50 space-y-2 text-xs">
-              <div className="flex items-center justify-between text-slate-300">
-                <span className="text-[10px] text-slate-400 uppercase font-bold">Switch Employee ID:</span>
-                <span className="text-indigo-400 font-mono font-bold">{loggedInEmployeeId}</span>
-              </div>
-              <select 
-                value={loggedInEmployeeId}
-                onChange={(e) => setLoggedInEmployeeId(e.target.value)}
-                className="w-full bg-slate-900 text-slate-200 text-xs p-1.5 rounded-lg border border-slate-700 outline-none"
-              >
-                {employees.map(emp => (
-                  <option key={emp.id} value={emp.id}>[{emp.id}] {emp.name} ({emp.primaryVertical})</option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {isAdminLoggedIn ? (
+          {role === 'admin' ? (
             <div className="bg-amber-950/60 border border-amber-800/60 p-3 rounded-xl flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
                 <ShieldCheck className="w-4 h-4 text-amber-400" />
                 <div>
-                  <p className="font-bold text-amber-200">Admin Mode Active</p>
-                  <p className="text-[10px] text-amber-400">Full System Privileges</p>
+                  <p className="font-bold text-amber-200">Admin Logged In</p>
+                  <p className="text-[10px] text-amber-400">Full Control Active</p>
                 </div>
               </div>
-              <button 
-                onClick={handleAdminLogout} 
-                className="text-amber-300 hover:text-white p-1 rounded hover:bg-amber-900/50"
-                title="Logout Admin"
-              >
+              <button onClick={handleLogout} className="text-amber-300 hover:text-white p-1 rounded hover:bg-amber-900/50" title="Logout">
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
           ) : (
-            <button 
-              onClick={() => setIsAdminModalOpen(true)}
-              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 p-2.5 rounded-xl flex items-center justify-between text-xs border border-slate-700/60 transition"
-            >
-              <div className="flex items-center space-x-2">
-                <Lock className="w-4 h-4 text-amber-400" />
-                <span className="font-semibold">Admin Login</span>
+            <div className="space-y-2">
+              <div className="p-2.5 bg-slate-800/80 rounded-xl text-xs space-y-1">
+                <p className="text-[10px] text-slate-400 uppercase font-bold">Logged In Staff:</p>
+                <p className="font-bold text-slate-200">{currentEmp.name} <span className="text-indigo-400 font-mono">({currentEmp.id})</span></p>
               </div>
-              <span className="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded">PIN Access</span>
-            </button>
+              <button 
+                onClick={() => setLoginModalOpen(true)}
+                className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 p-2.5 rounded-xl flex items-center justify-center text-xs border border-slate-700/60 transition"
+              >
+                <Key className="w-4 h-4 text-indigo-400 mr-2" />
+                <span>Employee / Admin Login</span>
+              </button>
+            </div>
           )}
 
           <div className="text-[10px] text-center text-slate-500 pt-1">
@@ -390,10 +393,9 @@ export default function App() {
         </div>
       </aside>
 
-      {/* MAIN CONTENT AREA */}
+      {/* MAIN CONTENT */}
       <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
         
-        {/* HEADER BAR */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
           <div>
             <div className="flex items-center space-x-2">
@@ -401,17 +403,16 @@ export default function App() {
                 {activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}
               </h2>
               <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">
-                {isAdminLoggedIn ? 'ADMIN VIEW' : `EMPLOYEE VIEW (${currentEmpObj.primaryVertical})`}
+                {role === 'admin' ? 'ADMIN VIEW' : `STAFF VIEW (${currentEmp.primaryVertical})`}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              {isAdminLoggedIn ? 'Viewing all company records and master controls.' : `Viewing records restricted to your ID (${loggedInEmployeeId}) & vertical (${currentEmpObj.primaryVertical}).`}
+              {role === 'admin' ? 'Managing employee credentials, targets, and master attendance records.' : `Welcome ${currentEmp.name}. You can manage your attendance, DCRs and leads.`}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {/* Employee Filter (Only for Admin) */}
-            {isAdminLoggedIn && (
+            {role === 'admin' && (
               <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 shadow-sm">
                 <Filter className="w-3.5 h-3.5 text-slate-400 mr-1.5" />
                 <select 
@@ -420,475 +421,292 @@ export default function App() {
                   className="bg-transparent text-xs font-semibold text-slate-700 outline-none cursor-pointer"
                 >
                   <option value="All">All Staff / Emp IDs</option>
-                  {employees.map(e => (
-                    <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>
-                  ))}
+                  {employees.map(e => <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>)}
                 </select>
               </div>
             )}
 
-            {/* Quick Actions */}
-            <button 
-              onClick={() => setIsLeadModalOpen(true)}
-              className="flex items-center space-x-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow transition"
-            >
+            <button onClick={() => setIsLeadModalOpen(true)} className="flex items-center space-x-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow transition">
               <UserPlus className="w-3.5 h-3.5" />
               <span>+ Add Lead</span>
             </button>
 
-            <button 
-              onClick={() => setIsDcrModalOpen(true)}
-              className="flex items-center space-x-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow transition"
-            >
+            <button onClick={() => setIsDcrModalOpen(true)} className="flex items-center space-x-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow transition">
               <Plus className="w-3.5 h-3.5" />
               <span>Log DCR</span>
             </button>
           </div>
         </header>
 
-        {/* TAB 1: DASHBOARD OVERVIEW */}
+        {/* TAB: DASHBOARD */}
         {activeTab === 'dashboard' && (
           <div className="space-y-6">
-            
-            {/* KPI STATS CARDS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">{isAdminLoggedIn ? 'Company Revenue Target' : 'Your Revenue Target'}</p>
-                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">
-                    ₹{(totalSalesAchieved).toLocaleString('en-IN')}
-                  </h3>
+                  <p className="text-xs font-medium text-slate-500">{role === 'admin' ? 'Company Target' : 'Your Target'}</p>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">₹{(totalSalesAchieved).toLocaleString('en-IN')}</h3>
                   <span className="text-[11px] text-emerald-600 font-medium flex items-center mt-1">
                     <TrendingUp className="w-3 h-3 mr-1" /> {Math.round((totalSalesAchieved/totalSalesTarget)*100)}% Achieved
                   </span>
                 </div>
-                <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-                  <DollarSign className="w-6 h-6" />
-                </div>
+                <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><DollarSign className="w-6 h-6" /></div>
               </div>
 
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-slate-500">Accessible Leads</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">{visibleLeads.length} Leads</h3>
-                  <span className="text-[11px] text-indigo-600 font-medium mt-1 inline-block">
-                    Pipeline: ₹{(totalLeadsValue).toLocaleString('en-IN')}
-                  </span>
+                  <span className="text-[11px] text-indigo-600 font-medium mt-1 inline-block">Pipeline: ₹{(totalLeadsValue).toLocaleString('en-IN')}</span>
                 </div>
-                <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
-                  <Users className="w-6 h-6" />
-                </div>
+                <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl"><Users className="w-6 h-6" /></div>
               </div>
 
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">Submitted DCR Reports</p>
+                  <p className="text-xs font-medium text-slate-500">DCR Reports</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">{visibleDcrs.length} Reports</h3>
-                  <span className="text-[11px] text-amber-600 font-medium mt-1 inline-block">
-                    {visibleDcrs.filter(d => d.callType === 'Field Visit').length} On-Site Visits
-                  </span>
+                  <span className="text-[11px] text-amber-600 font-medium mt-1 inline-block">{visibleDcrs.filter(d => d.callType === 'Field Visit').length} Visits</span>
                 </div>
-                <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-                  <PhoneCall className="w-6 h-6" />
-                </div>
+                <div className="p-3 bg-amber-50 text-amber-600 rounded-xl"><PhoneCall className="w-6 h-6" /></div>
               </div>
 
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">GPS Photo Verified</p>
-                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{gpsVerifiedVisitsCount} / {visibleDcrs.length}</h3>
-                  <span className="text-[11px] text-teal-600 font-medium flex items-center mt-1">
-                    <CheckCircle className="w-3 h-3 mr-1" /> Camera Tagged
-                  </span>
+                  <p className="text-xs font-medium text-slate-500">Today's Attendance</p>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">
+                    {attendanceList.some(a => a.empId === currentEmp.id && a.date === new Date().toISOString().split('T')[0]) ? 'Marked Present' : 'Not Marked'}
+                  </h3>
+                  <button onClick={() => setActiveTab('attendance')} className="text-[11px] text-indigo-600 font-bold hover:underline mt-1 block">Go to Attendance &rarr;</button>
                 </div>
-                <div className="p-3 bg-teal-50 text-teal-600 rounded-xl">
-                  <Camera className="w-6 h-6" />
-                </div>
+                <div className="p-3 bg-teal-50 text-teal-600 rounded-xl"><CheckSquare className="w-6 h-6" /></div>
               </div>
             </div>
 
-            {/* FIELD ACTIVITY & STAFF SUMMARY */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
-              {/* DCR Activity Feed */}
-              <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                    <Clock className="w-4 h-4 mr-2 text-indigo-600" /> {isAdminLoggedIn ? 'All Employee DCR Logs' : `Your Vertical DCR Logs (${currentEmpObj.primaryVertical})`}
-                  </h3>
-                  <button onClick={() => setActiveTab('dcr')} className="text-xs text-indigo-600 font-semibold hover:underline">
-                    View All &rarr;
-                  </button>
-                </div>
-
-                <div className="space-y-3">
-                  {visibleDcrs.slice(0, 4).map((dcr) => (
-                    <div key={dcr.id} className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition flex items-start justify-between">
-                      <div className="flex items-start space-x-3">
-                        <div className={`p-2 rounded-lg mt-0.5 ${dcr.photoVerified ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}>
-                          {dcr.photoVerified ? <Camera className="w-4 h-4" /> : <PhoneCall className="w-4 h-4" />}
-                        </div>
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <span className="font-bold text-xs text-slate-900">{dcr.clientName}</span>
-                            <span className="text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded border border-indigo-100">{dcr.vertical}</span>
-                          </div>
-                          <p className="text-xs text-slate-600 mt-0.5">{dcr.notes}</p>
-                          <div className="flex items-center space-x-3 text-[11px] text-slate-400 mt-1">
-                            <span>Emp ID: <strong className="text-slate-700">{dcr.empId}</strong> ({dcr.empName})</span>
-                            <span>•</span>
-                            <span className="flex items-center"><MapPin className="w-3 h-3 mr-0.5" /> {dcr.address}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="text-right flex-shrink-0">
-                        <span className="text-[10px] font-semibold text-slate-400">{dcr.visitTime}</span>
-                        {dcr.photoVerified && (
-                          <div className="mt-1">
-                            <button 
-                              onClick={() => setViewPhotoModal(dcr)} 
-                              className="text-[11px] text-emerald-600 font-medium hover:underline flex items-center justify-end"
-                            >
-                              <Eye className="w-3 h-3 mr-1" /> View Photo
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Staff Roster / Profile Card */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-                <h3 className="font-bold text-slate-900 text-sm flex items-center border-b border-slate-100 pb-3">
-                  <Navigation className="w-4 h-4 mr-2 text-indigo-600" /> {isAdminLoggedIn ? 'Employee Directory' : 'Your Profile & Vertical'}
-                </h3>
-
-                {isAdminLoggedIn ? (
-                  <div className="space-y-3">
-                    {employees.map((emp) => {
-                      const pct = Math.round((emp.achieved / emp.target) * 100);
-                      return (
-                        <div key={emp.id} className="p-3 border border-slate-100 rounded-xl bg-slate-50/60">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <span className="font-bold text-xs text-indigo-950">{emp.name}</span>
-                              <span className="text-[10px] font-mono font-bold text-indigo-600 block">{emp.id}</span>
-                              <p className="text-[10px] text-slate-400">{emp.territory} • {emp.primaryVertical}</p>
-                            </div>
-                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-                              {emp.status}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="p-4 border border-indigo-100 rounded-xl bg-indigo-50/40 space-y-3">
+            {/* RECENT DCR LOGS */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+              <h3 className="font-bold text-slate-900 text-sm flex items-center border-b border-slate-100 pb-3">
+                <Clock className="w-4 h-4 mr-2 text-indigo-600" /> {role === 'admin' ? 'Recent DCR Logs' : `Your DCR Logs (${currentEmp.primaryVertical})`}
+              </h3>
+              <div className="space-y-3">
+                {visibleDcrs.slice(0, 4).map((dcr) => (
+                  <div key={dcr.id} className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 flex items-start justify-between text-xs">
                     <div>
-                      <span className="text-[10px] font-bold text-indigo-600 uppercase">Logged In Staff</span>
-                      <h4 className="font-extrabold text-slate-900 text-sm">{currentEmpObj.name}</h4>
-                      <p className="text-xs font-mono text-indigo-700">{currentEmpObj.id}</p>
+                      <span className="font-bold text-slate-900">{dcr.clientName}</span>
+                      <span className="ml-2 text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">{dcr.vertical}</span>
+                      <p className="text-slate-600 mt-1">{dcr.notes}</p>
+                      <p className="text-[10px] text-slate-400 mt-1">By: {dcr.empName} ({dcr.empId}) • {dcr.address}</p>
                     </div>
-                    <div className="text-xs space-y-1 border-t border-indigo-100 pt-2">
-                      <p><strong>Territory:</strong> {currentEmpObj.territory}</p>
-                      <p><strong>Assigned Vertical:</strong> <span className="text-indigo-700 font-bold">{currentEmpObj.primaryVertical}</span></p>
-                      <p className="text-[11px] text-slate-500 mt-1">🔒 RBAC Active: You can only view leads and DCRs matching your vertical or Employee ID.</p>
-                    </div>
+                    {dcr.photoVerified && (
+                      <button onClick={() => setViewPhotoModal(dcr)} className="text-emerald-600 font-semibold hover:underline flex items-center">
+                        <Camera className="w-3.5 h-3.5 mr-1" /> View Photo
+                      </button>
+                    )}
                   </div>
-                )}
+                ))}
               </div>
-
             </div>
           </div>
         )}
 
-        {/* TAB 2: LEAD MANAGEMENT */}
+        {/* TAB: ATTENDANCE & PUNCH-IN */}
+        {activeTab === 'attendance' && (
+          <div className="space-y-4">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Daily Field Attendance & Punch-In</h3>
+                <p className="text-xs text-slate-500 mt-1">Mark your attendance for today to notify Admin of your field availability.</p>
+              </div>
+              {role !== 'admin' && (
+                <button 
+                  onClick={markTodayAttendance}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2"
+                >
+                  <CheckSquare className="w-4 h-4" />
+                  <span>Punch In Attendance Today</span>
+                </button>
+              )}
+            </div>
+
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="p-4 border-b border-slate-100 font-bold text-xs text-slate-700">Attendance Records History</div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                      <th className="p-3">Employee ID & Name</th>
+                      <th className="p-3">Date</th>
+                      <th className="p-3">Check-In Time</th>
+                      <th className="p-3">Location / Territory</th>
+                      <th className="p-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {visibleAttendance.map((att) => (
+                      <tr key={att.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold text-slate-900">{att.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{att.empId}]</span></td>
+                        <td className="p-3 text-slate-600">{att.date}</td>
+                        <td className="p-3 font-semibold text-emerald-700">{att.checkInTime}</td>
+                        <td className="p-3 text-slate-500">{att.location}</td>
+                        <td className="p-3"><span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">{att.status}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: LEADS */}
         {activeTab === 'leads' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="relative flex-1 max-w-xs">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                <input 
-                  type="text" 
-                  placeholder="Search your vertical leads..." 
-                  className="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 outline-none"
-                />
-              </div>
-
-              <button 
-                onClick={() => setIsLeadModalOpen(true)}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow"
-              >
-                <Plus className="w-4 h-4" />
-                <span>New Lead</span>
-              </button>
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-slate-900 text-sm">Business Leads ({role === 'admin' ? 'All Leads' : 'Your Vertical'})</h3>
+              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Add Lead</button>
             </div>
-
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
-                      <th className="p-3">Client Name</th>
-                      <th className="p-3">Business Vertical</th>
-                      <th className="p-3">Assigned Staff</th>
-                      <th className="p-3">Status / Stage</th>
-                      <th className="p-3">Est. Value</th>
-                      <th className="p-3">Next Follow-up</th>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Client Name</th>
+                    <th className="p-3">Vertical</th>
+                    <th className="p-3">Assigned Staff</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3">Est. Value</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleLeads.map(lead => (
+                    <tr key={lead.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold text-slate-900">{lead.clientName} <span className="text-[10px] text-slate-400 block">{lead.phone}</span></td>
+                      <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-[10px]">{lead.vertical}</span></td>
+                      <td className="p-3 font-semibold">{lead.assignedToName}</td>
+                      <td className="p-3"><span className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold">{lead.status}</span></td>
+                      <td className="p-3 font-bold">₹{(lead.estimatedValue).toLocaleString('en-IN')}</td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {visibleLeads.map((lead) => (
-                      <tr key={lead.id} className="hover:bg-slate-50/80">
-                        <td className="p-3">
-                          <p className="font-bold text-slate-900">{lead.clientName}</p>
-                          <p className="text-[10px] text-slate-400">{lead.address} • {lead.phone}</p>
-                        </td>
-                        <td className="p-3">
-                          <span className="bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded border border-indigo-100 text-[10px]">
-                            {lead.vertical}
-                          </span>
-                        </td>
-                        <td className="p-3">
-                          <span className="font-semibold text-slate-800">{lead.assignedToName}</span>
-                          <span className="text-[10px] text-indigo-600 font-mono block">({lead.assignedToId})</span>
-                        </td>
-                        <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            lead.status === 'Hot' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
-                          }`}>
-                            {lead.status}
-                          </span>
-                          <span className="text-[10px] text-slate-500 block mt-0.5">{lead.stage}</span>
-                        </td>
-                        <td className="p-3 font-bold text-slate-900">
-                          ₹{(lead.estimatedValue).toLocaleString('en-IN')}
-                        </td>
-                        <td className="p-3 text-slate-600 font-medium">
-                          {lead.nextFollowup}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
 
-        {/* TAB 3: DAILY CALL REPORTS (DCR) */}
+        {/* TAB: DCR */}
         {activeTab === 'dcr' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <h3 className="font-bold text-slate-900 text-sm">{isAdminLoggedIn ? 'All DCR Logs' : `Your Vertical DCR Logs (${currentEmpObj.primaryVertical})`}</h3>
-              <button 
-                onClick={() => setIsDcrModalOpen(true)}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Submit DCR Entry</span>
-              </button>
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR)</h3>
+              <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Submit DCR</button>
             </div>
-
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
-                      <th className="p-3">Emp ID & Name</th>
-                      <th className="p-3">Vertical / Client</th>
-                      <th className="p-3">Visit Notes & Outcome</th>
-                      <th className="p-3">GPS Location</th>
-                      <th className="p-3">Photo Tag</th>
-                      <th className="p-3">Time</th>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Staff</th>
+                    <th className="p-3">Client & Vertical</th>
+                    <th className="p-3">Notes & Outcome</th>
+                    <th className="p-3">GPS Location</th>
+                    <th className="p-3">Photo</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleDcrs.map(dcr => (
+                    <tr key={dcr.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold">{dcr.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{dcr.empId}]</span></td>
+                      <td className="p-3 font-bold">{dcr.clientName} <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded block mt-0.5">{dcr.vertical}</span></td>
+                      <td className="p-3 text-slate-700">{dcr.notes} <span className="text-[10px] text-emerald-700 block font-semibold mt-1">Outcome: {dcr.outcome}</span></td>
+                      <td className="p-3 font-mono text-[10px] text-slate-500">{dcr.address}</td>
+                      <td className="p-3">{dcr.photoVerified ? <button onClick={() => setViewPhotoModal(dcr)} className="text-emerald-600 font-semibold hover:underline">View</button> : 'No Photo'}</td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {visibleDcrs.map((dcr) => (
-                      <tr key={dcr.id} className="hover:bg-slate-50/80">
-                        <td className="p-3">
-                          <span className="font-bold text-slate-900">{dcr.empName}</span>
-                          <span className="text-[10px] font-mono text-indigo-600 block">{dcr.empId}</span>
-                        </td>
-                        <td className="p-3">
-                          <p className="font-bold text-slate-800">{dcr.clientName}</p>
-                          <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{dcr.vertical}</span>
-                        </td>
-                        <td className="p-3">
-                          <p className="text-slate-700">{dcr.notes}</p>
-                          <span className="text-[10px] text-emerald-700 font-semibold mt-0.5 inline-block">Outcome: {dcr.outcome}</span>
-                        </td>
-                        <td className="p-3 text-slate-500 font-mono text-[10px]">
-                          <span className="flex items-center"><MapPin className="w-3 h-3 mr-1 text-slate-400" /> {dcr.address}</span>
-                          <span>{dcr.lat}, {dcr.lng}</span>
-                        </td>
-                        <td className="p-3">
-                          {dcr.photoVerified ? (
-                            <button onClick={() => setViewPhotoModal(dcr)} className="text-emerald-600 hover:underline flex items-center space-x-1 font-semibold">
-                              <Camera className="w-3.5 h-3.5" />
-                              <span>Verified</span>
-                            </button>
-                          ) : (
-                            <span className="text-slate-400">No Photo</span>
-                          )}
-                        </td>
-                        <td className="p-3 text-slate-500">{dcr.visitTime}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: GPS */}
+        {activeTab === 'gps' && (
+          <div className="space-y-4">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <h3 className="font-bold text-slate-900 text-sm mb-3">GPS & Camera Photo Audits</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {visibleDcrs.filter(d => d.photoVerified).map(dcr => (
+                  <div key={dcr.id} className="border p-4 rounded-xl flex items-center space-x-3 bg-slate-50">
+                    <img src={dcr.photoUrl} alt="proof" className="w-20 h-20 object-cover rounded-lg border" />
+                    <div className="text-xs space-y-1">
+                      <p className="font-bold text-slate-900">{dcr.clientName} ({dcr.vertical})</p>
+                      <p className="text-slate-500">{dcr.notes}</p>
+                      <p className="text-[10px] font-mono text-indigo-600">{dcr.address}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         )}
 
-        {/* TAB 4: GPS VERIFICATION */}
-        {activeTab === 'gps' && (
-          <div className="space-y-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                <Camera className="w-4 h-4 mr-2 text-indigo-600" /> GPS & Live Geo-Tagging Audit
-              </h3>
-              <p className="text-xs text-slate-500">
-                Verified field visits restricted to your vertical scope.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {visibleDcrs.filter(d => d.photoVerified).map((dcr) => (
-                <div key={dcr.id} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                    <div>
-                      <span className="font-bold text-xs text-slate-900">{dcr.empName}</span>
-                      <span className="text-[10px] font-mono text-indigo-600 ml-2">({dcr.empId})</span>
-                    </div>
-                    <span className="text-[10px] bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded border border-emerald-100">
-                      {dcr.vertical}
-                    </span>
-                  </div>
-
-                  <div className="flex gap-3 items-center">
-                    <img src={dcr.photoUrl} alt="Field visit proof" className="w-24 h-24 object-cover rounded-xl border border-slate-200" />
-                    <div className="space-y-1 text-xs">
-                      <p className="font-bold text-slate-900">{dcr.clientName}</p>
-                      <p className="text-slate-600 text-[11px]">{dcr.notes}</p>
-                      <p className="text-slate-400 font-mono text-[10px] flex items-center mt-1">
-                        <MapPin className="w-3 h-3 mr-1 text-indigo-500" /> {dcr.address} ({dcr.lat})
-                      </p>
-                    </div>
-                  </div>
+        {/* TAB: VERTICALS */}
+        {activeTab === 'verticals' && (
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 className="font-bold text-slate-900 text-sm">Business Verticals</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {BUSINESS_VERTICALS.map(v => (
+                <div key={v} className="p-3 border rounded-xl bg-slate-50">
+                  <h4 className="font-bold text-xs text-indigo-950">{v}</h4>
+                  <p className="text-[10px] text-slate-500 mt-1">Managed under USR Power Industries Private Limited.</p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* TAB 5: BUSINESS VERTICALS */}
-        {activeTab === 'verticals' && (
-          <div className="space-y-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-900 text-sm mb-3">USR Power Industries Business Verticals</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {BUSINESS_VERTICALS.map((vertical, idx) => {
-                  const isAssignedToMe = !isAdminLoggedIn && currentEmpObj.primaryVertical === vertical;
-                  return (
-                    <div key={vertical} className={`p-4 border rounded-xl space-y-2 ${isAssignedToMe ? 'border-indigo-500 bg-indigo-50/40' : 'border-slate-200 bg-slate-50'}`}>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono text-indigo-600 font-bold">0{idx + 1}</span>
-                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${isAssignedToMe ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-800'}`}>
-                          {isAssignedToMe ? 'Your Vertical' : 'Active'}
-                        </span>
-                      </div>
-                      <h4 className="font-bold text-slate-900 text-sm">{vertical}</h4>
-                      <p className="text-xs text-slate-500">Managed under USR Power Industries Private Limited network.</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 6: PERFORMANCE */}
+        {/* TAB: PERFORMANCE */}
         {activeTab === 'performance' && (
-          <div className="space-y-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-900 text-sm mb-4">{isAdminLoggedIn ? 'Staff Target Leaderboard (All)' : `Your Performance (${currentEmpObj.name})`}</h3>
-              <div className="space-y-4">
-                {(isAdminLoggedIn ? employees : [currentEmpObj]).map((emp) => {
-                  const pct = Math.round((emp.achieved / emp.target) * 100);
-                  return (
-                    <div key={emp.id} className="p-4 border border-slate-100 rounded-xl bg-slate-50/50 space-y-2">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <span className="font-bold text-slate-900">{emp.name}</span>
-                          <span className="text-xs font-mono text-indigo-600 ml-2">[{emp.id}]</span>
-                          <span className="text-xs text-slate-500 block">{emp.territory} • Primary Vertical: <strong className="text-indigo-700">{emp.primaryVertical}</strong></span>
-                        </div>
-                        <div className="text-right">
-                          <span className="font-extrabold text-slate-900">₹{(emp.achieved).toLocaleString('en-IN')}</span>
-                          <span className="text-xs text-slate-400 block">Target: ₹{(emp.target).toLocaleString('en-IN')} ({pct}%)</span>
-                        </div>
-                      </div>
-                      <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                        <div className="bg-indigo-600 h-2 rounded-full" style={{ width: `${Math.min(pct, 100)}%` }}></div>
-                      </div>
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 className="font-bold text-slate-900 text-sm">Staff Targets Leaderboard</h3>
+            <div className="space-y-3">
+              {(role === 'admin' ? employees : [currentEmp]).map(emp => {
+                const pct = Math.round((emp.achieved / emp.target) * 100);
+                return (
+                  <div key={emp.id} className="p-3 border rounded-xl bg-slate-50 space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <div><strong className="text-slate-900">{emp.name}</strong> <span className="font-mono text-indigo-600">[{emp.id}]</span></div>
+                      <div>₹{(emp.achieved).toLocaleString('en-IN')} / ₹{(emp.target).toLocaleString('en-IN')} ({pct}%)</div>
                     </div>
-                  );
-                })}
-              </div>
+                    <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-indigo-600 h-1.5 rounded-full" style={{ width: `${Math.min(pct, 100)}%` }}></div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
 
-        {/* ADMIN CONTROL CENTER TAB */}
-        {activeTab === 'admin-manage' && isAdminLoggedIn && (
+        {/* TAB: ADMIN CONTROL CENTER */}
+        {activeTab === 'admin-manage' && role === 'admin' && (
           <div className="space-y-6">
-            <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl shadow-sm space-y-2">
-              <div className="flex items-center space-x-2 text-amber-900">
-                <ShieldCheck className="w-5 h-5 text-amber-700" />
-                <h3 className="font-bold text-sm">Admin Master Control Panel</h3>
-              </div>
-              <p className="text-xs text-amber-800">
-                You have full Master privileges. You can manage employee IDs, allocate vertical targets, and export complete DCR or Lead logs into Excel (CSV).
-              </p>
+            <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
+              <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
+              <p className="text-xs text-amber-800">Create employee IDs with passwords, manage targets, and export CSV reports.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Employee Management</h4>
-                <p className="text-xs text-slate-500">Create new employee IDs and assign primary verticals.</p>
-                <button 
-                  onClick={() => setIsAddEmpModalOpen(true)}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1"
-                >
-                  <UserPlus className="w-3.5 h-3.5" />
-                  <span>Create Employee ID</span>
+              <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
+                <h4 className="font-bold text-slate-900 text-xs uppercase">Employee ID & Password Creator</h4>
+                <p className="text-xs text-slate-500">Generate secure login IDs and passwords for new sales staff.</p>
+                <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold">
+                  + Create New Employee ID & Password
                 </button>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Master Data Export (Excel / CSV)</h4>
-                <p className="text-xs text-slate-500">Download complete business reports instantly.</p>
+              <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
+                <h4 className="font-bold text-slate-900 text-xs uppercase">Export Master Data (CSV)</h4>
                 <div className="flex gap-2">
-                  <button 
-                    onClick={() => exportToCSV(dcrs, 'USR_DCR_Reports')}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Export DCRs</span>
-                  </button>
-                  <button 
-                    onClick={() => exportToCSV(leads, 'USR_Leads_Database')}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Export Leads</span>
-                  </button>
+                  <button onClick={() => exportToCSV(dcrs, 'USR_DCR')} className="bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export DCRs</button>
+                  <button onClick={() => exportToCSV(attendanceList, 'USR_Attendance')} className="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Attendance</button>
                 </div>
               </div>
             </div>
@@ -897,230 +715,149 @@ export default function App() {
 
       </main>
 
-      {/* ADMIN LOGIN MODAL */}
-      {isAdminModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      {/* LOGIN MODAL */}
+      {loginModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                <ShieldCheck className="w-4 h-4 mr-2 text-amber-600" /> Admin Authentication
-              </h3>
-              <button onClick={() => setIsAdminModalOpen(false)} className="text-slate-400 hover:text-slate-600">
-                <X className="w-4 h-4" />
-              </button>
+              <h3 className="font-bold text-slate-900 text-sm">Staff or Admin Login</h3>
+              <button onClick={() => setLoginModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
-
-            <form onSubmit={handleAdminLogin} className="space-y-3">
+            <form onSubmit={handleLoginSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="text-xs font-semibold text-slate-700 block mb-1">Admin Security PIN</label>
-                <input 
-                  type="password" 
-                  value={adminPasswordInput}
-                  onChange={(e) => setAdminPasswordInput(e.target.value)}
-                  placeholder="Enter admin password..."
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-amber-500"
-                  autoFocus
-                />
-                {adminError && <p className="text-[11px] text-red-600 font-semibold mt-1">{adminError}</p>}
+                <label className="font-semibold text-slate-700 block mb-1">Employee ID or 'admin'</label>
+                <input required type="text" value={loginIdInput} onChange={e => setLoginIdInput(e.target.value)} placeholder="USR-EMP-101 or admin" className="w-full p-2.5 border rounded-xl" autoFocus />
               </div>
-
-              <button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow">
-                Unlock Admin Control
-              </button>
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Password / Admin PIN</label>
+                <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter password..." className="w-full p-2.5 border rounded-xl" />
+              </div>
+              {loginError && <p className="text-red-600 font-semibold">{loginError}</p>}
+              <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold">Login Securely</button>
             </form>
           </div>
         </div>
       )}
 
-      {/* ADD LEAD MODAL */}
+      {/* ADD EMPLOYEE MODAL (ADMIN) */}
+      {isAddEmpModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID & Password</h3>
+              <button onClick={() => setIsAddEmpModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Employee Name</label>
+                <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="e.g. Mukesh Kumar" className="w-full p-2 border rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Employee ID</label>
+                  <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} placeholder="USR-EMP-105" className="w-full p-2 border rounded-xl font-mono" />
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Password</label>
+                  <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} placeholder="Secret Pass" className="w-full p-2 border rounded-xl font-mono" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Monthly Target (₹)</label>
+                  <input type="number" value={newEmp.target} onChange={e => setNewEmp({...newEmp, target: e.target.value})} placeholder="500000" className="w-full p-2 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Territory</label>
+                  <input type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} placeholder="Gaya Division" className="w-full p-2 border rounded-xl" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Primary Vertical</label>
+                <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
+                </select>
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save Employee Credentials</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* LEAD MODAL */}
       {isLeadModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead ({isAdminLoggedIn ? 'Admin Mode' : `Staff: ${loggedInEmployeeId}`})</h3>
-              <button onClick={() => setIsLeadModalOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
+              <h3 className="font-bold text-slate-900 text-sm">Add New Lead</h3>
+              <button onClick={() => setIsLeadModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
-
             <form onSubmit={handleAddLead} className="space-y-3 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Client / Business Name</label>
-                <input required type="text" value={newLead.clientName} onChange={e=>setNewLead({...newLead, clientName: e.target.value})} placeholder="e.g. Balaji Enterprises" className="w-full p-2 border rounded-xl" />
+                <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
+                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="Client name" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Contact Person</label>
-                  <input type="text" value={newLead.contactPerson} onChange={e=>setNewLead({...newLead, contactPerson: e.target.value})} placeholder="Name" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Phone</label>
+                  <input type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="98XXXXXXXX" className="w-full p-2 border rounded-xl" />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
-                  <input type="text" value={newLead.phone} onChange={e=>setNewLead({...newLead, phone: e.target.value})} placeholder="98XXXXXXXX" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Est. Value (₹)</label>
+                  <input type="number" value={newLead.estimatedValue} onChange={e => setNewLead({...newLead, estimatedValue: e.target.value})} placeholder="50000" className="w-full p-2 border rounded-xl" />
                 </div>
               </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Business Vertical</label>
-                <select value={newLead.vertical} onChange={e=>setNewLead({...newLead, vertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                <label className="font-semibold text-slate-700 block mb-1">Vertical</label>
+                <select value={newLead.vertical} onChange={e => setNewLead({...newLead, vertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
                   {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
                 </select>
               </div>
-
-              {isAdminLoggedIn && (
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Assign to Employee ID</label>
-                  <select value={newLead.assignedToId} onChange={e=>setNewLead({...newLead, assignedToId: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                    {employees.map(e => <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>)}
-                  </select>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Est. Value (₹)</label>
-                  <input type="number" value={newLead.estimatedValue} onChange={e=>setNewLead({...newLead, estimatedValue: e.target.value})} placeholder="50000" className="w-full p-2 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Next Follow-up</label>
-                  <input type="date" value={newLead.nextFollowup} onChange={e=>setNewLead({...newLead, nextFollowup: e.target.value})} className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save Lead</button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* DCR MODAL WITH REAL CAMERA & GPS */}
+      {/* DCR MODAL */}
       {isDcrModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit DCR ({isAdminLoggedIn ? 'Admin Mode' : `Staff: ${loggedInEmployeeId}`})</h3>
-              <button onClick={() => setIsDcrModalOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
+              <h3 className="font-bold text-slate-900 text-sm">Submit DCR</h3>
+              <button onClick={() => setIsDcrModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
-
             <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
-              {isAdminLoggedIn ? (
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Select Employee ID</label>
-                  <select value={newDcr.empId} onChange={e=>setNewDcr({...newDcr, empId: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                    {employees.map(e => <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>)}
-                  </select>
-                </div>
-              ) : (
-                <div className="p-2.5 bg-indigo-50 rounded-xl border border-indigo-100 flex items-center justify-between">
-                  <span>Submitting as: <strong>{currentEmpObj.name}</strong></span>
-                  <span className="font-mono font-bold text-indigo-700">{loggedInEmployeeId}</span>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
-                  <input required type="text" value={newDcr.clientName} onChange={e=>setNewDcr({...newDcr, clientName: e.target.value})} placeholder="Client / Dealer" className="w-full p-2 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Vertical</label>
-                  <select value={newDcr.vertical} onChange={e=>setNewDcr({...newDcr, vertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                    {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                  </select>
-                </div>
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
+                <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} placeholder="Dealer / Client Name" className="w-full p-2 border rounded-xl" />
               </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Call Notes / Discussion Summary</label>
-                <textarea rows="2" value={newDcr.notes} onChange={e=>setNewDcr({...newDcr, notes: e.target.value})} placeholder="Discussed product portfolio..." className="w-full p-2 border rounded-xl"></textarea>
+                <label className="font-semibold text-slate-700 block mb-1">Discussion Notes</label>
+                <textarea rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} placeholder="Notes..." className="w-full p-2 border rounded-xl"></textarea>
               </div>
 
-              {/* REAL CAMERA & LIVE GPS CAPTURE */}
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+              {/* GPS Camera */}
+              <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <span className="font-bold text-slate-700 block">Live GPS Photo Capture</span>
-                    <span className="text-[10px] text-slate-500">Opens phone camera & records GPS coordinates</span>
-                  </div>
-                  
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    capture="environment" 
-                    ref={fileInputRef} 
-                    onChange={captureRealGpsPhoto} 
-                    className="hidden" 
-                  />
-
-                  <button 
-                    type="button" 
-                    onClick={() => fileInputRef.current.click()} 
-                    disabled={capturingGpsPhoto} 
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg text-[11px] font-semibold flex items-center space-x-1 shadow"
-                  >
-                    {capturingGpsPhoto ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
-                    <span>{capturingGpsPhoto ? 'Getting GPS...' : 'Open Camera'}</span>
+                  <span className="font-bold text-slate-700">Live GPS Photo Capture</span>
+                  <input type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={captureRealGpsPhoto} className="hidden" />
+                  <button type="button" onClick={() => fileInputRef.current.click()} disabled={capturingGpsPhoto} className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-[11px] font-semibold">
+                    {capturingGpsPhoto ? 'Getting GPS...' : 'Open Camera'}
                   </button>
                 </div>
-
-                {newDcr.photoVerified && (
-                  <div className="flex items-center space-x-2 pt-1 border-t border-slate-200">
-                    <img src={newDcr.photoUrl} alt="Captured preview" className="w-10 h-10 object-cover rounded-lg border" />
-                    <div>
-                      <p className="text-[11px] text-emerald-600 font-bold flex items-center">
-                        <CheckCircle className="w-3 h-3 mr-1" /> Photo & GPS Tagged Successfully!
-                      </p>
-                      <p className="text-[10px] text-slate-500 font-mono">{newDcr.lat}, {newDcr.lng}</p>
-                    </div>
-                  </div>
-                )}
+                {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 font-bold">✓ Photo & GPS Tagged!</p>}
               </div>
 
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">Submit DCR</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ADD EMPLOYEE MODAL */}
-      {isAddEmpModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Create New Employee ID</h3>
-              <button onClick={() => setIsAddEmpModalOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
-            </div>
-
-            <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Employee Name</label>
-                <input required type="text" value={newEmp.name} onChange={e=>setNewEmp({...newEmp, name: e.target.value})} placeholder="e.g. Mukesh Kumar" className="w-full p-2 border rounded-xl" />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Custom Employee ID</label>
-                  <input type="text" value={newEmp.id} onChange={e=>setNewEmp({...newEmp, id: e.target.value})} placeholder="USR-EMP-105" className="w-full p-2 border rounded-xl font-mono" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Monthly Target (₹)</label>
-                  <input type="number" value={newEmp.target} onChange={e=>setNewEmp({...newEmp, target: e.target.value})} placeholder="500000" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 character block mb-1">Territory / Region</label>
-                <input type="text" value={newEmp.territory} onChange={e=>setNewEmp({...newEmp, territory: e.target.value})} placeholder="Patna / Gaya" className="w-full p-2 border rounded-xl" />
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Primary Vertical</label>
-                <select value={newEmp.primaryVertical} onChange={e=>setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
-              </div>
-
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Create ID</button>
+                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">Submit</button>
               </div>
             </form>
           </div>
@@ -1132,13 +869,13 @@ export default function App() {
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-5 w-full max-w-sm shadow-2xl space-y-3">
             <div className="flex justify-between items-center border-b pb-2">
-              <h3 className="font-bold text-slate-900 text-xs">GPS Visit Photo Verification</h3>
-              <button onClick={() => setViewPhotoModal(null)} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
+              <h3 className="font-bold text-slate-900 text-xs">GPS Visit Photo</h3>
+              <button onClick={() => setViewPhotoModal(null)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <img src={viewPhotoModal.photoUrl} alt="Visit Proof" className="w-full h-64 object-cover rounded-xl border" />
             <div className="text-xs space-y-1">
               <p className="font-bold text-slate-900">{viewPhotoModal.clientName}</p>
-              <p className="text-slate-500 font-mono text-[10px]">{viewPhotoModal.address} ({viewPhotoModal.lat})</p>
+              <p className="text-slate-500 font-mono text-[10px]">{viewPhotoModal.address}</p>
             </div>
             <button onClick={() => setViewPhotoModal(null)} className="w-full py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold">Close</button>
           </div>
