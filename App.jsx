@@ -76,6 +76,7 @@ const INITIAL_AGREEMENTS = [
     investmentLcvHcv: 50000,
     totalInvestment: 1500000,
     submittedBy: 'Amit Kumar [USR-EMP-102]',
+    submittedEmpId: 'USR-EMP-102',
     date: '2026-11-02',
     status: 'Approved & Signed'
   }
@@ -111,13 +112,12 @@ export default function App() {
   const [isAddEmpModalOpen, setIsAddEmpModalOpen] = useState(false);
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [isAgreementModalOpen, setIsAgreementModalOpen] = useState(false);
-  const [viewPhotoModal, setViewPhotoModal] = useState(null);
   const [viewAgreementDetail, setViewAgreementDetail] = useState(null);
 
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // Complete Partnership Agreement Form State with Automatic Total Calculation
+  // Complete Partnership Agreement Form State with Auto-GST Fetch
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -148,7 +148,30 @@ export default function App() {
     investmentLcvHcv: '50000'
   });
 
-  // Calculate Total Initial Investment Automatically whenever sub-fields change
+  const [gstFetching, setGstFetching] = useState(false);
+  const [gstFetchedStatus, setGstFetchedStatus] = useState(false);
+
+  // Auto-Fetch GST Details Simulation Function
+  const handleGstnBlur = () => {
+    const gstVal = newAgreement.gstn.trim();
+    if (gstVal.length >= 10) {
+      setGstFetching(true);
+      setTimeout(() => {
+        // Simulated auto-fetched business details based on GSTN
+        setNewAgreement(prev => ({
+          ...prev,
+          distributorName: prev.distributorName || 'Shree Ganesh Auto & Lubricants Corp',
+          proprietorName: prev.proprietorName || 'Rajesh Sharma',
+          proprietorAddress: prev.proprietorAddress || 'Industrial Area Phase 2, Near Highway, Maharashtra',
+          transportCompany: prev.transportCompany || 'VRL Logistics Ltd',
+          railwayStation: prev.railwayStation || 'Central Railway Goods Terminal'
+        }));
+        setGstFetching(false);
+        setGstFetchedStatus(true);
+      }, 800);
+    }
+  };
+
   const calculatedTotalInvestment = 
     (Number(newAgreement.investmentAutomotive) || 0) +
     (Number(newAgreement.investmentFourStroke) || 0) +
@@ -314,12 +337,14 @@ export default function App() {
       investmentLcvHcv: Number(newAgreement.investmentLcvHcv) || 0,
       totalInvestment: calculatedTotalInvestment,
       submittedBy: `${currentEmp.name} [${currentEmp.id}]`,
+      submittedEmpId: currentEmp.id,
       date: new Date().toISOString().split('T')[0],
       status: 'Pending Verification'
     };
 
     setAgreements([createdAgreement, ...agreements]);
     setIsAgreementModalOpen(false);
+    setGstFetchedStatus(false);
     alert('Official Partnership Agreement Form submitted successfully! Total Investment: ₹' + calculatedTotalInvestment.toLocaleString('en-IN'));
   };
 
@@ -542,9 +567,10 @@ export default function App() {
     ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter))
     : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
 
+  // STRICT PRIVACY FILTER: Agreement forms are visible ONLY to Admin Master Panel or the specific Employee who filled it
   const visibleAgreements = authRole === 'admin'
     ? agreements
-    : agreements.filter(a => a.submittedBy.includes(currentEmp.id));
+    : agreements.filter(a => a.submittedEmpId === currentEmp.id);
 
   const visibleAttendance = authRole === 'admin' ? attendanceList : attendanceList.filter(a => a.empId === currentEmp.id);
   const visibleLeaves = authRole === 'admin' ? leaveList : leaveList.filter(l => l.empId === currentEmp.id);
@@ -565,7 +591,7 @@ export default function App() {
               <Briefcase className="w-6 h-6 text-white" />
             </div>
             <h1 className="font-extrabold text-base tracking-wide">USR POWER INDUSTRIES</h1>
-            <p className="text-[10px] text-indigo-300 uppercase tracking-widest font-semibold">OFFICIAL PARTNERSHIP PORTAL • MUMBAI</p>
+            <p className="text-[10px] text-indigo-300 uppercase tracking-widest font-semibold">OFFICIAL SALS PORTAL • MAHARASTRA</p>
           </div>
 
           <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2">
@@ -671,7 +697,7 @@ export default function App() {
                 <h1 className="font-extrabold text-sm tracking-wide text-white leading-tight">
                   USR POWER INDUSTRIES
                 </h1>
-                <p className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider">OFFICIAL AGREEMENT PORTAL</p>
+                <p className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider">OFFICIAL SALS PORTAL • MAHARASTRA</p>
               </div>
             </div>
             
@@ -755,7 +781,7 @@ export default function App() {
                 {authRole === 'admin' ? 'ADMIN VIEW' : `STAFF: ${currentEmp.name}`}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">USR Power Industries Private Limited • Partnership & Sales Management</p>
+            <p className="text-xs text-slate-500 mt-0.5">USR POWER INDUSTRIES PRIVATE LIMITED • OFFICIAL SALS PORTAL • MAHARASTRA</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -813,7 +839,7 @@ export default function App() {
             <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
               <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                  <FileText className="w-4 h-4 mr-2 text-emerald-600" /> Recent Official Partnership Agreement Forms
+                  <FileText className="w-4 h-4 mr-2 text-emerald-600" /> Recent Official Partnership Agreement Forms (Private View)
                 </h3>
                 <button onClick={() => setActiveTab('agreements')} className="text-xs font-bold text-indigo-600 hover:underline">View All &rarr;</button>
               </div>
@@ -848,7 +874,7 @@ export default function App() {
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Official Partnership Agreement Forms (Distributor / Dealer)</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  {authRole === 'admin' ? 'Review all distributor partnership forms submitted by sales team and approve agreements.' : 'Fill out and submit official partnership agreement forms for new distributors online.'}
+                  {authRole === 'admin' ? 'Review all distributor partnership forms submitted across Maharashtra.' : 'Forms submitted by you are securely listed here (Confidential & Private).'}
                 </p>
               </div>
               <div className="flex gap-2">
@@ -1121,7 +1147,7 @@ export default function App() {
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center (HQ)</h3>
-              <p className="text-xs text-amber-800">Create employee IDs, edit passwords, and manage partnership agreements.</p>
+              <p className="text-xs text-amber-800">Create employee IDs, edit passwords, and view all employee-submitted partnership agreements.</p>
             </div>
 
             <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
@@ -1166,7 +1192,7 @@ export default function App() {
 
       </main>
 
-      {/* MODAL: COMPLETE OFFICIAL PARTNERSHIP AGREEMENT FORM (WITH AUTO-CALCULATION & CLEAR LABELS) */}
+      {/* MODAL: COMPLETE OFFICIAL PARTNERSHIP AGREEMENT FORM WITH AUTO-GST FETCH */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
           <div className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 my-8 border border-slate-200">
@@ -1180,19 +1206,33 @@ export default function App() {
 
             <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs max-h-[75vh] overflow-y-auto pr-2">
               
-              {/* SECTION I: BASIC INFORMATION */}
+              {/* SECTION I: BASIC INFORMATION & GST AUTO-FETCH */}
               <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> I. Basic Information & Constitution
+                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center justify-between">
+                  <span className="flex items-center"><span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> I. Basic Information & GST Auto-Fetch</span>
+                  {gstFetching && <span className="text-indigo-600 animate-pulse font-bold text-[11px]">Fetching GSTN Details...</span>}
+                  {gstFetchedStatus && <span className="text-emerald-600 font-bold text-[11px]">✓ GST Details Auto-Filled!</span>}
                 </h4>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">1. Name of Distributor (Mr. / Mrs. / Ms.) *</label>
-                    <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} placeholder="e.g. Sahyadri Auto Spares" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
+                    <label className="font-semibold text-slate-700 block mb-1">21. GSTN No * (Enter to Auto-Fetch)</label>
+                    <input 
+                      required 
+                      type="text" 
+                      value={newAgreement.gstn} 
+                      onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} 
+                      onBlur={handleGstnBlur}
+                      placeholder="e.g. 27AAAAA0000A1Z5" 
+                      className="w-full p-3 border border-indigo-300 rounded-xl bg-white shadow-sm font-mono uppercase text-indigo-900 font-bold" 
+                    />
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">4. Constitution of Distributor *</label>
+                    <label className="font-semibold text-slate-700 block mb-1">1. Name of Distributor *</label>
+                    <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} placeholder="e.g. Sahyadri Auto" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
+                  </div>
+                  <div>
+                    <label className="font-semibold text-slate-700 block mb-1">4. Constitution *</label>
                     <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
                       <option value="Proprietorship">Proprietorship</option>
                       <option value="Partnership">Partnership</option>
@@ -1272,11 +1312,7 @@ export default function App() {
                   <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> VII - IX. Infrastructure, Goods & Territory
                 </h4>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">21. GSTN No *</label>
-                    <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} placeholder="27AAAAA0000A1Z5" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-mono uppercase" />
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="font-semibold text-slate-700 block mb-1">22. Transport Company Name *</label>
                     <input required type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} placeholder="VRL Logistics / Bank Approved" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
@@ -1308,7 +1344,7 @@ export default function App() {
               {/* SECTION X: INVESTMENT BREAKDOWN (AUTO-CALCULATED) */}
               <div className="space-y-4 bg-indigo-50/70 p-5 rounded-2xl border border-indigo-200">
                 <h4 className="font-bold text-indigo-900 text-xs border-b border-indigo-200 pb-2 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> X. Initial Investment Plan (Auto-Calculated)[cite: 5]
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> X. Initial Investment Plan (Auto-Calculated)
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
@@ -1335,7 +1371,7 @@ export default function App() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row justify-between items-center pt-3 border-t border-indigo-200 gap-2">
-                  <span className="font-bold text-indigo-950 text-sm">Total Initial Minimum Investment for Stock[cite: 5]:</span>
+                  <span className="font-bold text-indigo-950 text-sm">Total Initial Minimum Investment for Stock:</span>
                   <div className="bg-white px-5 py-2.5 rounded-xl border border-indigo-300 shadow-inner text-emerald-700 font-extrabold text-base font-mono">
                     ₹ {calculatedTotalInvestment.toLocaleString('en-IN')}
                   </div>
@@ -1344,7 +1380,7 @@ export default function App() {
 
               {/* DECLARATION */}
               <div className="text-[11px] text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                <p><strong>XIII. Declaration:</strong> I/we state that all information as mentioned in this Application Form is true & correct. I/we bind ourselves into a legal contract with the company as per the Indian Contract Act, 1872[cite: 15].</p>
+                <p><strong>XIII. Declaration:</strong> I/we state that all information as mentioned in this Application Form is true & correct. I/we bind ourselves into a legal contract with the company as per the Indian Contract Act, 1872.</p>
               </div>
 
               <div className="pt-2 flex justify-end space-x-3">
@@ -1409,14 +1445,14 @@ export default function App() {
                   </div>
                   <p><strong>26. Allotted Territory:</strong> {viewAgreementDetail.territory}</p>
                   <div className="bg-slate-100 p-3 rounded-lg font-bold text-emerald-800 mt-2">
-                    Total Initial Minimum Investment: ₹{(viewAgreementDetail.totalInvestment || 1500000).toLocaleString('en-IN')}[cite: 5]
+                    Total Initial Minimum Investment: ₹{(viewAgreementDetail.totalInvestment || 1500000).toLocaleString('en-IN')}
                   </div>
                 </div>
 
                 <div className="border border-slate-300 p-4 rounded-xl space-y-2">
                   <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">XIII. Declaration & Signatures</h4>
                   <p className="text-[10px] text-slate-600 leading-relaxed">
-                    I/we, the undersigned, have gone through the terms & conditions for my/our appointment as distributor of the company. I/we fully understand the implications and bind ourselves into a legal contract as per the Indian Contract Act, 1872[cite: 15].
+                    I/we, the undersigned, have gone through the terms & conditions for my/our appointment as distributor of the company. I/we fully understand the implications and bind ourselves into a legal contract as per the Indian Contract Act, 1872.
                   </p>
                   <div className="grid grid-cols-2 gap-6 pt-6">
                     <div className="border-t border-slate-400 pt-1 text-center">
