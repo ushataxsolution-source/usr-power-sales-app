@@ -17,6 +17,15 @@ const BUSINESS_VERTICALS = [
   'DIGITAL MARKETING'
 ];
 
+// Client Types
+const CLIENT_TYPES = [
+  'Distributor',
+  'Dealer',
+  'Retailer',
+  'Fleet Owner',
+  'Corporate / Direct'
+];
+
 // Initial Staff Data
 const INITIAL_EMPLOYEES = [
   { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Patna Division', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE' },
@@ -37,22 +46,26 @@ const INITIAL_LEAVES = [
   { id: 'LEV-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', fromDate: '2026-11-15', toDate: '2026-11-15', reason: 'Medical Checkup', status: 'Pending' }
 ];
 
-// Initial Travelling Expense Claims
-const INITIAL_TRAVEL = [
-  { id: 'TRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', weekRange: 'Nov 01 - Nov 07, 2026', mode: 'Bike / Fuel', totalKm: 140, amount: 1200, purpose: 'Patna - Hajipur Dealer Visits', status: 'Approved' },
-  { id: 'TRV-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', weekRange: 'Nov 01 - Nov 07, 2026', mode: 'Bus / Public', totalKm: 95, amount: 850, purpose: 'Gaya - Dobhi Hub Field Survey', status: 'Pending' }
+// Initial Daily Travelling Logs (Daily reported, weekly submitted)
+const INITIAL_DAILY_TRAVEL = [
+  { id: 'DTRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-01', mode: 'Bike / Fuel', km: 45, amount: 350, route: 'Patna to Danapur Dealer Route', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' },
+  { id: 'DTRV-2', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', mode: 'Bike / Fuel', km: 55, amount: 450, route: 'Patna to Hajipur Hub', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' },
+  { id: 'DTRV-3', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', mode: 'Bus / Public', km: 30, amount: 250, route: 'Gaya Local Distributors', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Pending Submit' }
+];
+
+// Initial Weekly Travel Claims
+const INITIAL_TRAVEL_CLAIMS = [
+  { id: 'TRV-101', empId: 'USR-EMP-101', empName: 'Rohan Sharma', weekRange: 'Nov 01 - Nov 07, 2026', totalKm: 100, totalAmount: 800, purpose: 'Patna & Hajipur Dealer Route Visits', status: 'Approved' }
 ];
 
 // Initial Leads
 const INITIAL_LEADS = [
-  { id: 'LD-101', clientName: 'Bihar Auto Spares & Lubricants', contactPerson: 'Suresh Prasad', phone: '9835012345', address: 'Baksoti Road, Gaya', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-03' },
-  { id: 'LD-102', clientName: 'Maheshwari Logistics & Fleet Services', contactPerson: 'Mahesh Gupta', phone: '9431098765', address: 'Exhibition Road, Patna', status: 'Warm', stage: 'Proposal Sent', estimatedValue: 350000, assignedToId: 'USR-EMP-101', assignedToName: 'Rohan Sharma', vertical: 'TURBO OIL', lastFollowup: '2026-10-31', nextFollowup: '2026-11-04' }
+  { id: 'LD-101', clientName: 'Bihar Auto Spares & Lubricants', clientType: 'Distributor', contactPerson: 'Suresh Prasad', phone: '9835012345', place: 'Baksoti Road, Gaya', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, investmentAmount: 250000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
 ];
 
-// Initial Daily Call Reports
+// Initial DCRs
 const INITIAL_DCR = [
-  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Punchkuteer Resort & Eco Stay', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract for heavy lube and Turbo Oil.', nextDate: '2026-11-10', lat: '24.5821 N', lng: '84.9754 E', address: 'NH-2 Dobhi, Gaya', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' },
-  { id: 'DCR-502', empId: 'USR-EMP-101', empName: 'Rohan Sharma', vertical: 'DIGITAL MARKETING', clientName: 'Bihar Auto Spares', visitTime: '12:15 PM', callType: 'Phone Call', outcome: 'Follow Up Required', notes: 'Pitched customized packaging & digital promotional campaign bundle.', nextDate: '2026-11-04', lat: '25.6121 N', lng: '85.1412 E', address: 'Exhibition Road, Patna', photoVerified: false, photoUrl: null }
+  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Punchkuteer Resort & Eco Stay', clientType: 'Corporate / Direct', place: 'NH-2 Dobhi, Gaya', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '24.5821 N', lng: '84.9754 E', address: 'NH-2 Dobhi, Gaya', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' }
 ];
 
 export default function App() {
@@ -68,7 +81,8 @@ export default function App() {
   const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
   const [attendanceList, setAttendanceList] = useState(INITIAL_ATTENDANCE);
   const [leaveList, setLeaveList] = useState(INITIAL_LEAVES);
-  const [travelList, setTravelList] = useState(INITIAL_TRAVEL);
+  const [dailyTravelList, setDailyTravelList] = useState(INITIAL_DAILY_TRAVEL);
+  const [travelClaims, setTravelClaims] = useState(INITIAL_TRAVEL_CLAIMS);
   const [leads, setLeads] = useState(INITIAL_LEADS);
   const [dcrs, setDcrs] = useState(INITIAL_DCR);
 
@@ -77,21 +91,31 @@ export default function App() {
 
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isDcrModalOpen, setIsDcrModalOpen] = useState(false);
+  const [isDailyTravelModalOpen, setIsDailyTravelModalOpen] = useState(false);
   const [isAddEmpModalOpen, setIsAddEmpModalOpen] = useState(false);
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
-  const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
   const [viewPhotoModal, setViewPhotoModal] = useState(null);
 
   const [newLead, setNewLead] = useState({
-    clientName: '', contactPerson: '', phone: '', address: '',
-    status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: ''
+    clientName: '', clientType: 'Dealer', contactPerson: '', phone: '', place: '',
+    status: 'Hot', stage: 'Contacted', estimatedValue: '', investmentAmount: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: ''
   });
 
   const [newDcr, setNewDcr] = useState({
-    empId: 'USR-EMP-101', clientName: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
-    outcome: 'Follow Up Required', notes: '', nextDate: '',
+    empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
+    outcome: 'Follow Up Required', notes: '', investmentAmount: '', nextDate: '',
     lat: '25.5941 N', lng: '85.1376 E', address: 'Main Market, Patna',
     photoVerified: false, photoUrl: null
+  });
+
+  // Daily Travel Log State
+  const [newDailyTravel, setNewDailyTravel] = useState({
+    date: new Date().toISOString().split('T')[0],
+    mode: 'Bike / Fuel',
+    km: '',
+    amount: '',
+    route: '',
+    weekCycle: 'Nov 01 - Nov 07, 2026'
   });
 
   const [newEmp, setNewEmp] = useState({
@@ -100,10 +124,6 @@ export default function App() {
 
   const [newLeave, setNewLeave] = useState({
     fromDate: '', toDate: '', reason: ''
-  });
-
-  const [newTravel, setNewTravel] = useState({
-    weekRange: 'Nov 01 - Nov 07, 2026', mode: 'Bike / Fuel', totalKm: '', amount: '', purpose: ''
   });
 
   const [capturingGpsPhoto, setCapturingGpsPhoto] = useState(false);
@@ -182,32 +202,67 @@ export default function App() {
     alert('Leave Application Submitted Successfully!');
   };
 
-  // Admin Leave Approval
   const handleApproveLeave = (leaveId) => {
     setLeaveList(leaveList.map(l => l.id === leaveId ? { ...l, status: 'Approved' } : l));
     alert('Leave Approved Successfully!');
   };
 
-  const handleApplyTravel = (e) => {
+  // Add Daily Travel Log
+  const handleAddDailyTravel = (e) => {
     e.preventDefault();
-    const createdTravel = {
+    const createdLog = {
+      id: `DTRV-${Date.now()}`,
+      empId: currentEmp.id,
+      empName: currentEmp.name,
+      ...newDailyTravel,
+      km: Number(newDailyTravel.km) || 0,
+      amount: Number(newDailyTravel.amount) || 0,
+      status: 'Pending Submit'
+    };
+    setDailyTravelList([createdLog, ...dailyTravelList]);
+    setIsDailyTravelModalOpen(false);
+    setNewDailyTravel({
+      date: new Date().toISOString().split('T')[0],
+      mode: 'Bike / Fuel',
+      km: '',
+      amount: '',
+      route: '',
+      weekCycle: 'Nov 01 - Nov 07, 2026'
+    });
+    alert('Daily Travel Log Saved Successfully!');
+  };
+
+  // Compile and Submit Weekly Claim from Daily Logs
+  const submitWeeklyTravelClaim = (weekCycleName) => {
+    const empDailyLogs = dailyTravelList.filter(d => d.empId === currentEmp.id && d.weekCycle === weekCycleName && d.status === 'Pending Submit');
+    if (empDailyLogs.length === 0) {
+      alert('No pending daily travel logs found for this week to submit!');
+      return;
+    }
+
+    const totalKmSum = empDailyLogs.reduce((acc, curr) => acc + curr.km, 0);
+    const totalAmtSum = empDailyLogs.reduce((acc, curr) => acc + curr.amount, 0);
+    const routesCombined = empDailyLogs.map(l => l.route).join(' | ');
+
+    const newClaim = {
       id: `TRV-${Date.now()}`,
       empId: currentEmp.id,
       empName: currentEmp.name,
-      ...newTravel,
-      totalKm: Number(newTravel.totalKm) || 0,
-      amount: Number(newTravel.amount) || 0,
+      weekRange: weekCycleName,
+      totalKm: totalKmSum,
+      totalAmount: totalAmtSum,
+      purpose: routesCombined,
       status: 'Pending'
     };
-    setTravelList([createdTravel, ...travelList]);
-    setIsTravelModalOpen(false);
-    setNewTravel({ weekRange: 'Nov 01 - Nov 07, 2026', mode: 'Bike / Fuel', totalKm: '', amount: '', purpose: '' });
-    alert('Weekly Travelling Expense Claim Submitted Successfully!');
+
+    setTravelClaims([newClaim, ...travelClaims]);
+    setDailyTravelList(dailyTravelList.map(d => (d.empId === currentEmp.id && d.weekCycle === weekCycleName) ? { ...d, status: 'Submitted Weekly' } : d));
+    alert(`Weekly Travelling Claim for (${weekCycleName}) submitted to Admin successfully! Total Amount: ₹${totalAmtSum}`);
   };
 
-  // Admin Travel Approval
-  const handleApproveTravel = (travelId) => {
-    setTravelList(travelList.map(t => t.id === travelId ? { ...t, status: 'Approved' } : t));
+  // Admin Travel Claim Approval
+  const handleApproveTravelClaim = (claimId) => {
+    setTravelClaims(travelClaims.map(t => t.id === claimId ? { ...t, status: 'Approved' } : t));
     alert('Weekly Travelling Claim Approved Successfully!');
   };
 
@@ -269,7 +324,8 @@ export default function App() {
       vertical: authRole === 'admin' ? newLead.vertical : currentEmp.primaryVertical,
       id: `LD-${Math.floor(Math.random() * 900 + 100)}`,
       lastFollowup: new Date().toISOString().split('T')[0],
-      estimatedValue: Number(newLead.estimatedValue) || 0
+      estimatedValue: Number(newLead.estimatedValue) || 0,
+      investmentAmount: Number(newLead.investmentAmount) || 0
     };
     setLeads([createdLead, ...leads]);
     setIsLeadModalOpen(false);
@@ -285,7 +341,8 @@ export default function App() {
       empName: empObj ? empObj.name : currentEmp.name,
       vertical: authRole === 'admin' ? newDcr.vertical : currentEmp.primaryVertical,
       id: `DCR-${Math.floor(Math.random() * 900 + 100)}`,
-      visitTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      visitTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      investmentAmount: Number(newDcr.investmentAmount) || 0
     };
     setDcrs([createdDcr, ...dcrs]);
     setIsDcrModalOpen(false);
@@ -341,13 +398,17 @@ export default function App() {
     ? leaveList
     : leaveList.filter(l => l.empId === currentEmp.id);
 
-  const visibleTravel = authRole === 'admin'
-    ? travelList
-    : travelList.filter(t => t.empId === currentEmp.id);
+  const visibleDailyTravel = authRole === 'admin'
+    ? dailyTravelList
+    : dailyTravelList.filter(d => d.empId === currentEmp.id);
+
+  const visibleTravelClaims = authRole === 'admin'
+    ? travelClaims
+    : travelClaims.filter(t => t.empId === currentEmp.id);
 
   const totalSalesTarget = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmp.target;
   const totalSalesAchieved = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
-  const totalLeadsValue = visibleLeads.reduce((acc, curr) => acc + curr.estimatedValue, 0);
+  const totalLeadsValue = visibleLeads.reduce((acc, curr) => acc + (curr.investmentAmount || curr.estimatedValue), 0);
 
   // LOGIN SCREEN
   if (!authRole) {
@@ -407,7 +468,7 @@ export default function App() {
             ) : (
               <form onSubmit={handleAdminLogin} className="space-y-4 text-xs">
                 <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-amber-900 text-[11px]">
-                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, leave & weekly travel approvals.
+                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, leave & weekly travel claim approvals.
                 </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Admin Security Password / PIN</label>
@@ -459,7 +520,7 @@ export default function App() {
               { id: 'dashboard', label: 'Dashboard Overview', icon: TrendingUp },
               { id: 'attendance', label: 'Attendance & Punch-In', icon: CheckSquare, badge: visibleAttendance.length },
               { id: 'leaves', label: 'Leave Management', icon: CalendarDays, badge: visibleLeaves.length },
-              { id: 'travel', label: 'Travelling Expenses', icon: Bus, badge: visibleTravel.length },
+              { id: 'travel', label: 'Travelling (Daily & Weekly)', icon: Bus, badge: visibleTravelClaims.length },
               { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
               { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
               { id: 'gps', label: 'GPS Photo Verification', icon: Camera },
@@ -599,9 +660,9 @@ export default function App() {
                 <div>
                   <p className="text-xs font-medium text-slate-500">Travelling Expense</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">
-                    {visibleTravel.filter(t => t.status === 'Approved').length} Approved
+                    {visibleTravelClaims.filter(t => t.status === 'Approved').length} Approved Claims
                   </h3>
-                  <button onClick={() => setActiveTab('travel')} className="text-[11px] text-indigo-600 font-bold hover:underline mt-1 block">View Claims &rarr;</button>
+                  <button onClick={() => setActiveTab('travel')} className="text-[11px] text-indigo-600 font-bold hover:underline mt-1 block">View Travel &rarr;</button>
                 </div>
                 <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><Bus className="w-6 h-6" /></div>
               </div>
@@ -616,9 +677,10 @@ export default function App() {
                   <div key={dcr.id} className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 flex items-start justify-between text-xs">
                     <div>
                       <span className="font-bold text-slate-900">{dcr.clientName}</span>
-                      <span className="ml-2 text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">{dcr.vertical}</span>
+                      <span className="ml-2 text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">{dcr.clientType || 'Client'}</span>
+                      <span className="ml-2 text-[10px] bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded">Inv: ₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</span>
                       <p className="text-slate-600 mt-1">{dcr.notes}</p>
-                      <p className="text-[10px] text-slate-400 mt-1">By: {dcr.empName} ({dcr.empId}) • {dcr.address}</p>
+                      <p className="text-[10px] text-slate-400 mt-1">Place: {dcr.place || dcr.address} • Next Followup: <strong className="text-indigo-600">{dcr.nextDate}</strong></p>
                     </div>
                     {dcr.photoVerified && (
                       <button onClick={() => setViewPhotoModal(dcr)} className="text-emerald-600 font-semibold hover:underline flex items-center">
@@ -632,26 +694,198 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: VERTICALS */}
-        {activeTab === 'verticals' && (
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div className="border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">
-                {authRole === 'admin' ? 'All Business Verticals (Company Overview)' : `Your Assigned Business Vertical`}
-              </h3>
-              <p className="text-xs text-slate-500 mt-1">
-                {authRole === 'admin' ? 'Showing all company product lines.' : `You are authorized to manage operation for ${currentEmp.primaryVertical} only.`}
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {accessibleVerticals.map(v => (
-                <div key={v} className="p-4 border border-indigo-200 rounded-xl bg-indigo-50/40 space-y-2">
-                  <span className="text-[10px] font-bold bg-indigo-600 text-white px-2 py-0.5 rounded uppercase">Active Vertical</span>
-                  <h4 className="font-extrabold text-sm text-indigo-950">{v}</h4>
-                  <p className="text-[11px] text-slate-600">USR POWER INDUSTRIES PRIVATE LIMITED</p>
+        {/* TAB: TRAVELLING (DAILY REPORT & WEEKLY SUBMIT & APPROVAL) */}
+        {activeTab === 'travel' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Travelling Allowance & Expense Management</h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {authRole === 'admin' ? 'Review and approve weekly compiled travel claims submitted by sales staff.' : 'Report your travel expenses daily and submit them weekly to Admin for approval.'}
+                </p>
+              </div>
+              {authRole !== 'admin' && (
+                <div className="flex gap-2">
+                  <button onClick={() => setIsDailyTravelModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5">
+                    <Plus className="w-4 h-4" />
+                    <span>+ Log Daily Travel</span>
+                  </button>
+                  <button onClick={() => submitWeeklyTravelClaim('Nov 01 - Nov 07, 2026')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5">
+                    <Bus className="w-4 h-4" />
+                    <span>Submit Weekly Claim</span>
+                  </button>
                 </div>
-              ))}
+              )}
+            </div>
+
+            {/* DAILY REPORTED TRAVEL LOGS (EMPLOYEE VIEW) */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h4 className="font-bold text-slate-900 text-xs">Daily Reported Travel Entries ({authRole === 'admin' ? 'All Staff' : 'Your Logs'})</h4>
+                <span className="text-[10px] text-slate-500">Employees report daily, submitted to admin weekly</span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Staff Name</th>
+                      <th className="p-3">Date</th>
+                      <th className="p-3">Week Cycle</th>
+                      <th className="p-3">Mode & Distance</th>
+                      <th className="p-3">Amount (₹)</th>
+                      <th className="p-3">Route / Purpose</th>
+                      <th className="p-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleDailyTravel.map(log => (
+                      <tr key={log.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold text-slate-900">{log.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{log.empId}]</span></td>
+                        <td className="p-3 text-slate-600">{log.date}</td>
+                        <td className="p-3 font-semibold text-slate-700">{log.weekCycle}</td>
+                        <td className="p-3 text-slate-600">{log.mode} <span className="text-[10px] text-slate-400 block">({log.km} KM)</span></td>
+                        <td className="p-3 font-bold text-emerald-700">₹{(log.amount).toLocaleString('en-IN')}</td>
+                        <td className="p-3 text-slate-600">{log.route}</td>
+                        <td className="p-3">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${log.status === 'Submitted Weekly' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}`}>
+                            {log.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* WEEKLY TRAVEL CLAIMS (ADMIN APPROVAL & EMPLOYEE STATUS) */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h4 className="font-bold text-slate-900 text-xs">Weekly Travel Claims (Admin Approval Status)</h4>
+                <span className="text-[10px] text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded">Weekly Compiled Claims</span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Staff Name</th>
+                      <th className="p-3">Week Cycle</th>
+                      <th className="p-3">Total Distance</th>
+                      <th className="p-3">Claim Amount (₹)</th>
+                      <th className="p-3">Combined Purpose</th>
+                      <th className="p-3">Approval Status</th>
+                      {authRole === 'admin' && <th className="p-3">Action</th>}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleTravelClaims.map(trv => (
+                      <tr key={trv.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold text-slate-900">{trv.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{trv.empId}]</span></td>
+                        <td className="p-3 font-semibold text-slate-700">{trv.weekRange}</td>
+                        <td className="p-3 text-slate-600">{trv.totalKm} KM</td>
+                        <td className="p-3 font-bold text-slate-900 text-emerald-700">₹{(trv.totalAmount).toLocaleString('en-IN')}</td>
+                        <td className="p-3 text-slate-600">{trv.purpose}</td>
+                        <td className="p-3">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${trv.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                            {trv.status === 'Approved' ? '✓ Approved by Admin' : 'Pending Admin Approval'}
+                          </span>
+                        </td>
+                        {authRole === 'admin' && (
+                          <td className="p-3">
+                            {trv.status === 'Pending' ? (
+                              <button onClick={() => handleApproveTravelClaim(trv.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-[11px] font-semibold">
+                                Approve Claim
+                              </button>
+                            ) : (
+                              <span className="text-emerald-700 font-bold text-[11px]">✓ Settled</span>
+                            )}
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: LEADS */}
+        {activeTab === 'leads' && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-slate-900 text-sm">Business Leads ({authRole === 'admin' ? 'All Leads' : currentEmp.primaryVertical})</h3>
+              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Add Lead</button>
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Client Name</th>
+                      <th className="p-3">Client Type</th>
+                      <th className="p-3">Place / City</th>
+                      <th className="p-3">Investment Amount</th>
+                      <th className="p-3">Next Follow Date</th>
+                      <th className="p-3">Assigned Staff</th>
+                      <th className="p-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleLeads.map(lead => (
+                      <tr key={lead.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold text-slate-900">{lead.clientName} <span className="text-[10px] text-slate-400 block">{lead.phone}</span></td>
+                        <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-[10px] font-semibold">{lead.clientType || 'Dealer'}</span></td>
+                        <td className="p-3 text-slate-700 font-medium">{lead.place || lead.address}</td>
+                        <td className="p-3 font-bold text-emerald-700">₹{(lead.investmentAmount || lead.estimatedValue).toLocaleString('en-IN')}</td>
+                        <td className="p-3 font-semibold text-indigo-600">{lead.nextFollowup || 'Not Set'}</td>
+                        <td className="p-3 font-semibold">{lead.assignedToName}</td>
+                        <td className="p-3"><span className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold">{lead.status}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: DCR */}
+        {activeTab === 'dcr' && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR)</h3>
+              <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Submit DCR</button>
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Staff</th>
+                      <th className="p-3">Client & Type</th>
+                      <th className="p-3">Place</th>
+                      <th className="p-3">Investment Amount</th>
+                      <th className="p-3">Next Follow Date</th>
+                      <th className="p-3">Notes & Outcome</th>
+                      <th className="p-3">Photo</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleDcrs.map(dcr => (
+                      <tr key={dcr.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold">{dcr.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{dcr.empId}]</span></td>
+                        <td className="p-3 font-bold">{dcr.clientName} <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded block mt-0.5 text-indigo-700">{dcr.clientType || 'Client'}</span></td>
+                        <td className="p-3 font-medium text-slate-700">{dcr.place || dcr.address}</td>
+                        <td className="p-3 font-bold text-emerald-700">₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</td>
+                        <td className="p-3 font-semibold text-indigo-600">{dcr.nextDate || 'N/A'}</td>
+                        <td className="p-3 text-slate-700">{dcr.notes} <span className="text-[10px] text-emerald-700 block font-semibold mt-1">Outcome: {dcr.outcome}</span></td>
+                        <td className="p-3">{dcr.photoVerified ? <button onClick={() => setViewPhotoModal(dcr)} className="text-emerald-600 font-semibold hover:underline">View</button> : 'No Photo'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -702,7 +936,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: LEAVES (WITH ADMIN APPROVAL) */}
+        {/* TAB: LEAVES */}
         {activeTab === 'leaves' && (
           <div className="space-y-4">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -764,138 +998,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: TRAVELLING EXPENSES & WEEKLY APPROVAL */}
-        {activeTab === 'travel' && (
-          <div className="space-y-4">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Weekly Travelling Allowance & Expense Claims</h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  {authRole === 'admin' ? 'Review weekly field travel claims submitted by sales staff.' : 'Submit your weekly travel costs and check approval status here.'}
-                </p>
-              </div>
-              {authRole !== 'admin' && (
-                <button onClick={() => setIsTravelModalOpen(true)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2">
-                  <Bus className="w-4 h-4" />
-                  <span>+ Submit Weekly Travel Claim</span>
-                </button>
-              )}
-            </div>
-
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="p-4 border-b border-slate-100 font-bold text-xs text-slate-700">Travelling Expense Claims History</div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                      <th className="p-3">Employee Name</th>
-                      <th className="p-3">Week Cycle</th>
-                      <th className="p-3">Mode & Distance</th>
-                      <th className="p-3">Claim Amount (₹)</th>
-                      <th className="p-3">Purpose</th>
-                      <th className="p-3">Approval Status</th>
-                      {authRole === 'admin' && <th className="p-3">Action</th>}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {visibleTravel.map(trv => (
-                      <tr key={trv.id} className="hover:bg-slate-50">
-                        <td className="p-3 font-bold text-slate-900">{trv.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{trv.empId}]</span></td>
-                        <td className="p-3 font-semibold text-slate-700">{trv.weekRange}</td>
-                        <td className="p-3 text-slate-600">{trv.mode} <span className="text-[10px] text-slate-400 block">({trv.totalKm} KM)</span></td>
-                        <td className="p-3 font-bold text-slate-900">₹{(trv.amount).toLocaleString('en-IN')}</td>
-                        <td className="p-3 text-slate-600">{trv.purpose}</td>
-                        <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${trv.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                            {trv.status === 'Approved' ? '✓ Approved by Admin' : 'Pending Approval'}
-                          </span>
-                        </td>
-                        {authRole === 'admin' && (
-                          <td className="p-3">
-                            {trv.status === 'Pending' ? (
-                              <button onClick={() => handleApproveTravel(trv.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-[11px] font-semibold">
-                                Approve Claim
-                              </button>
-                            ) : (
-                              <span className="text-emerald-700 font-bold text-[11px]">✓ Settled</span>
-                            )}
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'leads' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold text-slate-900 text-sm">Business Leads ({authRole === 'admin' ? 'All Leads' : currentEmp.primaryVertical})</h3>
-              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Add Lead</button>
-            </div>
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Client Name</th>
-                    <th className="p-3">Vertical</th>
-                    <th className="p-3">Assigned Staff</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Est. Value</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleLeads.map(lead => (
-                    <tr key={lead.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold text-slate-900">{lead.clientName} <span className="text-[10px] text-slate-400 block">{lead.phone}</span></td>
-                      <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-[10px] font-semibold">{lead.vertical}</span></td>
-                      <td className="p-3 font-semibold">{lead.assignedToName}</td>
-                      <td className="p-3"><span className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold">{lead.status}</span></td>
-                      <td className="p-3 font-bold">₹{(lead.estimatedValue).toLocaleString('en-IN')}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'dcr' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR)</h3>
-              <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Submit DCR</button>
-            </div>
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Staff</th>
-                    <th className="p-3">Client & Vertical</th>
-                    <th className="p-3">Notes & Outcome</th>
-                    <th className="p-3">GPS Location</th>
-                    <th className="p-3">Photo</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleDcrs.map(dcr => (
-                    <tr key={dcr.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold">{dcr.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{dcr.empId}]</span></td>
-                      <td className="p-3 font-bold">{dcr.clientName} <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded block mt-0.5">{dcr.vertical}</span></td>
-                      <td className="p-3 text-slate-700">{dcr.notes} <span className="text-[10px] text-emerald-700 block font-semibold mt-1">Outcome: {dcr.outcome}</span></td>
-                      <td className="p-3 font-mono text-[10px] text-slate-500">{dcr.address}</td>
-                      <td className="p-3">{dcr.photoVerified ? <button onClick={() => setViewPhotoModal(dcr)} className="text-emerald-600 font-semibold hover:underline">View</button> : 'No Photo'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
+        {/* TAB: GPS */}
         {activeTab === 'gps' && (
           <div className="space-y-4">
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
@@ -905,9 +1008,9 @@ export default function App() {
                   <div key={dcr.id} className="border p-4 rounded-xl flex items-center space-x-3 bg-slate-50">
                     <img src={dcr.photoUrl} alt="proof" className="w-20 h-20 object-cover rounded-lg border" />
                     <div className="text-xs space-y-1">
-                      <p className="font-bold text-slate-900">{dcr.clientName} ({dcr.vertical})</p>
+                      <p className="font-bold text-slate-900">{dcr.clientName} ({dcr.clientType || 'Client'})</p>
                       <p className="text-slate-500">{dcr.notes}</p>
-                      <p className="text-[10px] font-mono text-indigo-600">{dcr.address}</p>
+                      <p className="text-[10px] font-mono text-indigo-600">{dcr.place || dcr.address}</p>
                     </div>
                   </div>
                 ))}
@@ -916,6 +1019,31 @@ export default function App() {
           </div>
         )}
 
+        {/* TAB: VERTICALS */}
+        {activeTab === 'verticals' && (
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div className="border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">
+                {authRole === 'admin' ? 'All Business Verticals (Company Overview)' : `Your Assigned Business Vertical`}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                {authRole === 'admin' ? 'Showing all company product lines.' : `You are authorized to manage operation for ${currentEmp.primaryVertical} only.`}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {accessibleVerticals.map(v => (
+                <div key={v} className="p-4 border border-indigo-200 rounded-xl bg-indigo-50/40 space-y-2">
+                  <span className="text-[10px] font-bold bg-indigo-600 text-white px-2 py-0.5 rounded uppercase">Active Vertical</span>
+                  <h4 className="font-extrabold text-sm text-indigo-950">{v}</h4>
+                  <p className="text-[11px] text-slate-600">USR POWER INDUSTRIES PRIVATE LIMITED</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB: PERFORMANCE */}
         {activeTab === 'performance' && (
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <h3 className="font-bold text-slate-900 text-sm">Staff Targets Leaderboard</h3>
@@ -959,7 +1087,8 @@ export default function App() {
                 <h4 className="font-bold text-slate-900 text-xs uppercase">Export Master Data (CSV)</h4>
                 <div className="flex gap-2">
                   <button onClick={() => exportToCSV(dcrs, 'USR_DCR')} className="bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export DCRs</button>
-                  <button onClick={() => exportToCSV(travelList, 'USR_Travelling')} className="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Travel Claims</button>
+                  <button onClick={() => exportToCSV(leads, 'USR_Leads')} className="bg-indigo-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Leads</button>
+                  <button onClick={() => exportToCSV(travelClaims, 'USR_Travelling')} className="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Travel Claims</button>
                 </div>
               </div>
             </div>
@@ -1009,7 +1138,7 @@ export default function App() {
 
       </main>
 
-      {/* ADD EMPLOYEE MODAL (ADMIN) */}
+      {/* MODAL: ADD EMPLOYEE */}
       {isAddEmpModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
@@ -1067,104 +1196,94 @@ export default function App() {
         </div>
       )}
 
-      {/* LEAVE APPLICATION MODAL */}
-      {isLeaveModalOpen && (
+      {/* MODAL: LOG DAILY TRAVEL */}
+      {isDailyTravelModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Apply for Leave</h3>
-              <button onClick={() => setIsLeaveModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+              <h3 className="font-bold text-slate-900 text-sm">Log Daily Travelling Expense</h3>
+              <button onClick={() => setIsDailyTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
-            <form onSubmit={handleApplyLeave} className="space-y-3 text-xs">
+            <form onSubmit={handleAddDailyTravel} className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">From Date</label>
-                  <input required type="date" value={newLeave.fromDate} onChange={e => setNewLeave({...newLeave, fromDate: e.target.value})} className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Travel Date</label>
+                  <input required type="date" value={newDailyTravel.date} onChange={e => setNewDailyTravel({...newDailyTravel, date: e.target.value})} className="w-full p-2 border rounded-xl" />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">To Date</label>
-                  <input required type="date" value={newLeave.toDate} onChange={e => setNewLeave({...newLeave, toDate: e.target.value})} className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Week Cycle</label>
+                  <input required type="text" value={newDailyTravel.weekCycle} onChange={e => setNewDailyTravel({...newDailyTravel, weekCycle: e.target.value})} placeholder="Nov 01 - Nov 07, 2026" className="w-full p-2 border rounded-xl" />
                 </div>
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Reason for Leave</label>
-                <textarea required rows="3" value={newLeave.reason} onChange={e => setNewLeave({...newLeave, reason: e.target.value})} placeholder="Enter reason..." className="w-full p-2 border rounded-xl"></textarea>
-              </div>
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsLeaveModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Submit Application</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* TRAVELLING CLAIM MODAL */}
-      {isTravelModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit Weekly Travelling Expense Claim</h3>
-              <button onClick={() => setIsTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleApplyTravel} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Week Cycle Range</label>
-                <input required type="text" value={newTravel.weekRange} onChange={e => setNewTravel({...newTravel, weekRange: e.target.value})} placeholder="e.g. Nov 01 - Nov 07, 2026" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Mode of Transport</label>
-                  <select value={newTravel.mode} onChange={e => setNewTravel({...newTravel, mode: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                  <select value={newDailyTravel.mode} onChange={e => setNewDailyTravel({...newDailyTravel, mode: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
                     <option value="Bike / Fuel">Bike / Fuel</option>
                     <option value="Bus / Public">Bus / Public</option>
                     <option value="Train / Auto">Train / Auto</option>
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Total Distance (KM)</label>
-                  <input required type="number" value={newTravel.totalKm} onChange={e => setNewTravel({...newTravel, totalKm: e.target.value})} placeholder="120" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Distance (KM)</label>
+                  <input required type="number" value={newDailyTravel.km} onChange={e => setNewDailyTravel({...newDailyTravel, km: e.target.value})} placeholder="45" className="w-full p-2 border rounded-xl" />
                 </div>
               </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Total Claim Amount (₹)</label>
-                <input required type="number" value={newTravel.amount} onChange={e => setNewTravel({...newTravel, amount: e.target.value})} placeholder="1500" className="w-full p-2 border rounded-xl" />
+                <label className="font-semibold text-slate-700 block mb-1">Daily Amount Claim (₹)</label>
+                <input required type="number" value={newDailyTravel.amount} onChange={e => setNewDailyTravel({...newDailyTravel, amount: e.target.value})} placeholder="350" className="w-full p-2 border rounded-xl" />
               </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Travel Purpose / Route Details</label>
-                <textarea required rows="2" value={newTravel.purpose} onChange={e => setNewTravel({...newTravel, purpose: e.target.value})} placeholder="e.g. Weekly dealer visits in Patna and Hajipur route" className="w-full p-2 border rounded-xl"></textarea>
+                <label className="font-semibold text-slate-700 block mb-1">Route / Visit Details</label>
+                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} placeholder="e.g. Patna to Danapur Route" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold">Submit Weekly Claim</button>
+                <button type="button" onClick={() => setIsDailyTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">Save Daily Travel Log</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* LEAD MODAL */}
+      {/* MODAL: ADD LEAD */}
       {isLeadModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Add New Lead</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead</h3>
               <button onClick={() => setIsLeadModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddLead} className="space-y-3 text-xs">
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
-                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="Client name" className="w-full p-2 border rounded-xl" />
+                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="e.g. Bihar Auto Spares" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Phone</label>
-                  <input type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="98XXXXXXXX" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Types of Client</label>
+                  <select value={newLead.clientType} onChange={e => setNewLead({...newLead, clientType: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                    {CLIENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Est. Value (₹)</label>
-                  <input type="number" value={newLead.estimatedValue} onChange={e => setNewLead({...newLead, estimatedValue: e.target.value})} placeholder="50000" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
+                  <input type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="98XXXXXXXX" className="w-full p-2 border rounded-xl" />
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Place / City</label>
+                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="e.g. Baksoti Road, Gaya" className="w-full p-2 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Investment Amount (₹)</label>
+                  <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} placeholder="e.g. 250000" className="w-full p-2 border rounded-xl" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Next Follow-up Date</label>
+                <input required type="date" value={newLead.nextFollowup} onChange={e => setNewLead({...newLead, nextFollowup: e.target.value})} className="w-full p-2 border rounded-xl" />
               </div>
               {authRole === 'admin' ? (
                 <div>
@@ -1187,12 +1306,12 @@ export default function App() {
         </div>
       )}
 
-      {/* DCR MODAL */}
+      {/* MODAL: SUBMIT DCR */}
       {isDcrModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit DCR</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Submit DCR (Daily Call Report)</h3>
               <button onClick={() => setIsDcrModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
@@ -1200,9 +1319,31 @@ export default function App() {
                 <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
                 <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} placeholder="Dealer / Client Name" className="w-full p-2 border rounded-xl" />
               </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Types of Client</label>
+                  <select value={newDcr.clientType} onChange={e => setNewDcr({...newDcr, clientType: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                    {CLIENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Place / City</label>
+                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} placeholder="e.g. NH-2 Dobhi, Gaya" className="w-full p-2 border rounded-xl" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Investment Amount (₹)</label>
+                  <input required type="number" value={newDcr.investmentAmount} onChange={e => setNewDcr({...newDcr, investmentAmount: e.target.value})} placeholder="e.g. 150000" className="w-full p-2 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Next Follow-up Date</label>
+                  <input required type="date" value={newDcr.nextDate} onChange={e => setNewDcr({...newDcr, nextDate: e.target.value})} className="w-full p-2 border rounded-xl" />
+                </div>
+              </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Discussion Notes</label>
-                <textarea rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} placeholder="Notes..." className="w-full p-2 border rounded-xl"></textarea>
+                <label className="font-semibold text-slate-700 block mb-1">Discussion Notes / Deal Outcome</label>
+                <textarea rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} placeholder="Meeting outcome notes..." className="w-full p-2 border rounded-xl"></textarea>
               </div>
 
               <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
@@ -1236,7 +1377,7 @@ export default function App() {
             <img src={viewPhotoModal.photoUrl} alt="Visit Proof" className="w-full h-64 object-cover rounded-xl border" />
             <div className="text-xs space-y-1">
               <p className="font-bold text-slate-900">{viewPhotoModal.clientName}</p>
-              <p className="text-slate-500 font-mono text-[10px]">{viewPhotoModal.address}</p>
+              <p className="text-slate-500 font-mono text-[10px]">{viewPhotoModal.place || viewPhotoModal.address}</p>
             </div>
             <button onClick={() => setViewPhotoModal(null)} className="w-full py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold">Close</button>
           </div>
