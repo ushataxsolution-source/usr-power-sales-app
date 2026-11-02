@@ -26,46 +26,46 @@ const CLIENT_TYPES = [
   'Corporate / Direct'
 ];
 
-// Initial Staff Data
+// Initial Staff Data (Maharashtra Hubs)
 const INITIAL_EMPLOYEES = [
-  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Patna Division', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE' },
-  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Gaya & South Bihar', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL' },
-  { id: 'USR-EMP-103', pass: '1033', name: 'Priya Singh', joiningDate: '2025-09-01', totalLeaves: 18, usedLeaves: 5, territory: 'Muzaffarpur Cluster', target: 900000, achieved: 870000, primaryVertical: 'TAX AND LEGAL' },
-  { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', joiningDate: '2026-01-10', totalLeaves: 18, usedLeaves: 1, territory: 'Bhagalpur Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING' }
+  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE' },
+  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL' },
+  { id: 'USR-EMP-103', pass: '1033', name: 'Priya Singh', joiningDate: '2025-09-01', totalLeaves: 18, usedLeaves: 5, territory: 'Thane & Kalyan Belt', target: 900000, achieved: 870000, primaryVertical: 'TAX AND LEGAL' },
+  { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', joiningDate: '2026-01-10', totalLeaves: 18, usedLeaves: 1, territory: 'Nagpur Industrial Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING' }
 ];
 
 // Initial Attendance Records
 const INITIAL_ATTENDANCE = [
-  { id: 'ATT-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', checkInTime: '09:15 AM', status: 'Present', location: 'Patna Hub' },
-  { id: 'ATT-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', checkInTime: '09:30 AM', status: 'Present', location: 'Gaya Hub' }
+  { id: 'ATT-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', checkInTime: '09:15 AM', status: 'Present', location: 'Mumbai HQ Hub' },
+  { id: 'ATT-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', checkInTime: '09:30 AM', status: 'Present', location: 'Pune Branch' }
 ];
 
 // Initial Leave Requests
 const INITIAL_LEAVES = [
-  { id: 'LEV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', fromDate: '2026-11-10', toDate: '2026-11-11', reason: 'Family Function', status: 'Approved' },
-  { id: 'LEV-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', fromDate: '2026-11-15', toDate: '2026-11-15', reason: 'Medical Checkup', status: 'Pending' }
+  { id: 'LEV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', fromDate: '2026-11-10', toDate: '2026-11-11', reason: 'Family Function in Mumbai', status: 'Approved' },
+  { id: 'LEV-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', fromDate: '2026-11-15', toDate: '2026-11-15', reason: 'Medical Checkup in Pune', status: 'Pending' }
 ];
 
-// Initial Daily Travelling Logs (Daily reported, weekly submitted)
+// Initial Daily Travelling Logs (Maharashtra Routes)
 const INITIAL_DAILY_TRAVEL = [
-  { id: 'DTRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-01', mode: 'Bike / Fuel', km: 45, amount: 350, route: 'Patna to Danapur Dealer Route', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' },
-  { id: 'DTRV-2', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', mode: 'Bike / Fuel', km: 55, amount: 450, route: 'Patna to Hajipur Hub', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' },
-  { id: 'DTRV-3', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', mode: 'Bus / Public', km: 30, amount: 250, route: 'Gaya Local Distributors', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Pending Submit' }
+  { id: 'DTRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-01', mode: 'Bike / Fuel', km: 45, amount: 350, route: 'Andheri to Thane Dealer Route', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' },
+  { id: 'DTRV-2', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', mode: 'Bike / Fuel', km: 55, amount: 450, route: 'Dadar to Vashi APMC Hub', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' },
+  { id: 'DTRV-3', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', mode: 'Bus / Public', km: 30, amount: 250, route: 'Shivajinagar to Hinjewadi Phase 1', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Pending Submit' }
 ];
 
 // Initial Weekly Travel Claims
 const INITIAL_TRAVEL_CLAIMS = [
-  { id: 'TRV-101', empId: 'USR-EMP-101', empName: 'Rohan Sharma', weekRange: 'Nov 01 - Nov 07, 2026', totalKm: 100, totalAmount: 800, purpose: 'Patna & Hajipur Dealer Route Visits', status: 'Approved' }
+  { id: 'TRV-101', empId: 'USR-EMP-101', empName: 'Rohan Sharma', weekRange: 'Nov 01 - Nov 07, 2026', totalKm: 100, totalAmount: 800, purpose: 'Mumbai & Thane Dealer Route Visits', status: 'Approved' }
 ];
 
-// Initial Leads
+// Initial Leads (Maharashtra)
 const INITIAL_LEADS = [
-  { id: 'LD-101', clientName: 'Bihar Auto Spares & Lubricants', clientType: 'Distributor', contactPerson: 'Suresh Prasad', phone: '9835012345', place: 'Baksoti Road, Gaya', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, investmentAmount: 250000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
+  { id: 'LD-101', clientName: 'Sahyadri Auto Spares & Lubricants', clientType: 'Distributor', contactPerson: 'Suresh Patil', phone: '9820012345', place: 'Vashi Turbhe Road, Navi Mumbai', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, investmentAmount: 250000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
 ];
 
-// Initial DCRs
+// Initial DCRs (Maharashtra)
 const INITIAL_DCR = [
-  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Punchkuteer Resort & Eco Stay', clientType: 'Corporate / Direct', place: 'NH-2 Dobhi, Gaya', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '24.5821 N', lng: '84.9754 E', address: 'NH-2 Dobhi, Gaya', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' }
+  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Pune Logistics & Fleet Services', clientType: 'Corporate / Direct', place: 'Mumbai-Pune Expressway, Hinjewadi', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract for heavy lube and Turbo Oil.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '18.5204 N', lng: '73.8567 E', address: 'Hinjewadi Phase 1, Pune', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' }
 ];
 
 export default function App() {
@@ -104,11 +104,11 @@ export default function App() {
   const [newDcr, setNewDcr] = useState({
     empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
     outcome: 'Follow Up Required', notes: '', investmentAmount: '', nextDate: '',
-    lat: '25.5941 N', lng: '85.1376 E', address: 'Main Market, Patna',
+    lat: '19.0760 N', lng: '72.8777 E', address: 'Andheri West, Mumbai',
     photoVerified: false, photoUrl: null
   });
 
-  // Daily Travel Log State
+  // Daily Travel Log State (Maharashtra Defaults)
   const [newDailyTravel, setNewDailyTravel] = useState({
     date: new Date().toISOString().split('T')[0],
     mode: 'Bike / Fuel',
@@ -119,7 +119,7 @@ export default function App() {
   });
 
   const [newEmp, setNewEmp] = useState({
-    id: '', pass: '', name: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE'
+    id: '', pass: '', name: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '', primaryVertical: 'USR POWER LUBE'
   });
 
   const [newLeave, setNewLeave] = useState({
@@ -207,7 +207,6 @@ export default function App() {
     alert('Leave Approved Successfully!');
   };
 
-  // Add Daily Travel Log
   const handleAddDailyTravel = (e) => {
     e.preventDefault();
     const createdLog = {
@@ -232,7 +231,6 @@ export default function App() {
     alert('Daily Travel Log Saved Successfully!');
   };
 
-  // Compile and Submit Weekly Claim from Daily Logs
   const submitWeeklyTravelClaim = (weekCycleName) => {
     const empDailyLogs = dailyTravelList.filter(d => d.empId === currentEmp.id && d.weekCycle === weekCycleName && d.status === 'Pending Submit');
     if (empDailyLogs.length === 0) {
@@ -260,7 +258,6 @@ export default function App() {
     alert(`Weekly Travelling Claim for (${weekCycleName}) submitted to Admin successfully! Total Amount: ₹${totalAmtSum}`);
   };
 
-  // Admin Travel Claim Approval
   const handleApproveTravelClaim = (claimId) => {
     setTravelClaims(travelClaims.map(t => t.id === claimId ? { ...t, status: 'Approved' } : t));
     alert('Weekly Travelling Claim Approved Successfully!');
@@ -282,7 +279,7 @@ export default function App() {
               ...prev,
               lat: lat,
               lng: lng,
-              address: 'Live Field Location (Lat: ' + lat + ')',
+              address: 'Live MH Field Location (Lat: ' + lat + ')',
               photoVerified: true,
               photoUrl: reader.result
             }));
@@ -295,9 +292,9 @@ export default function App() {
           reader.onloadend = () => {
             setNewDcr(prev => ({
               ...prev,
-              lat: '25.5941 N',
-              lng: '85.1376 E',
-              address: 'Bihar Field Hub (GPS Manual)',
+              lat: '19.0760 N',
+              lng: '72.8777 E',
+              address: 'Mumbai HQ Hub (GPS Manual)',
               photoVerified: true,
               photoUrl: reader.result
             }));
@@ -364,7 +361,7 @@ export default function App() {
     };
     setEmployees([...employees, createdEmp]);
     setIsAddEmpModalOpen(false);
-    setNewEmp({ id: '', pass: '', name: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE' });
+    setNewEmp({ id: '', pass: '', name: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '', primaryVertical: 'USR POWER LUBE' });
     alert(`Employee ID (${createdEmp.id}) Created & Assigned to ${createdEmp.primaryVertical}!`);
   };
 
@@ -420,7 +417,7 @@ export default function App() {
               <Briefcase className="w-6 h-6 text-white" />
             </div>
             <h1 className="font-extrabold text-base tracking-wide">USR POWER INDUSTRIES</h1>
-            <p className="text-[10px] text-indigo-300 uppercase tracking-widest font-semibold">PRIVATE LIMITED • SALES & DCR PORTAL</p>
+            <p className="text-[10px] text-indigo-300 uppercase tracking-widest font-semibold">MUMBAI, MAHARASHTRA • SALES & DCR PORTAL</p>
           </div>
 
           <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2">
@@ -503,7 +500,7 @@ export default function App() {
                 <h1 className="font-extrabold text-sm tracking-wide text-white leading-tight">
                   USR POWER INDUSTRIES
                 </h1>
-                <p className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider">PRIVATE LIMITED</p>
+                <p className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider">MUMBAI, MAHARASHTRA</p>
               </div>
             </div>
             
@@ -591,7 +588,7 @@ export default function App() {
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              {authRole === 'admin' ? 'Managing employee credentials, leave approvals, and weekly travel claims.' : `Welcome ${currentEmp.name}. Joined: ${currentEmp.joiningDate} | Assigned Vertical: ${currentEmp.primaryVertical}`}
+              {authRole === 'admin' ? 'Managing Maharashtra employee credentials, leave approvals, and weekly travel claims.' : `Welcome ${currentEmp.name}. Territory: ${currentEmp.territory} | Vertical: ${currentEmp.primaryVertical}`}
             </p>
           </div>
 
@@ -670,7 +667,7 @@ export default function App() {
 
             <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
               <h3 className="font-bold text-slate-900 text-sm flex items-center border-b border-slate-100 pb-3">
-                <Clock className="w-4 h-4 mr-2 text-indigo-600" /> {authRole === 'admin' ? 'Recent DCR Logs' : `Your DCR Logs (${currentEmp.primaryVertical})`}
+                <Clock className="w-4 h-4 mr-2 text-indigo-600" /> {authRole === 'admin' ? 'Recent MH DCR Logs' : `Your DCR Logs (${currentEmp.primaryVertical})`}
               </h3>
               <div className="space-y-3">
                 {visibleDcrs.slice(0, 4).map((dcr) => (
@@ -694,14 +691,14 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: TRAVELLING (DAILY REPORT & WEEKLY SUBMIT & APPROVAL) */}
+        {/* TAB: TRAVELLING (DAILY & WEEKLY MH) */}
         {activeTab === 'travel' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">Travelling Allowance & Expense Management</h3>
+                <h3 className="font-bold text-slate-900 text-sm">Travelling Allowance & Expense Management (Maharashtra)</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  {authRole === 'admin' ? 'Review and approve weekly compiled travel claims submitted by sales staff.' : 'Report your travel expenses daily and submit them weekly to Admin for approval.'}
+                  {authRole === 'admin' ? 'Review and approve weekly compiled travel claims submitted by Maharashtra sales staff.' : 'Report your daily travel expenses and submit them weekly to Admin for approval.'}
                 </p>
               </div>
               {authRole !== 'admin' && (
@@ -718,11 +715,11 @@ export default function App() {
               )}
             </div>
 
-            {/* DAILY REPORTED TRAVEL LOGS (EMPLOYEE VIEW) */}
+            {/* DAILY REPORTED TRAVEL LOGS */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h4 className="font-bold text-slate-900 text-xs">Daily Reported Travel Entries ({authRole === 'admin' ? 'All Staff' : 'Your Logs'})</h4>
-                <span className="text-[10px] text-slate-500">Employees report daily, submitted to admin weekly</span>
+                <h4 className="font-bold text-slate-900 text-xs">Daily Reported Travel Entries ({authRole === 'admin' ? 'All MH Staff' : 'Your Logs'})</h4>
+                <span className="text-[10px] text-slate-500">Example Route: Andheri to Thane, Dadar to Vashi</span>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
@@ -758,7 +755,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* WEEKLY TRAVEL CLAIMS (ADMIN APPROVAL & EMPLOYEE STATUS) */}
+            {/* WEEKLY TRAVEL CLAIMS */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h4 className="font-bold text-slate-900 text-xs">Weekly Travel Claims (Admin Approval Status)</h4>
@@ -824,7 +821,7 @@ export default function App() {
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Client Name</th>
                       <th className="p-3">Client Type</th>
-                      <th className="p-3">Place / City</th>
+                      <th className="p-3">Place / City (MH)</th>
                       <th className="p-3">Investment Amount</th>
                       <th className="p-3">Next Follow Date</th>
                       <th className="p-3">Assigned Staff</th>
@@ -864,7 +861,7 @@ export default function App() {
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Staff</th>
                       <th className="p-3">Client & Type</th>
-                      <th className="p-3">Place</th>
+                      <th className="p-3">Place (MH)</th>
                       <th className="p-3">Investment Amount</th>
                       <th className="p-3">Next Follow Date</th>
                       <th className="p-3">Notes & Outcome</th>
@@ -896,7 +893,7 @@ export default function App() {
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Daily Field Attendance & Punch-In</h3>
-                <p className="text-xs text-slate-500 mt-1">Mark your attendance for today to notify Admin of your field availability.</p>
+                <p className="text-xs text-slate-500 mt-1">Mark your attendance for today to notify Admin of your Maharashtra field availability.</p>
               </div>
               {authRole !== 'admin' && (
                 <button onClick={markTodayAttendance} className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2">
@@ -915,7 +912,7 @@ export default function App() {
                       <th className="p-3">Employee ID & Name</th>
                       <th className="p-3">Date</th>
                       <th className="p-3">Check-In Time</th>
-                      <th className="p-3">Location / Territory</th>
+                      <th className="p-3">Territory (MH)</th>
                       <th className="p-3">Status</th>
                     </tr>
                   </thead>
@@ -1002,7 +999,7 @@ export default function App() {
         {activeTab === 'gps' && (
           <div className="space-y-4">
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-900 text-sm mb-3">GPS & Camera Photo Audits</h3>
+              <h3 className="font-bold text-slate-900 text-sm mb-3">GPS & Camera Photo Audits (Maharashtra)</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {visibleDcrs.filter(d => d.photoVerified).map(dcr => (
                   <div key={dcr.id} className="border p-4 rounded-xl flex items-center space-x-3 bg-slate-50">
@@ -1036,7 +1033,7 @@ export default function App() {
                 <div key={v} className="p-4 border border-indigo-200 rounded-xl bg-indigo-50/40 space-y-2">
                   <span className="text-[10px] font-bold bg-indigo-600 text-white px-2 py-0.5 rounded uppercase">Active Vertical</span>
                   <h4 className="font-extrabold text-sm text-indigo-950">{v}</h4>
-                  <p className="text-[11px] text-slate-600">USR POWER INDUSTRIES PRIVATE LIMITED</p>
+                  <p className="text-[11px] text-slate-600">USR POWER INDUSTRIES PRIVATE LIMITED • MUMBAI</p>
                 </div>
               ))}
             </div>
@@ -1046,14 +1043,14 @@ export default function App() {
         {/* TAB: PERFORMANCE */}
         {activeTab === 'performance' && (
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-900 text-sm">Staff Targets Leaderboard</h3>
+            <h3 className="font-bold text-slate-900 text-sm">Staff Targets Leaderboard (Maharashtra)</h3>
             <div className="space-y-3">
               {(authRole === 'admin' ? employees : [currentEmp]).map(emp => {
                 const pct = Math.round((emp.achieved / emp.target) * 100);
                 return (
                   <div key={emp.id} className="p-3 border rounded-xl bg-slate-50 space-y-2">
                     <div className="flex justify-between text-xs">
-                      <div><strong className="text-slate-900">{emp.name}</strong> <span className="font-mono text-indigo-600">[{emp.id}]</span></div>
+                      <div><strong className="text-slate-900">{emp.name}</strong> <span className="font-mono text-indigo-600">[{emp.id}]</span> - <span className="text-slate-500">{emp.territory}</span></div>
                       <div>₹{(emp.achieved).toLocaleString('en-IN')} / ₹{(emp.target).toLocaleString('en-IN')} ({pct}%)</div>
                     </div>
                     <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
@@ -1070,7 +1067,7 @@ export default function App() {
         {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
-              <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
+              <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center (Mumbai HQ)</h3>
               <p className="text-xs text-amber-800">Create employee IDs, passwords, assign verticals, and approve leaves & weekly travel claims.</p>
             </div>
 
@@ -1086,9 +1083,9 @@ export default function App() {
               <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
                 <h4 className="font-bold text-slate-900 text-xs uppercase">Export Master Data (CSV)</h4>
                 <div className="flex gap-2">
-                  <button onClick={() => exportToCSV(dcrs, 'USR_DCR')} className="bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export DCRs</button>
-                  <button onClick={() => exportToCSV(leads, 'USR_Leads')} className="bg-indigo-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Leads</button>
-                  <button onClick={() => exportToCSV(travelClaims, 'USR_Travelling')} className="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Travel Claims</button>
+                  <button onClick={() => exportToCSV(dcrs, 'USR_MH_DCR')} className="bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export DCRs</button>
+                  <button onClick={() => exportToCSV(leads, 'USR_MH_Leads')} className="bg-indigo-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Leads</button>
+                  <button onClick={() => exportToCSV(travelClaims, 'USR_MH_Travelling')} className="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Travel Claims</button>
                 </div>
               </div>
             </div>
@@ -1097,7 +1094,7 @@ export default function App() {
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-3">
               <div className="p-5 border-b border-slate-100 flex justify-between items-center">
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Registered Employees, Assigned Verticals & Credentials</h4>
+                  <h4 className="font-bold text-slate-900 text-sm">Registered Maharashtra Employees, Assigned Verticals & Credentials</h4>
                   <p className="text-xs text-slate-500">Only Admin can view all active employee credentials.</p>
                 </div>
                 <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100">
@@ -1114,7 +1111,7 @@ export default function App() {
                       <th className="p-3">Assigned Vertical</th>
                       <th className="p-3">Joining Date</th>
                       <th className="p-3">Leaves (Used / Total)</th>
-                      <th className="p-3">Territory</th>
+                      <th className="p-3">MH Territory</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -1149,7 +1146,7 @@ export default function App() {
             <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">Employee Name</label>
-                <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="e.g. Mukesh Kumar" className="w-full p-2 border rounded-xl" />
+                <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="e.g. Santosh Shinde" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -1183,8 +1180,8 @@ export default function App() {
                   <input type="number" value={newEmp.target} onChange={e => setNewEmp({...newEmp, target: e.target.value})} placeholder="500000" className="w-full p-2 border rounded-xl" />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Territory</label>
-                  <input type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} placeholder="Gaya Division" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">MH Territory</label>
+                  <input type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} placeholder="Pune & PCMC Cluster" className="w-full p-2 border rounded-xl" />
                 </div>
               </div>
               <div className="pt-2 flex justify-end space-x-2">
@@ -1196,12 +1193,12 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: LOG DAILY TRAVEL */}
+      {/* MODAL: LOG DAILY TRAVEL (MAHARASHTRA EXAMPLES) */}
       {isDailyTravelModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Log Daily Travelling Expense</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Log Daily Travelling Expense (Maharashtra)</h3>
               <button onClick={() => setIsDailyTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddDailyTravel} className="space-y-3 text-xs">
@@ -1234,8 +1231,8 @@ export default function App() {
                 <input required type="number" value={newDailyTravel.amount} onChange={e => setNewDailyTravel({...newDailyTravel, amount: e.target.value})} placeholder="350" className="w-full p-2 border rounded-xl" />
               </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Route / Visit Details</label>
-                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} placeholder="e.g. Patna to Danapur Route" className="w-full p-2 border rounded-xl" />
+                <label className="font-semibold text-slate-700 block mb-1">Route / Visit Details (e.g. Andheri to Thane)</label>
+                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} placeholder="e.g. Andheri to Thane Route" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsDailyTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
@@ -1246,18 +1243,18 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD LEAD */}
+      {/* MODAL: ADD LEAD (MAHARASHTRA EXAMPLES) */}
       {isLeadModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead (Maharashtra)</h3>
               <button onClick={() => setIsLeadModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddLead} className="space-y-3 text-xs">
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
-                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="e.g. Bihar Auto Spares" className="w-full p-2 border rounded-xl" />
+                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="e.g. Sahyadri Auto Spares" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -1268,13 +1265,13 @@ export default function App() {
                 </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
-                  <input type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="98XXXXXXXX" className="w-full p-2 border rounded-xl" />
+                  <input type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2 border rounded-xl" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Place / City</label>
-                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="e.g. Baksoti Road, Gaya" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Place / City (MH)</label>
+                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="e.g. Vashi Turbhe, Navi Mumbai" className="w-full p-2 border rounded-xl" />
                 </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Investment Amount (₹)</label>
@@ -1306,12 +1303,12 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: SUBMIT DCR */}
+      {/* MODAL: SUBMIT DCR (MAHARASHTRA EXAMPLES) */}
       {isDcrModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit DCR (Daily Call Report)</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Submit DCR (Maharashtra Field Report)</h3>
               <button onClick={() => setIsDcrModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
@@ -1327,8 +1324,8 @@ export default function App() {
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Place / City</label>
-                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} placeholder="e.g. NH-2 Dobhi, Gaya" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold text-slate-700 block mb-1">Place / City (MH)</label>
+                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} placeholder="e.g. Hinjewadi Phase 1, Pune" className="w-full p-2 border rounded-xl" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -1354,7 +1351,7 @@ export default function App() {
                     {capturingGpsPhoto ? 'Getting GPS...' : 'Open Camera'}
                   </button>
                 </div>
-                {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 font-bold">✓ Photo & GPS Tagged!</p>}
+                {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 font-bold">✓ MH Photo & GPS Tagged!</p>}
               </div>
 
               <div className="pt-2 flex justify-end space-x-2">
@@ -1371,7 +1368,7 @@ export default function App() {
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-5 w-full max-w-sm shadow-2xl space-y-3">
             <div className="flex justify-between items-center border-b pb-2">
-              <h3 className="font-bold text-slate-900 text-xs">GPS Visit Photo</h3>
+              <h3 className="font-bold text-slate-900 text-xs">GPS Visit Photo (MH)</h3>
               <button onClick={() => setViewPhotoModal(null)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <img src={viewPhotoModal.photoUrl} alt="Visit Proof" className="w-full h-64 object-cover rounded-xl border" />
