@@ -6,7 +6,7 @@ import {
   Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare, ArrowRight, CalendarDays
 } from 'lucide-react';
 
-// Product Lines & Business Verticals
+// Business Verticals List
 const BUSINESS_VERTICALS = [
   'USR POWER LUBE',
   'TURBO OIL',
@@ -17,7 +17,7 @@ const BUSINESS_VERTICALS = [
   'DIGITAL MARKETING'
 ];
 
-// Initial Staff Data with Joining Date & Leaves
+// Initial Staff Data with Passwords, IDs & Assigned Verticals
 const INITIAL_EMPLOYEES = [
   { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Patna Division', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE' },
   { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Gaya & South Bihar', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL' },
@@ -99,6 +99,11 @@ export default function App() {
 
   const currentEmp = employees.find(e => e.id === loggedEmpId) || employees[0];
 
+  // Filtering Business Verticals based on Role
+  const accessibleVerticals = authRole === 'admin' 
+    ? BUSINESS_VERTICALS 
+    : BUSINESS_VERTICALS.filter(v => v === currentEmp.primaryVertical);
+
   const handleEmployeeLogin = (e) => {
     e.preventDefault();
     setLoginError('');
@@ -110,7 +115,7 @@ export default function App() {
       setLoginPassInput('');
       setActiveTab('dashboard');
     } else {
-      setLoginError('Invalid Employee ID or Password! (e.g. ID: USR-EMP-101, Pass: 1011)');
+      setLoginError('Invalid Employee ID or Password!');
     }
   };
 
@@ -190,7 +195,7 @@ export default function App() {
           };
           reader.readAsDataURL(file);
         },
-        (error) => {
+        () => {
           const reader = new FileReader();
           reader.onloadend = () => {
             setNewDcr(prev => ({
@@ -221,6 +226,7 @@ export default function App() {
       ...newLead,
       assignedToId: assignedId,
       assignedToName: empObj ? empObj.name : currentEmp.name,
+      vertical: authRole === 'admin' ? newLead.vertical : currentEmp.primaryVertical,
       id: `LD-${Math.floor(Math.random() * 900 + 100)}`,
       lastFollowup: new Date().toISOString().split('T')[0],
       estimatedValue: Number(newLead.estimatedValue) || 0
@@ -237,6 +243,7 @@ export default function App() {
       ...newDcr,
       empId: targetId,
       empName: empObj ? empObj.name : currentEmp.name,
+      vertical: authRole === 'admin' ? newDcr.vertical : currentEmp.primaryVertical,
       id: `DCR-${Math.floor(Math.random() * 900 + 100)}`,
       visitTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
@@ -261,7 +268,7 @@ export default function App() {
     setEmployees([...employees, createdEmp]);
     setIsAddEmpModalOpen(false);
     setNewEmp({ id: '', pass: '', name: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE' });
-    alert(`Employee ID (${createdEmp.id}) & Joining/Leave Details Created Successfully!`);
+    alert(`Employee ID (${createdEmp.id}) Created & Assigned to ${createdEmp.primaryVertical}!`);
   };
 
   const exportToCSV = (data, filename) => {
@@ -352,15 +359,11 @@ export default function App() {
                   <span>Login to Employee Portal</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
-
-                <div className="text-[10px] text-slate-400 text-center pt-2">
-                  Demo Staff ID: <strong className="text-slate-600">USR-EMP-101</strong> | Pass: <strong className="text-slate-600">1011</strong>
-                </div>
               </form>
             ) : (
               <form onSubmit={handleAdminLogin} className="space-y-4 text-xs">
                 <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-amber-900 text-[11px]">
-                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, joining dates, leave tracking, and master CSV reports.
+                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, vertical assignments, and leave tracking.
                 </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Admin Security Password / PIN</label>
@@ -415,7 +418,7 @@ export default function App() {
               { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
               { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
               { id: 'gps', label: 'GPS Photo Verification', icon: Camera },
-              { id: 'verticals', label: 'Business Verticals', icon: Tag, badge: BUSINESS_VERTICALS.length },
+              { id: 'verticals', label: authRole === 'admin' ? 'Business Verticals' : 'Assigned Vertical', icon: Tag, badge: accessibleVerticals.length },
               { id: 'performance', label: 'Staff Performance', icon: Award },
             ].map((item) => {
               const Icon = item.icon;
@@ -478,11 +481,11 @@ export default function App() {
                 {activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}
               </h2>
               <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">
-                {authRole === 'admin' ? 'ADMIN VIEW' : `STAFF VIEW (${currentEmp.primaryVertical})`}
+                {authRole === 'admin' ? 'ADMIN VIEW' : `ASSIGNED VERTICAL: ${currentEmp.primaryVertical}`}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              {authRole === 'admin' ? 'Managing employee credentials, joining dates, and leave records.' : `Welcome ${currentEmp.name}. Joining Date: ${currentEmp.joiningDate} | Leaves Left: ${currentEmp.totalLeaves - currentEmp.usedLeaves}`}
+              {authRole === 'admin' ? 'Managing employee credentials, assigned verticals, and leave records.' : `Welcome ${currentEmp.name}. Joined: ${currentEmp.joiningDate} | Assigned Vertical: ${currentEmp.primaryVertical}`}
             </p>
           </div>
 
@@ -584,6 +587,30 @@ export default function App() {
           </div>
         )}
 
+        {/* TAB: VERTICALS (ONLY ASSIGNED VERTICAL SHOWN TO EMPLOYEE) */}
+        {activeTab === 'verticals' && (
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div className="border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">
+                {authRole === 'admin' ? 'All Business Verticals (Company Overview)' : `Your Assigned Business Vertical`}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                {authRole === 'admin' ? 'Showing all company product lines.' : `You are authorized to manage operation for ${currentEmp.primaryVertical} only.`}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {accessibleVerticals.map(v => (
+                <div key={v} className="p-4 border border-indigo-200 rounded-xl bg-indigo-50/40 space-y-2">
+                  <span className="text-[10px] font-bold bg-indigo-600 text-white px-2 py-0.5 rounded uppercase">Active Vertical</span>
+                  <h4 className="font-extrabold text-sm text-indigo-950">{v}</h4>
+                  <p className="text-[11px] text-slate-600">USR POWER INDUSTRIES PRIVATE LIMITED</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {activeTab === 'attendance' && (
           <div className="space-y-4">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -629,7 +656,6 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: LEAVES (BOTH ADMIN & EMPLOYEE) */}
         {activeTab === 'leaves' && (
           <div className="space-y-4">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -680,7 +706,7 @@ export default function App() {
         {activeTab === 'leads' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-slate-900 text-sm">Business Leads ({authRole === 'admin' ? 'All Leads' : 'Your Vertical'})</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Business Leads ({authRole === 'admin' ? 'All Leads' : currentEmp.primaryVertical})</h3>
               <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Add Lead</button>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
@@ -698,7 +724,7 @@ export default function App() {
                   {visibleLeads.map(lead => (
                     <tr key={lead.id} className="hover:bg-slate-50">
                       <td className="p-3 font-bold text-slate-900">{lead.clientName} <span className="text-[10px] text-slate-400 block">{lead.phone}</span></td>
-                      <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-[10px]">{lead.vertical}</span></td>
+                      <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-[10px] font-semibold">{lead.vertical}</span></td>
                       <td className="p-3 font-semibold">{lead.assignedToName}</td>
                       <td className="p-3"><span className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold">{lead.status}</span></td>
                       <td className="p-3 font-bold">₹{(lead.estimatedValue).toLocaleString('en-IN')}</td>
@@ -763,20 +789,6 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'verticals' && (
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-900 text-sm">Business Verticals</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {BUSINESS_VERTICALS.map(v => (
-                <div key={v} className="p-3 border rounded-xl bg-slate-50">
-                  <h4 className="font-bold text-xs text-indigo-950">{v}</h4>
-                  <p className="text-[10px] text-slate-500 mt-1">Managed under USR Power Industries Private Limited.</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {activeTab === 'performance' && (
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <h3 className="font-bold text-slate-900 text-sm">Staff Targets Leaderboard</h3>
@@ -799,20 +811,20 @@ export default function App() {
           </div>
         )}
 
-        {/* ADMIN CONTROL CENTER WITH JOINING DATE & LEAVES */}
+        {/* ADMIN CONTROL CENTER */}
         {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
-              <p className="text-xs text-amber-800">Create employee IDs, passwords, joining dates, and review leave records.</p>
+              <p className="text-xs text-amber-800">Create employee IDs, passwords, select assigned verticals, joining dates, and review leave records.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
                 <h4 className="font-bold text-slate-900 text-xs uppercase">Employee ID & Password Creator</h4>
-                <p className="text-xs text-slate-500">Generate secure login IDs, passwords, and joining dates for new sales staff.</p>
+                <p className="text-xs text-slate-500">Generate secure login IDs, passwords, and assign specific Business Vertical to staff.</p>
                 <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold">
-                  + Create New Employee ID & Password
+                  + Create New Employee & Assign Vertical
                 </button>
               </div>
 
@@ -829,8 +841,8 @@ export default function App() {
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-3">
               <div className="p-5 border-b border-slate-100 flex justify-between items-center">
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Registered Employees, Joining Dates & Leave Balances</h4>
-                  <p className="text-xs text-slate-500">Complete staff HR records.</p>
+                  <h4 className="font-bold text-slate-900 text-sm">Registered Employees, Assigned Verticals & Credentials</h4>
+                  <p className="text-xs text-slate-500">Only Admin can view all active employee credentials.</p>
                 </div>
                 <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100">
                   Total Staff: {employees.length}
@@ -843,9 +855,10 @@ export default function App() {
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Employee Name & ID</th>
                       <th className="p-3">Password</th>
+                      <th className="p-3">Assigned Vertical</th>
                       <th className="p-3">Joining Date</th>
                       <th className="p-3">Leaves (Used / Total)</th>
-                      <th className="p-3">Vertical & Territory</th>
+                      <th className="p-3">Territory</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -853,9 +866,10 @@ export default function App() {
                       <tr key={emp.id} className="hover:bg-slate-50">
                         <td className="p-3 font-bold text-slate-900">{emp.name} <span className="font-mono text-indigo-600 text-[10px] block">[{emp.id}]</span></td>
                         <td className="p-3 font-mono font-bold text-amber-700 bg-amber-50/50 rounded">{emp.pass}</td>
+                        <td className="p-3"><span className="bg-indigo-600 text-white px-2 py-0.5 rounded text-[10px] font-bold">{emp.primaryVertical}</span></td>
                         <td className="p-3 font-semibold text-slate-700">{emp.joiningDate}</td>
                         <td className="p-3"><span className="bg-indigo-50 text-indigo-800 px-2 py-0.5 rounded font-bold text-[10px]">{emp.usedLeaves} / {emp.totalLeaves} Leaves</span></td>
-                        <td className="p-3"><span className="text-slate-900 font-semibold">{emp.primaryVertical}</span> <span className="text-slate-400 block text-[10px]">{emp.territory}</span></td>
+                        <td className="p-3 text-slate-600">{emp.territory}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -873,7 +887,7 @@ export default function App() {
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID & Password</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Create Employee & Assign Vertical</h3>
               <button onClick={() => setIsAddEmpModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
@@ -890,6 +904,12 @@ export default function App() {
                   <label className="font-semibold text-slate-700 block mb-1">Password</label>
                   <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} placeholder="Secret Pass" className="w-full p-2 border rounded-xl font-mono" />
                 </div>
+              </div>
+              <div>
+                <label className="font-semibold text-indigo-900 font-bold block mb-1">Assign Business Vertical (Staff Access)</label>
+                <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2 border border-indigo-300 rounded-xl bg-indigo-50 font-bold text-indigo-900">
+                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
+                </select>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -910,12 +930,6 @@ export default function App() {
                   <label className="font-semibold text-slate-700 block mb-1">Territory</label>
                   <input type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} placeholder="Gaya Division" className="w-full p-2 border rounded-xl" />
                 </div>
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Primary Vertical</label>
-                <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
               </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
@@ -981,15 +995,21 @@ export default function App() {
                   <input type="number" value={newLead.estimatedValue} onChange={e => setNewLead({...newLead, estimatedValue: e.target.value})} placeholder="50000" className="w-full p-2 border rounded-xl" />
                 </div>
               </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Vertical</label>
-                <select value={newLead.vertical} onChange={e => setNewLead({...newLead, vertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
-              </div>
+              {authRole === 'admin' ? (
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Vertical</label>
+                  <select value={newLead.vertical} onChange={e => setNewLead({...newLead, vertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                    {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
+                  </select>
+                </div>
+              ) : (
+                <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-xl text-[11px] font-bold text-indigo-900">
+                  Assigned Vertical: {currentEmp.primaryVertical}
+                </div>
+              )}
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save</button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save Lead</button>
               </div>
             </form>
           </div>
@@ -1027,7 +1047,7 @@ export default function App() {
 
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">Submit</button>
+                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">Submit DCR</button>
               </div>
             </form>
           </div>
