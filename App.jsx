@@ -3,10 +3,9 @@ import {
   Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
   Search, Filter, CheckCircle, Clock, Award, 
   Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag,
-  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare, ArrowRight, CalendarDays, Bus, ShieldAlert, MessageSquare, FileSpreadsheet
+  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare, ArrowRight, CalendarDays, Bus, ShieldAlert, MessageSquare, FileSpreadsheet, Printer
 } from 'lucide-react';
 
-// Business Verticals List
 const BUSINESS_VERTICALS = [
   'USR POWER LUBE',
   'TURBO OIL',
@@ -17,7 +16,6 @@ const BUSINESS_VERTICALS = [
   'DIGITAL MARKETING'
 ];
 
-// Client Types
 const CLIENT_TYPES = [
   'Distributor',
   'Dealer',
@@ -26,7 +24,6 @@ const CLIENT_TYPES = [
   'Corporate / Direct'
 ];
 
-// Initial Staff Data
 const INITIAL_EMPLOYEES = [
   { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', phone: '9820012345', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
   { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false },
@@ -34,39 +31,30 @@ const INITIAL_EMPLOYEES = [
   { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', phone: '9823345678', joiningDate: '2026-01-10', totalLeaves: 18, usedLeaves: 1, territory: 'Nagpur Industrial Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING', failedAttempts: 0, isBlocked: false }
 ];
 
-// Initial Attendance Records
 const INITIAL_ATTENDANCE = [
-  { id: 'ATT-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', checkInTime: '09:15 AM', status: 'Present', location: 'Mumbai HQ Hub' },
-  { id: 'ATT-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', checkInTime: '09:30 AM', status: 'Present', location: 'Pune Branch' }
+  { id: 'ATT-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', checkInTime: '09:15 AM', status: 'Present', location: 'Mumbai HQ Hub' }
 ];
 
-// Initial Leave Requests
 const INITIAL_LEAVES = [
-  { id: 'LEV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', fromDate: '2026-11-10', toDate: '2026-11-11', reason: 'Family Function in Mumbai', status: 'Approved' },
-  { id: 'LEV-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', fromDate: '2026-11-15', toDate: '2026-11-15', reason: 'Medical Checkup in Pune', status: 'Pending' }
+  { id: 'LEV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', fromDate: '2026-11-10', toDate: '2026-11-11', reason: 'Family Function in Mumbai', status: 'Approved' }
 ];
 
-// Initial Daily Travelling Logs
 const INITIAL_DAILY_TRAVEL = [
   { id: 'DTRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-01', mode: 'Bike / Fuel', km: 45, amount: 350, route: 'Andheri to Thane Dealer Route', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' }
 ];
 
-// Initial Weekly Travel Claims
 const INITIAL_TRAVEL_CLAIMS = [
   { id: 'TRV-101', empId: 'USR-EMP-101', empName: 'Rohan Sharma', weekRange: 'Nov 01 - Nov 07, 2026', totalKm: 100, totalAmount: 800, purpose: 'Mumbai & Thane Dealer Route Visits', status: 'Approved' }
 ];
 
-// Initial Leads
 const INITIAL_LEADS = [
   { id: 'LD-101', clientName: 'Sahyadri Auto Spares & Lubricants', clientType: 'Distributor', contactPerson: 'Suresh Patil', phone: '9820012345', place: 'Vashi Turbhe Road, Navi Mumbai', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, investmentAmount: 250000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
 ];
 
-// Initial DCRs
 const INITIAL_DCR = [
-  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Pune Logistics & Fleet Services', clientType: 'Corporate / Direct', place: 'Mumbai-Pune Expressway, Hinjewadi', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract for heavy lube and Turbo Oil.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '18.5204 N', lng: '73.8567 E', address: 'Hinjewadi Phase 1, Pune', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' }
+  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Pune Logistics & Fleet Services', clientType: 'Corporate / Direct', place: 'Hinjewadi', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '18.5204 N', lng: '73.8567 E', address: 'Hinjewadi Phase 1, Pune', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' }
 ];
 
-// Initial Partnership Agreements (Based on the uploaded PDF form)
 const INITIAL_AGREEMENTS = [
   {
     id: 'AGR-2026-01',
@@ -75,13 +63,21 @@ const INITIAL_AGREEMENTS = [
     proprietorName: 'Suresh Patil',
     phone: '9820012345',
     address: 'Vashi Turbhe Road, Navi Mumbai, Maharashtra - 400703',
+    immovableProperties: 'Commercial Shop No 12, Vashi Market',
     gstn: '27AAAAA0000A1Z5',
+    transportCompany: 'VRL Logistics Ltd, Mumbai',
+    railwayStation: 'Vashi Railway Station',
     verticalInterested: 'Automotive Engine Oil',
     territory: 'Navi Mumbai & Thane Region',
-    investmentAmount: 1500000,
+    investmentAutomotive: 1000000,
+    investmentFourStroke: 200000,
+    investmentPassenger: 150000,
+    investmentHeavyDuty: 100000,
+    investmentLcvHcv: 50000,
+    totalInvestment: 1500000,
     submittedBy: 'Amit Kumar [USR-EMP-102]',
     date: '2026-11-02',
-    status: 'Approved'
+    status: 'Approved & Signed'
   }
 ];
 
@@ -93,7 +89,6 @@ export default function App() {
   const [loginIdInput, setLoginIdInput] = useState('');
   const [loginPassInput, setLoginPassInput] = useState('');
   
-  // CAPTCHA State
   const [captchaCode, setCaptchaCode] = useState('4829');
   const [captchaInput, setCaptchaInput] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -109,7 +104,6 @@ export default function App() {
   const [agreements, setAgreements] = useState(INITIAL_AGREEMENTS);
 
   const [selectedEmpFilter, setSelectedEmpFilter] = useState('All');
-  const [selectedVerticalFilter, setSelectedVerticalFilter] = useState('All');
 
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isDcrModalOpen, setIsDcrModalOpen] = useState(false);
@@ -120,24 +114,39 @@ export default function App() {
   const [viewPhotoModal, setViewPhotoModal] = useState(null);
   const [viewAgreementDetail, setViewAgreementDetail] = useState(null);
 
-  // Edit Password Modal State for Admin
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // New Partnership Agreement Form State (from PDF)
+  // Complete Partnership Agreement Form State matching full PDF
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
     proprietorName: '',
+    proprietorAddress: '',
+    residenceAddress: '',
+    qualification: '',
     phone: '',
-    address: '',
+    immovableProperties: '',
+    sisterConcernName: '',
+    sisterAddress: '',
+    sisterBusiness: '',
+    sisterTurnover: '',
+    adminStaffCount: '2',
+    salesStaffCount: '4',
+    techStaffCount: '1',
+    isRelatedToEmployee: 'No',
+    relationDetails: '',
     gstn: '',
+    transportCompany: '',
+    railwayStation: '',
     verticalInterested: 'Automotive Engine Oil',
     territory: '',
-    investmentAmount: '1500000',
-    bankName: '',
-    accountNo: '',
-    ifsc: ''
+    investmentAutomotive: '1000000',
+    investmentFourStroke: '200000',
+    investmentPassenger: '150000',
+    investmentHeavyDuty: '100000',
+    investmentLcvHcv: '50000',
+    totalInvestment: '1500000'
   });
 
   const [newLead, setNewLead] = useState({
@@ -174,10 +183,6 @@ export default function App() {
 
   const currentEmp = employees.find(e => e.id === loggedEmpId) || employees[0];
 
-  const accessibleVerticals = authRole === 'admin' 
-    ? BUSINESS_VERTICALS 
-    : BUSINESS_VERTICALS.filter(v => v === currentEmp.primaryVertical);
-
   const refreshCaptcha = () => {
     const randomNum = Math.floor(1000 + Math.random() * 9000).toString();
     setCaptchaCode(randomNum);
@@ -202,7 +207,7 @@ export default function App() {
     }
 
     if (foundEmp.isBlocked) {
-      setLoginError('Account is BLOCKED due to 6 failed password attempts! Contact Admin to regenerate password.');
+      setLoginError('Account is BLOCKED due to 6 failed password attempts! Contact Admin.');
       return;
     }
 
@@ -225,9 +230,9 @@ export default function App() {
       } : emp));
 
       if (isNowBlocked) {
-        setLoginError('Account BLOCKED! You exceeded 6 incorrect password attempts. Contact Admin.');
+        setLoginError('Account BLOCKED! You exceeded 6 incorrect password attempts.');
       } else {
-        setLoginError(`Incorrect Password! Attempt ${updatedAttempts} of 6. Account will lock after 6 failures.`);
+        setLoginError(`Incorrect Password! Attempt ${updatedAttempts} of 6.`);
       }
       refreshCaptcha();
     }
@@ -260,7 +265,6 @@ export default function App() {
     refreshCaptcha();
   };
 
-  // Admin updating password & sending WhatsApp notification
   const handleSaveEmployeeCredentials = (e) => {
     e.preventDefault();
     if (!editingEmpModal) return;
@@ -272,22 +276,36 @@ export default function App() {
       failedAttempts: 0
     } : emp));
 
-    const message = `Hello ${editingEmpModal.name},\n\nYour USR Power Sales Portal password has been reset / regenerated by Admin.\n\n🆔 Employee ID: ${editingEmpModal.id}\n🔑 New Password: ${newPasswordInput}\n\nYou can now login securely.\n- USR Power Industries Mumbai`;
+    const message = `Hello ${editingEmpModal.name},\n\nYour USR Power Portal password has been reset by Admin.\n\n🆔 Employee ID: ${editingEmpModal.id}\n🔑 New Password: ${newPasswordInput}\n\n- USR Power Industries Mumbai`;
     const whatsappUrl = `https://wa.me/91${editingEmpModal.phone}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 
-    alert(`Password updated & account unblocked for ${editingEmpModal.name}! WhatsApp notification window opened.`);
+    alert(`Password updated & account unblocked for ${editingEmpModal.name}! WhatsApp window opened.`);
     setEditingEmpModal(null);
     setNewPasswordInput('');
   };
 
-  // Handle submitting Partnership Agreement Form (Online PDF Form)
   const handleAgreementSubmit = (e) => {
     e.preventDefault();
     const createdAgreement = {
       id: `AGR-2026-${Math.floor(Math.random() * 900 + 100)}`,
-      ...newAgreement,
-      investmentAmount: Number(newAgreement.investmentAmount) || 1500000,
+      distributorName: newAgreement.distributorName,
+      constitution: newAgreement.constitution,
+      proprietorName: newAgreement.proprietorName,
+      phone: newAgreement.phone,
+      address: newAgreement.proprietorAddress,
+      immovableProperties: newAgreement.immovableProperties,
+      gstn: newAgreement.gstn,
+      transportCompany: newAgreement.transportCompany,
+      railwayStation: newAgreement.railwayStation,
+      verticalInterested: newAgreement.verticalInterested,
+      territory: newAgreement.territory,
+      investmentAutomotive: Number(newAgreement.investmentAutomotive) || 0,
+      investmentFourStroke: Number(newAgreement.investmentFourStroke) || 0,
+      investmentPassenger: Number(newAgreement.investmentPassenger) || 0,
+      investmentHeavyDuty: Number(newAgreement.investmentHeavyDuty) || 0,
+      investmentLcvHcv: Number(newAgreement.investmentLcvHcv) || 0,
+      totalInvestment: Number(newAgreement.totalInvestment) || 1500000,
       submittedBy: `${currentEmp.name} [${currentEmp.id}]`,
       date: new Date().toISOString().split('T')[0],
       status: 'Pending Verification'
@@ -295,21 +313,7 @@ export default function App() {
 
     setAgreements([createdAgreement, ...agreements]);
     setIsAgreementModalOpen(false);
-    setNewAgreement({
-      distributorName: '',
-      constitution: 'Proprietorship',
-      proprietorName: '',
-      phone: '',
-      address: '',
-      gstn: '',
-      verticalInterested: 'Automotive Engine Oil',
-      territory: '',
-      investmentAmount: '1500000',
-      bankName: '',
-      accountNo: '',
-      ifsc: ''
-    });
-    alert('Official Partnership Agreement Form submitted successfully! Admin can now review it from the panel.');
+    alert('Official Partnership Agreement Form submitted successfully! Admin can review it from the panel.');
   };
 
   const handleApproveAgreement = (agrId) => {
@@ -370,21 +374,13 @@ export default function App() {
     };
     setDailyTravelList([createdLog, ...dailyTravelList]);
     setIsDailyTravelModalOpen(false);
-    setNewDailyTravel({
-      date: new Date().toISOString().split('T')[0],
-      mode: 'Bike / Fuel',
-      km: '',
-      amount: '',
-      route: '',
-      weekCycle: 'Nov 01 - Nov 07, 2026'
-    });
     alert('Daily Travel Log Saved Successfully!');
   };
 
   const submitWeeklyTravelClaim = (weekCycleName) => {
     const empDailyLogs = dailyTravelList.filter(d => d.empId === currentEmp.id && d.weekCycle === weekCycleName && d.status === 'Pending Submit');
     if (empDailyLogs.length === 0) {
-      alert('No pending daily travel logs found for this week to submit!');
+      alert('No pending daily travel logs found for this week!');
       return;
     }
 
@@ -405,7 +401,7 @@ export default function App() {
 
     setTravelClaims([newClaim, ...travelClaims]);
     setDailyTravelList(dailyTravelList.map(d => (d.empId === currentEmp.id && d.weekCycle === weekCycleName) ? { ...d, status: 'Submitted Weekly' } : d));
-    alert(`Weekly Travelling Claim for (${weekCycleName}) submitted to Admin successfully! Total Amount: ₹${totalAmtSum}`);
+    alert(`Weekly Travelling Claim submitted successfully! Amount: ₹${totalAmtSum}`);
   };
 
   const handleApproveTravelClaim = (claimId) => {
@@ -429,7 +425,7 @@ export default function App() {
               ...prev,
               lat: lat,
               lng: lng,
-              address: 'Live MH Field Location (Lat: ' + lat + ')',
+              address: 'Live Location (Lat: ' + lat + ')',
               photoVerified: true,
               photoUrl: reader.result
             }));
@@ -444,7 +440,7 @@ export default function App() {
               ...prev,
               lat: '19.0760 N',
               lng: '72.8777 E',
-              address: 'Mumbai HQ Hub (GPS Manual)',
+              address: 'Mumbai HQ Hub',
               photoVerified: true,
               photoUrl: reader.result
             }));
@@ -456,7 +452,7 @@ export default function App() {
       );
     } else {
       setCapturingGpsPhoto(false);
-      alert('Geolocation is not supported.');
+      alert('Geolocation not supported.');
     }
   };
 
@@ -514,8 +510,7 @@ export default function App() {
     };
     setEmployees([...employees, createdEmp]);
     setIsAddEmpModalOpen(false);
-    setNewEmp({ id: '', pass: '', name: '', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '', primaryVertical: 'USR POWER LUBE' });
-    alert(`Employee ID (${createdEmp.id}) Created & Assigned to ${createdEmp.primaryVertical}!`);
+    alert(`Employee ID (${createdEmp.id}) Created Successfully!`);
   };
 
   const exportToCSV = (data, filename) => {
@@ -533,11 +528,11 @@ export default function App() {
   };
 
   const visibleLeads = authRole === 'admin'
-    ? leads.filter(l => (selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || l.vertical === selectedVerticalFilter))
+    ? leads.filter(l => (selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter))
     : leads.filter(l => l.assignedToId === currentEmp.id || l.vertical === currentEmp.primaryVertical);
 
   const visibleDcrs = authRole === 'admin'
-    ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || d.vertical === selectedVerticalFilter))
+    ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter))
     : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
 
   const visibleAgreements = authRole === 'admin'
@@ -553,7 +548,7 @@ export default function App() {
   const totalSalesAchieved = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
   const totalLeadsValue = visibleLeads.reduce((acc, curr) => acc + (curr.investmentAmount || curr.estimatedValue), 0);
 
-  // LOGIN SCREEN WITH CAPTCHA
+  // LOGIN SCREEN
   if (!authRole) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
@@ -590,30 +585,26 @@ export default function App() {
           <div className="p-6">
             {loginType === 'employee' ? (
               <form onSubmit={handleEmployeeLogin} className="space-y-4 text-xs">
-                <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-indigo-900 text-[11px]">
-                  <strong>Security Note:</strong> Account will be blocked automatically after 6 consecutive incorrect password attempts.
-                </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Employee ID</label>
-                  <input required type="text" value={loginIdInput} onChange={e => setLoginIdInput(e.target.value)} placeholder="e.g. USR-EMP-101" className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono uppercase outline-none focus:ring-2 focus:ring-indigo-500" />
+                  <input required type="text" value={loginIdInput} onChange={e => setLoginIdInput(e.target.value)} placeholder="e.g. USR-EMP-101" className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono uppercase outline-none" />
                 </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Password</label>
-                  <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter password..." className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+                  <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter password..." className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none" />
                 </div>
 
-                {/* CAPTCHA SECTION */}
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Security CAPTCHA Verification</label>
                   <div className="flex items-center space-x-3">
                     <div className="bg-slate-900 text-amber-400 font-mono font-extrabold tracking-widest px-4 py-3 rounded-xl select-none text-base shadow-inner border border-slate-700 flex-1 text-center">
                       {captchaCode}
                     </div>
-                    <button type="button" onClick={refreshCaptcha} className="p-3 bg-slate-100 hover:bg-slate-200 border rounded-xl text-slate-600 transition" title="Refresh Captcha">
+                    <button type="button" onClick={refreshCaptcha} className="p-3 bg-slate-100 hover:bg-slate-200 border rounded-xl text-slate-600 transition">
                       <RefreshCw className="w-4 h-4" />
                     </button>
                   </div>
-                  <input required type="text" value={captchaInput} onChange={e => setCaptchaInput(e.target.value)} placeholder="Enter CAPTCHA code above..." className="w-full mt-2 p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono outline-none focus:ring-2 focus:ring-indigo-500" />
+                  <input required type="text" value={captchaInput} onChange={e => setCaptchaInput(e.target.value)} placeholder="Enter CAPTCHA code above..." className="w-full mt-2 p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono outline-none" />
                 </div>
 
                 {loginError && <p className="text-red-600 font-semibold text-[11px] bg-red-50 p-2.5 rounded-lg border border-red-200">{loginError}</p>}
@@ -625,26 +616,22 @@ export default function App() {
               </form>
             ) : (
               <form onSubmit={handleAdminLogin} className="space-y-4 text-xs">
-                <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-amber-900 text-[11px]">
-                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, editing passwords, and reviewing official distributor agreements.
-                </div>
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Admin Security Password / PIN</label>
-                  <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter admin password..." className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-amber-500" autoFocus />
+                  <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter admin password..." className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none" autoFocus />
                 </div>
 
-                {/* CAPTCHA SECTION */}
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Security CAPTCHA Verification</label>
                   <div className="flex items-center space-x-3">
                     <div className="bg-slate-900 text-amber-400 font-mono font-extrabold tracking-widest px-4 py-3 rounded-xl select-none text-base shadow-inner border border-slate-700 flex-1 text-center">
                       {captchaCode}
                     </div>
-                    <button type="button" onClick={refreshCaptcha} className="p-3 bg-slate-100 hover:bg-slate-200 border rounded-xl text-slate-600 transition" title="Refresh Captcha">
+                    <button type="button" onClick={refreshCaptcha} className="p-3 bg-slate-100 hover:bg-slate-200 border rounded-xl text-slate-600 transition">
                       <RefreshCw className="w-4 h-4" />
                     </button>
                   </div>
-                  <input required type="text" value={captchaInput} onChange={e => setCaptchaInput(e.target.value)} placeholder="Enter CAPTCHA code above..." className="w-full mt-2 p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono outline-none focus:ring-2 focus:ring-amber-500" />
+                  <input required type="text" value={captchaInput} onChange={e => setCaptchaInput(e.target.value)} placeholder="Enter CAPTCHA code above..." className="w-full mt-2 p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono outline-none" />
                 </div>
 
                 {loginError && <p className="text-red-600 font-semibold text-[11px] bg-red-50 p-2.5 rounded-lg border border-red-200">{loginError}</p>}
@@ -665,7 +652,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col md:flex-row">
       
-      <aside className="w-full md:w-72 bg-slate-900 text-slate-100 flex-shrink-0 flex flex-col justify-between shadow-xl">
+      {/* SIDEBAR (Hidden during print) */}
+      <aside className="w-full md:w-72 bg-slate-900 text-slate-100 flex-shrink-0 flex flex-col justify-between shadow-xl no-print">
         <div>
           <div className="p-5 border-b border-slate-800">
             <div className="flex items-center space-x-3 mb-2">
@@ -698,7 +686,6 @@ export default function App() {
               { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
               { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
               { id: 'gps', label: 'GPS Photo Verification', icon: Camera },
-              { id: 'performance', label: 'Staff Performance', icon: Award },
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -745,15 +732,13 @@ export default function App() {
             <LogOut className="w-4 h-4 mr-2" />
             <span>Logout Securely</span>
           </button>
-          <div className="text-[10px] text-center text-slate-500 pt-1">
-            USR POWER INDUSTRIES PVT LTD © 2026
-          </div>
         </div>
       </aside>
 
       <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
         
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+        {/* HEADER (Hidden during print) */}
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 no-print">
           <div>
             <div className="flex items-center space-x-2">
               <h2 className="text-xl font-bold text-slate-900 capitalize">
@@ -763,20 +748,13 @@ export default function App() {
                 {authRole === 'admin' ? 'ADMIN VIEW' : `STAFF: ${currentEmp.name}`}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              {authRole === 'admin' ? 'Reviewing partnership agreement forms, employee credentials & WhatsApp alerts.' : `Welcome ${currentEmp.name}. Territory: ${currentEmp.territory}`}
-            </p>
+            <p className="text-xs text-slate-500 mt-0.5">USR Power Industries Private Limited • Partnership & Sales Management</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <button onClick={() => setIsAgreementModalOpen(true)} className="flex items-center space-x-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow transition">
               <FileText className="w-3.5 h-3.5" />
-              <span>+ New Agreement Form</span>
-            </button>
-
-            <button onClick={() => setIsLeadModalOpen(true)} className="flex items-center space-x-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow transition">
-              <UserPlus className="w-3.5 h-3.5" />
-              <span>+ Add Lead</span>
+              <span>+ Fill New Agreement Form</span>
             </button>
           </div>
         </header>
@@ -825,7 +803,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* QUICK PREVIEW OF RECENT AGREEMENTS */}
             <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
               <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 className="font-bold text-slate-900 text-sm flex items-center">
@@ -840,7 +817,7 @@ export default function App() {
                       <span className="font-bold text-slate-900 text-sm">{agr.distributorName}</span>
                       <span className="ml-2 text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">{agr.constitution}</span>
                       <p className="text-slate-600 mt-1">Proprietor/Partner: <strong>{agr.proprietorName}</strong> ({agr.phone}) | GSTN: {agr.gstn}</p>
-                      <p className="text-[10px] text-slate-400 mt-1">Territory: {agr.territory} • Investment: ₹{(agr.investmentAmount).toLocaleString('en-IN')}</p>
+                      <p className="text-[10px] text-slate-400 mt-1">Territory: {agr.territory} • Investment: ₹{(agr.totalInvestment).toLocaleString('en-IN')}</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold ${agr.status === 'Approved & Signed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
@@ -857,14 +834,14 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: PARTNERSHIP AGREEMENTS FORM LIST */}
+        {/* TAB: AGREEMENTS */}
         {activeTab === 'agreements' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Official Partnership Agreement Forms (Distributor / Dealer)</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  {authRole === 'admin' ? 'Review all distributor partnership forms submitted by sales team, verify investment details, and approve agreements.' : 'Fill out and submit official partnership agreement forms for new distributors or dealers online.'}
+                  {authRole === 'admin' ? 'Review all distributor partnership forms submitted by sales team and approve agreements.' : 'Fill out and submit official partnership agreement forms for new distributors online.'}
                 </p>
               </div>
               <div className="flex gap-2">
@@ -873,7 +850,7 @@ export default function App() {
                   <span>+ Fill New Agreement Form</span>
                 </button>
                 {authRole === 'admin' && (
-                  <button onClick={() => exportToCSV(agreements, 'USR_Partnership_Agreements')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5">
+                  <button onClick={() => exportToCSV(agreements, 'USR_Agreements')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5">
                     <FileSpreadsheet className="w-4 h-4" />
                     <span>Export CSV</span>
                   </button>
@@ -903,7 +880,7 @@ export default function App() {
                         <td className="p-3 font-bold text-slate-900">{agr.distributorName} <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-indigo-700 font-semibold block mt-0.5">{agr.constitution}</span></td>
                         <td className="p-3 text-slate-700">{agr.proprietorName} <span className="font-mono text-slate-500 block">+{agr.phone}</span></td>
                         <td className="p-3 font-mono text-slate-600">{agr.gstn || 'N/A'}</td>
-                        <td className="p-3 font-bold text-emerald-700">₹{(agr.investmentAmount || 1500000).toLocaleString('en-IN')}</td>
+                        <td className="p-3 font-bold text-emerald-700">₹{(agr.totalInvestment || 1500000).toLocaleString('en-IN')}</td>
                         <td className="p-3 font-semibold text-slate-600">{agr.submittedBy}</td>
                         <td className="p-3">
                           <span className={`px-2.5 py-1 rounded text-[10px] font-bold ${agr.status === 'Approved & Signed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
@@ -929,7 +906,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: LEADS */}
+        {/* OTHER TABS (Leads, DCR, Attendance, Leaves, Travelling, GPS) */}
         {activeTab === 'leads' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
@@ -937,39 +914,34 @@ export default function App() {
               <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Add Lead</button>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                      <th className="p-3">Client Name</th>
-                      <th className="p-3">Client Type</th>
-                      <th className="p-3">Place / City</th>
-                      <th className="p-3">Investment Amount</th>
-                      <th className="p-3">Next Follow Date</th>
-                      <th className="p-3">Assigned Staff</th>
-                      <th className="p-3">Status</th>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Client Name</th>
+                    <th className="p-3">Client Type</th>
+                    <th className="p-3">Place</th>
+                    <th className="p-3">Investment</th>
+                    <th className="p-3">Assigned Staff</th>
+                    <th className="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleLeads.map(lead => (
+                    <tr key={lead.id}>
+                      <td className="p-3 font-bold">{lead.clientName}</td>
+                      <td className="p-3">{lead.clientType}</td>
+                      <td className="p-3">{lead.place}</td>
+                      <td className="p-3 font-bold text-emerald-700">₹{(lead.investmentAmount || 0).toLocaleString('en-IN')}</td>
+                      <td className="p-3">{lead.assignedToName}</td>
+                      <td className="p-3"><span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">{lead.status}</span></td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {visibleLeads.map(lead => (
-                      <tr key={lead.id} className="hover:bg-slate-50">
-                        <td className="p-3 font-bold text-slate-900">{lead.clientName} <span className="text-[10px] text-slate-400 block">{lead.phone}</span></td>
-                        <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-[10px] font-semibold">{lead.clientType}</span></td>
-                        <td className="p-3 text-slate-700 font-medium">{lead.place}</td>
-                        <td className="p-3 font-bold text-emerald-700">₹{(lead.investmentAmount || lead.estimatedValue).toLocaleString('en-IN')}</td>
-                        <td className="p-3 font-semibold text-indigo-600">{lead.nextFollowup}</td>
-                        <td className="p-3 font-semibold">{lead.assignedToName}</td>
-                        <td className="p-3"><span className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold">{lead.status}</span></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
 
-        {/* TAB: DCR */}
         {activeTab === 'dcr' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
@@ -977,163 +949,164 @@ export default function App() {
               <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Submit DCR</button>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                      <th className="p-3">Staff</th>
-                      <th className="p-3">Client & Type</th>
-                      <th className="p-3">Place</th>
-                      <th className="p-3">Investment</th>
-                      <th className="p-3">Next Follow Date</th>
-                      <th className="p-3">Notes & Outcome</th>
-                      <th className="p-3">Photo</th>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Staff</th>
+                    <th className="p-3">Client Name</th>
+                    <th className="p-3">Place</th>
+                    <th className="p-3">Investment</th>
+                    <th className="p-3">Notes</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleDcrs.map(dcr => (
+                    <tr key={dcr.id}>
+                      <td className="p-3 font-bold">{dcr.empName}</td>
+                      <td className="p-3">{dcr.clientName}</td>
+                      <td className="p-3">{dcr.place || dcr.address}</td>
+                      <td className="p-3 font-bold text-emerald-700">₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</td>
+                      <td className="p-3">{dcr.notes}</td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {visibleDcrs.map(dcr => (
-                      <tr key={dcr.id} className="hover:bg-slate-50">
-                        <td className="p-3 font-bold">{dcr.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{dcr.empId}]</span></td>
-                        <td className="p-3 font-bold">{dcr.clientName} <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded block mt-0.5 text-indigo-700">{dcr.clientType}</span></td>
-                        <td className="p-3 font-medium text-slate-700">{dcr.place || dcr.address}</td>
-                        <td className="p-3 font-bold text-emerald-700">₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</td>
-                        <td className="p-3 font-semibold text-indigo-600">{dcr.nextDate}</td>
-                        <td className="p-3 text-slate-700">{dcr.notes} <span className="text-[10px] text-emerald-700 block font-semibold mt-1">Outcome: {dcr.outcome}</span></td>
-                        <td className="p-3">{dcr.photoVerified ? <button onClick={() => setViewPhotoModal(dcr)} className="text-emerald-600 font-semibold hover:underline">View</button> : 'No Photo'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
 
-        {/* TAB: ATTENDANCE */}
         {activeTab === 'attendance' && (
           <div className="space-y-4">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Daily Field Attendance & Punch-In</h3>
-                <p className="text-xs text-slate-500 mt-1">Mark your attendance for today to notify Admin of your field availability.</p>
+                <p className="text-xs text-slate-500">Mark your attendance for today.</p>
               </div>
               {authRole !== 'admin' && (
-                <button onClick={markTodayAttendance} className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2">
-                  <CheckSquare className="w-4 h-4" />
-                  <span>Punch In Attendance Today</span>
+                <button onClick={markTodayAttendance} className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow">
+                  Punch In Today
                 </button>
               )}
             </div>
-
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="p-4 border-b border-slate-100 font-bold text-xs text-slate-700">Attendance Records History</div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
-                      <th className="p-3">Employee Name</th>
-                      <th className="p-3">Date</th>
-                      <th className="p-3">Check-In Time</th>
-                      <th className="p-3">Territory</th>
-                      <th className="p-3">Status</th>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Employee Name</th>
+                    <th className="p-3">Date</th>
+                    <th className="p-3">Check-In Time</th>
+                    <th className="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleAttendance.map(att => (
+                    <tr key={att.id}>
+                      <td className="p-3 font-bold">{att.empName}</td>
+                      <td className="p-3">{att.date}</td>
+                      <td className="p-3 text-emerald-700 font-bold">{att.checkInTime}</td>
+                      <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">{att.status}</span></td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {visibleAttendance.map((att) => (
-                      <tr key={att.id} className="hover:bg-slate-50">
-                        <td className="p-3 font-bold text-slate-900">{att.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{att.empId}]</span></td>
-                        <td className="p-3 text-slate-600">{att.date}</td>
-                        <td className="p-3 font-semibold text-emerald-700">{att.checkInTime}</td>
-                        <td className="p-3 text-slate-500">{att.location}</td>
-                        <td className="p-3"><span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">{att.status}</span></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
 
-        {/* TAB: LEAVES */}
         {activeTab === 'leaves' && (
           <div className="space-y-4">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">Leave Management & Approval Status</h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  {authRole === 'admin' ? 'Review and approve employee leave requests below.' : `Your Leaves: Used ${currentEmp.usedLeaves} | Remaining ${currentEmp.totalLeaves - currentEmp.usedLeaves} of ${currentEmp.totalLeaves}`}
-                </p>
+                <h3 className="font-bold text-slate-900 text-sm">Leave Management</h3>
+                <p className="text-xs text-slate-500">Apply for leaves and check status.</p>
               </div>
               {authRole !== 'admin' && (
-                <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2">
-                  <CalendarDays className="w-4 h-4" />
-                  <span>+ Apply for Leave</span>
+                <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">
+                  + Apply Leave
                 </button>
               )}
             </div>
-
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="p-4 border-b border-slate-100 font-bold text-xs text-slate-700">Leave Applications</div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                      <th className="p-3">Employee Name</th>
-                      <th className="p-3">From - To Date</th>
-                      <th className="p-3">Reason</th>
-                      <th className="p-3">Status</th>
-                      {authRole === 'admin' && <th className="p-3">Action</th>}
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Employee</th>
+                    <th className="p-3">From - To</th>
+                    <th className="p-3">Reason</th>
+                    <th className="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleLeaves.map(lev => (
+                    <tr key={lev.id}>
+                      <td className="p-3 font-bold">{lev.empName}</td>
+                      <td className="p-3">{lev.fromDate} to {lev.toDate}</td>
+                      <td className="p-3">{lev.reason}</td>
+                      <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">{lev.status}</span></td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {visibleLeaves.map(lev => (
-                      <tr key={lev.id} className="hover:bg-slate-50">
-                        <td className="p-3 font-bold text-slate-900">{lev.empName} <span className="font-mono text-indigo-600 text-[10px] block">[{lev.empId}]</span></td>
-                        <td className="p-3 text-slate-600">{lev.fromDate} to {lev.toDate}</td>
-                        <td className="p-3 text-slate-700">{lev.reason}</td>
-                        <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${lev.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                            {lev.status}
-                          </span>
-                        </td>
-                        {authRole === 'admin' && (
-                          <td className="p-3">
-                            {lev.status === 'Pending' ? (
-                              <button onClick={() => handleApproveLeave(lev.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-[11px] font-semibold">
-                                Approve
-                              </button>
-                            ) : (
-                              <span className="text-emerald-700 font-bold text-[11px]">✓ Approved</span>
-                            )}
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
 
-        {/* TAB: GPS */}
-        {activeTab === 'gps' && (
+        {activeTab === 'travel' && (
           <div className="space-y-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-900 text-sm mb-3">GPS & Camera Photo Audits</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {visibleDcrs.filter(d => d.photoVerified).map(dcr => (
-                  <div key={dcr.id} className="border p-4 rounded-xl flex items-center space-x-3 bg-slate-50">
-                    <img src={dcr.photoUrl} alt="proof" className="w-20 h-20 object-cover rounded-lg border" />
-                    <div className="text-xs space-y-1">
-                      <p className="font-bold text-slate-900">{dcr.clientName} ({dcr.clientType})</p>
-                      <p className="text-slate-500">{dcr.notes}</p>
-                      <p className="text-[10px] font-mono text-indigo-600">{dcr.place || dcr.address}</p>
-                    </div>
-                  </div>
-                ))}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Travelling Allowance & Expense Claims</h3>
               </div>
+              {authRole !== 'admin' && (
+                <div className="flex gap-2">
+                  <button onClick={() => setIsDailyTravelModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold">
+                    + Log Daily Travel
+                  </button>
+                  <button onClick={() => submitWeeklyTravelClaim('Nov 01 - Nov 07, 2026')} className="bg-blue-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold">
+                    Submit Weekly Claim
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Staff Name</th>
+                    <th className="p-3">Week Range</th>
+                    <th className="p-3">Total Amount</th>
+                    <th className="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleTravelClaims.map(trv => (
+                    <tr key={trv.id}>
+                      <td className="p-3 font-bold">{trv.empName}</td>
+                      <td className="p-3">{trv.weekRange}</td>
+                      <td className="p-3 font-bold text-emerald-700">₹{(trv.totalAmount).toLocaleString('en-IN')}</td>
+                      <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">{trv.status}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'gps' && (
+          <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-4">
+            <h3 className="font-bold text-slate-900 text-sm">GPS & Camera Photo Audits</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {visibleDcrs.filter(d => d.photoVerified).map(dcr => (
+                <div key={dcr.id} className="border p-4 rounded-xl flex items-center space-x-3 bg-slate-50">
+                  <img src={dcr.photoUrl} alt="proof" className="w-20 h-20 object-cover rounded-lg border" />
+                  <div className="text-xs space-y-1">
+                    <p className="font-bold text-slate-900">{dcr.clientName}</p>
+                    <p className="text-slate-500">{dcr.notes}</p>
+                    <p className="text-[10px] font-mono text-indigo-600">{dcr.place || dcr.address}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -1143,38 +1116,18 @@ export default function App() {
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center (HQ)</h3>
-              <p className="text-xs text-amber-800">Create employee IDs, edit passwords, unblock locked accounts, and instantly dispatch new credentials via WhatsApp.</p>
+              <p className="text-xs text-amber-800">Create employee IDs, edit passwords, and manage partnership agreements.</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
-                <h4 className="font-bold text-slate-900 text-xs uppercase">Employee ID & Password Creator</h4>
-                <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold">
-                  + Create New Employee & Assign Vertical
-                </button>
-              </div>
-
-              <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
-                <h4 className="font-bold text-slate-900 text-xs uppercase">Export Master Data (CSV)</h4>
-                <div className="flex gap-2">
-                  <button onClick={() => exportToCSV(agreements, 'USR_Agreements')} className="bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Agreements</button>
-                  <button onClick={() => exportToCSV(leads, 'USR_Leads')} className="bg-indigo-600 text-white px-3 py-2 rounded-xl text-xs font-semibold">Export Leads</button>
-                </div>
-              </div>
+            <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
+              <h4 className="font-bold text-slate-900 text-xs uppercase">Employee Management</h4>
+              <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold">
+                + Create New Employee ID
+              </button>
             </div>
 
-            {/* REGISTERED EMPLOYEES TABLE WITH WHATSAPP ALERT */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-3">
-              <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Registered Employees, Passwords & WhatsApp Notifications</h4>
-                  <p className="text-xs text-slate-500">Admin can edit passwords, unblock accounts, and send credentials via WhatsApp instantly.</p>
-                </div>
-                <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100">
-                  Total Staff: {employees.length}
-                </span>
-              </div>
-
+              <div className="p-5 border-b border-slate-100 font-bold text-xs">Registered Employees & WhatsApp Password Reset</div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
@@ -1182,36 +1135,19 @@ export default function App() {
                       <th className="p-3">Employee Name & ID</th>
                       <th className="p-3">WhatsApp Phone</th>
                       <th className="p-3">Current Password</th>
-                      <th className="p-3">Account Status</th>
-                      <th className="p-3">Assigned Vertical</th>
-                      <th className="p-3">Action / WhatsApp Notification</th>
+                      <th className="p-3">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {employees.map(emp => (
-                      <tr key={emp.id} className="hover:bg-slate-50">
-                        <td className="p-3 font-bold text-slate-900">{emp.name} <span className="font-mono text-indigo-600 text-[10px] block">[{emp.id}]</span></td>
-                        <td className="p-3 text-slate-600 font-mono">+91 {emp.phone}</td>
-                        <td className="p-3 font-mono font-bold text-amber-700 bg-amber-50/50 rounded">{emp.pass}</td>
+                      <tr key={emp.id}>
+                        <td className="p-3 font-bold">{emp.name} [{emp.id}]</td>
+                        <td className="p-3 font-mono">+91 {emp.phone}</td>
+                        <td className="p-3 font-mono text-amber-700 font-bold">{emp.pass}</td>
                         <td className="p-3">
-                          {emp.isBlocked ? (
-                            <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-[10px] font-extrabold flex items-center w-max">
-                              <ShieldAlert className="w-3 h-3 mr-1" /> BLOCKED ({emp.failedAttempts} fails)
-                            </span>
-                          ) : (
-                            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">
-                              Active
-                            </span>
-                          )}
-                        </td>
-                        <td className="p-3"><span className="bg-indigo-600 text-white px-2 py-0.5 rounded text-[10px] font-bold">{emp.primaryVertical}</span></td>
-                        <td className="p-3">
-                          <button 
-                            onClick={() => { setEditingEmpModal(emp); setNewPasswordInput(emp.pass); }}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1 shadow"
-                          >
+                          <button onClick={() => { setEditingEmpModal(emp); setNewPasswordInput(emp.pass); }} className="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1">
                             <MessageSquare className="w-3.5 h-3.5" />
-                            <span>Edit Password & WhatsApp Alert</span>
+                            <span>Edit & Send WhatsApp</span>
                           </button>
                         </td>
                       </tr>
@@ -1220,141 +1156,260 @@ export default function App() {
                 </table>
               </div>
             </div>
-
           </div>
         )}
 
       </main>
 
-      {/* MODAL: FILL OFFICIAL PARTNERSHIP AGREEMENT FORM (PDF BASED) */}
+      {/* MODAL: COMPLETE OFFICIAL PARTNERSHIP AGREEMENT FORM (MATCHING PDF) */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl space-y-4 my-8">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-4xl shadow-2xl space-y-6 my-8">
             <div className="flex justify-between items-center border-b pb-3">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">USR POWER INDUSTRIES PRIVATE LIMITED</h3>
-                <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider">OFFICIAL PARTNERSHIP AGREEMENT FORM</p>
+                <h3 className="font-extrabold text-sm text-slate-900">USR POWER INDUSTRIES PRIVATE LIMITED</h3>
+                <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider">OFFICIAL DISTRIBUTOR / DEALER AGREEMENT FORM</p>
               </div>
               <button onClick={() => setIsAgreementModalOpen(false)}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
 
-            <form onSubmit={handleAgreementSubmit} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">1. Name of Distributor (Mr. / Mrs. / Ms.) *</label>
-                  <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} placeholder="e.g. Sahyadri Auto Spares" className="w-full p-2.5 border rounded-xl" />
+            <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs">
+              
+              {/* SECTION I: BASIC INFORMATION */}
+              <div className="space-y-3 bg-slate-50 p-4 rounded-xl border">
+                <h4 className="font-bold text-slate-900 text-xs border-b pb-1 text-indigo-900">I. Basic Information & Constitution</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="font-semibold block mb-1">1. Name of Distributor (Mr. / Mrs. / Ms.) *</label>
+                    <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} placeholder="e.g. Sahyadri Auto Spares" className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">4. Constitution of Distributor *</label>
+                    <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
+                      <option value="Proprietorship">Proprietorship</option>
+                      <option value="Partnership">Partnership</option>
+                      <option value="Private Limited Co">Private Limited Co</option>
+                      <option value="Public Limited Co">Public Limited Co</option>
+                      <option value="Others">Others</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Constitution of Distributor *</label>
-                  <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
-                    <option value="Proprietorship">Proprietorship</option>
-                    <option value="Partnership">Partnership</option>
-                    <option value="Private Limited Co">Private Limited Co</option>
-                    <option value="Public Limited Co">Public Limited Co</option>
-                    <option value="Others">Others</option>
-                  </select>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="font-semibold block mb-1">Proprietor / Partner Name *</label>
+                    <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} placeholder="Suresh Patil" className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">Mobile No *</label>
+                    <input required type="text" value={newAgreement.phone} onChange={e => setNewAgreement({...newAgreement, phone: e.target.value})} placeholder="9820012345" className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">Qualification</label>
+                    <input type="text" value={newAgreement.qualification} onChange={e => setNewAgreement({...newAgreement, qualification: e.target.value})} placeholder="Graduate / MBA" className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="font-semibold block mb-1">2. Permanent & Showroom Address *</label>
+                    <textarea required rows="2" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} placeholder="Full address with town and PIN code..." className="w-full p-2.5 border rounded-xl bg-white"></textarea>
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">3. Details of Immovable Properties (Owned)</label>
+                    <textarea rows="2" value={newAgreement.immovableProperties} onChange={e => setNewAgreement({...newAgreement, immovableProperties: e.target.value})} placeholder="Details of godown/office properties..." className="w-full p-2.5 border rounded-xl bg-white"></textarea>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Proprietor / Managing Partner Name *</label>
-                  <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} placeholder="e.g. Suresh Patil" className="w-full p-2.5 border rounded-xl" />
+              {/* SECTION III: MANPOWER & SISTER CONCERN */}
+              <div className="space-y-3 bg-slate-50 p-4 rounded-xl border">
+                <h4 className="font-bold text-slate-900 text-xs border-b pb-1 text-indigo-900">III. Manpower & Sister Concerns</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="font-semibold block mb-1">Administrative Staffs (No.)</label>
+                    <input type="number" value={newAgreement.adminStaffCount} onChange={e => setNewAgreement({...newAgreement, adminStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">Sales Staff (No.)</label>
+                    <input type="number" value={newAgreement.salesStaffCount} onChange={e => setNewAgreement({...newAgreement, salesStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">Technical Staff (No.)</label>
+                    <input type="number" value={newAgreement.techStaffCount} onChange={e => setNewAgreement({...newAgreement, techStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
                 </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Mobile No / Phone No *</label>
-                  <input required type="text" value={newAgreement.phone} onChange={e => setNewAgreement({...newAgreement, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2.5 border rounded-xl" />
-                </div>
-              </div>
-
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Permanent & Showroom Address *</label>
-                <textarea required rows="2" value={newAgreement.address} onChange={e => setNewAgreement({...newAgreement, address: e.target.value})} placeholder="Full address with town, district and PIN code..." className="w-full p-2.5 border rounded-xl"></textarea>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">GSTN No *</label>
-                  <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} placeholder="27AAAAA0000A1Z5" className="w-full p-2.5 border rounded-xl font-mono" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Product Category Interested *</label>
-                  <select value={newAgreement.verticalInterested} onChange={e => setNewAgreement({...newAgreement, verticalInterested: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
-                    <option value="Automotive Engine Oil">Automotive Engine Oil</option>
-                    <option value="Four Stroke Engine Oils">Four Stroke Engine Oils</option>
-                    <option value="Passenger Car Oils">Passenger Car Oils</option>
-                    <option value="Heavy Duty & HCV Oils">Heavy Duty & HCV Oils</option>
-                    <option value="Agricultural Tractor Oils">Agricultural Tractor Oils</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Territory (State/Region/District) *</label>
-                  <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} placeholder="e.g. Pune Cluster" className="w-full p-2.5 border rounded-xl" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="font-semibold block mb-1">6. Sister Concern / Allied Concern Name (if any)</label>
+                    <input type="text" value={newAgreement.sisterConcernName} onChange={e => setNewAgreement({...newAgreement, sisterConcernName: e.target.value})} placeholder="Sister firm name..." className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">12. Related to any employee of USR Power?</label>
+                    <select value={newAgreement.isRelatedToEmployee} onChange={e => setNewAgreement({...newAgreement, isRelatedToEmployee: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-indigo-50 border border-indigo-100 p-3.5 rounded-xl space-y-2">
-                <span className="font-bold text-indigo-900 block text-xs">Minimum Investment for Distributor Stock:</span>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-600">Initial Stock Order Value:</span>
-                  <input required type="number" value={newAgreement.investmentAmount} onChange={e => setNewAgreement({...newAgreement, investmentAmount: e.target.value})} className="p-2 border rounded-xl font-bold text-indigo-800 bg-white" />
+              {/* SECTION VII, VIII, IX: INFRASTRUCTURE, GOODS, TERRITORY */}
+              <div className="space-y-3 bg-slate-50 p-4 rounded-xl border">
+                <h4 className="font-bold text-slate-900 text-xs border-b pb-1 text-indigo-900">VII - IX. Infrastructure, Goods & Territory</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="font-semibold block mb-1">21. GSTN No *</label>
+                    <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} placeholder="27AAAAA0000A1Z5" className="w-full p-2.5 border rounded-xl bg-white font-mono" />
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">22. Transport Company Name *</label>
+                    <input required type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} placeholder="VRL Logistics / Bank Approved" className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">24. Nearest Railway Station / Agency *</label>
+                    <input required type="text" value={newAgreement.railwayStation} onChange={e => setNewAgreement({...newAgreement, railwayStation: e.target.value})} placeholder="e.g. Vashi Railway Station" className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
                 </div>
-                <p className="text-[10px] text-indigo-700">As per company terms, minimum initial investment is ₹15,00,000 (Fifteen Lakh only)[cite: 5].</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="font-semibold block mb-1">25. Interested in C&FA for Product Line *</label>
+                    <select value={newAgreement.verticalInterested} onChange={e => setNewAgreement({...newAgreement, verticalInterested: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
+                      <option value="Automotive Engine Oil">Automotive Engine Oil</option>
+                      <option value="Four Stroke Engine Oils">Four Stroke Engine Oils</option>
+                      <option value="Passenger Car Oils">Passenger Car Oils</option>
+                      <option value="Heavy Duty & HCV Oils">Heavy Duty & HCV Oils</option>
+                      <option value="Agricultural Tractor Oils">Agricultural Tractor Oils</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="font-semibold block mb-1">26. Territory (State / Region / Districts) *</label>
+                    <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} placeholder="e.g. Pune & PCMC Cluster" className="w-full p-2.5 border rounded-xl bg-white" />
+                  </div>
+                </div>
               </div>
 
-              <div className="border-t pt-3 text-[11px] text-slate-500">
-                <p><strong>Declaration:</strong> I/we state that all information as mentioned in this Agreement Form is true & correct to the best of my knowledge. I/we bind ourselves into a legal contract as per the Indian Contract Act, 1872[cite: 7].</p>
+              {/* SECTION X: INVESTMENT BREAKDOWN */}
+              <div className="space-y-3 bg-indigo-50/60 p-4 rounded-xl border border-indigo-200">
+                <h4 className="font-bold text-indigo-900 text-xs border-b border-indigo-200 pb-1">X. Investment Plan (As per PDF Form)</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                  <div>
+                    <label className="text-[10px] font-bold block mb-1">Automotive Oil (₹)</label>
+                    <input type="number" value={newAgreement.investmentAutomotive} onChange={e => setNewAgreement({...newAgreement, investmentAutomotive: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold block mb-1">4-Stroke Oil (₹)</label>
+                    <input type="number" value={newAgreement.investmentFourStroke} onChange={e => setNewAgreement({...newAgreement, investmentFourStroke: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold block mb-1">Passenger Car (₹)</label>
+                    <input type="number" value={newAgreement.investmentPassenger} onChange={e => setNewAgreement({...newAgreement, investmentPassenger: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold block mb-1">Heavy Duty (₹)</label>
+                    <input type="number" value={newAgreement.investmentHeavyDuty} onChange={e => setNewAgreement({...newAgreement, investmentHeavyDuty: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold block mb-1">LCV-HCV Oils (₹)</label>
+                    <input type="number" value={newAgreement.investmentLcvHcv} onChange={e => setNewAgreement({...newAgreement, investmentLcvHcv: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center pt-2 border-t border-indigo-200 font-bold text-indigo-950">
+                  <span>Total Initial Minimum Investment for Stock:</span>
+                  <input type="number" value={newAgreement.totalInvestment} onChange={e => setNewAgreement({...newAgreement, totalInvestment: e.target.value})} className="p-2 border border-indigo-300 rounded-xl bg-white text-emerald-700 font-extrabold" />
+                </div>
+              </div>
+
+              {/* DECLARATION */}
+              <div className="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-xl border">
+                <p><strong>XIII. Declaration:</strong> I/we state that all information as mentioned in this Application Form is true & correct. I/we bind ourselves into a legal contract with the company as per the Indian Contract Act, 1872[cite: 15].</p>
               </div>
 
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsAgreementModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Submit Agreement Form Online</button>
+                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Submit Official Agreement Form</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* MODAL: VIEW FULL PARTNERSHIP AGREEMENT FORM DETAILS */}
+      {/* MODAL: VIEW & PRINT CLEAN AGREEMENT FORM (SOLO PRINT VIEW) */}
       {viewAgreementDetail && (
-        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-xl shadow-2xl space-y-4 my-8">
-            <div className="flex justify-between items-center border-b pb-3">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">USR POWER INDUSTRIES PRIVATE LIMITED</h3>
-                <p className="text-[10px] text-indigo-600 font-bold uppercase">OFFICIAL PARTNERSHIP AGREEMENT DETAILS [{viewAgreementDetail.id}]</p>
-              </div>
-              <button onClick={() => setViewAgreementDetail(null)}><X className="w-5 h-5 text-slate-400" /></button>
-            </div>
-
-            <div className="space-y-3 text-xs bg-slate-50 p-4 rounded-xl border">
-              <div className="grid grid-cols-2 gap-2">
-                <p><strong>Distributor Name:</strong> {viewAgreementDetail.distributorName}</p>
-                <p><strong>Constitution:</strong> {viewAgreementDetail.constitution}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <p><strong>Proprietor/Partner:</strong> {viewAgreementDetail.proprietorName}</p>
-                <p><strong>Phone:</strong> +91 {viewAgreementDetail.phone}</p>
-              </div>
-              <p><strong>Address:</strong> {viewAgreementDetail.address}</p>
-              <div className="grid grid-cols-2 gap-2">
-                <p><strong>GSTN No:</strong> {viewAgreementDetail.gstn}</p>
-                <p><strong>Territory:</strong> {viewAgreementDetail.territory}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <p><strong>Product Vertical:</strong> {viewAgreementDetail.verticalInterested}</p>
-                <p><strong>Investment:</strong> ₹{(viewAgreementDetail.investmentAmount || 1500000).toLocaleString('en-IN')}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-2 border-t pt-2">
-                <p><strong>Submitted By Staff:</strong> {viewAgreementDetail.submittedBy}</p>
-                <p><strong>Status:</strong> <span className="text-emerald-700 font-bold">{viewAgreementDetail.status}</span></p>
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-2xl w-full max-w-3xl shadow-2xl space-y-6 my-8 overflow-hidden">
+            
+            {/* Modal Top Action Bar (Hidden during print) */}
+            <div className="bg-slate-900 text-white p-4 flex justify-between items-center no-print">
+              <h3 className="font-bold text-xs uppercase tracking-widest">Official Agreement Preview & Print</h3>
+              <div className="space-x-2">
+                <button onClick={() => window.print()} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 inline-flex">
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Print Agreement Form</span>
+                </button>
+                <button onClick={() => setViewAgreementDetail(null)} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold">Close</button>
               </div>
             </div>
 
-            <div className="pt-2 flex justify-end space-x-2">
-              <button onClick={() => window.print()} className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Print / Save PDF</button>
-              <button onClick={() => setViewAgreementDetail(null)} className="px-4 py-2 bg-slate-900 text-white rounded-xl font-semibold">Close</button>
+            {/* Printable Agreement Document Container */}
+            <div id="printable-agreement" className="p-8 space-y-6 text-slate-900 bg-white">
+              <div className="text-center space-y-1 border-b-2 border-slate-900 pb-4">
+                <h2 className="text-lg font-extrabold tracking-wide">USR POWER INDUSTRIES PRIVATE LIMITED</h2>
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">OFFICIAL DISTRIBUTOR / DEALER PARTNERSHIP AGREEMENT FORM</p>
+                <p className="text-[10px] text-slate-500">Agreement ID: <strong className="text-indigo-600 font-mono">{viewAgreementDetail.id}</strong> | Date: {viewAgreementDetail.date}</p>
+              </div>
+
+              <div className="space-y-4 text-xs">
+                <div className="border border-slate-300 p-4 rounded-xl space-y-2">
+                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">I. Basic Information</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <p><strong>1. Distributor Name:</strong> {viewAgreementDetail.distributorName}</p>
+                    <p><strong>4. Constitution:</strong> {viewAgreementDetail.constitution}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <p><strong>Proprietor/Partner:</strong> {viewAgreementDetail.proprietorName}</p>
+                    <p><strong>Phone No:</strong> +91 {viewAgreementDetail.phone}</p>
+                  </div>
+                  <p><strong>2. Permanent Address:</strong> {viewAgreementDetail.address}</p>
+                  <p><strong>3. Immovable Properties:</strong> {viewAgreementDetail.immovableProperties || 'N/A'}</p>
+                </div>
+
+                <div className="border border-slate-300 p-4 rounded-xl space-y-2">
+                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">VII - X. Infrastructure, Territory & Investment</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <p><strong>21. GSTN No:</strong> {viewAgreementDetail.gstn}</p>
+                    <p><strong>22. Transport Company:</strong> {viewAgreementDetail.transportCompany}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <p><strong>24. Nearest Railway Station:</strong> {viewAgreementDetail.railwayStation}</p>
+                    <p><strong>25. Product Line C&FA:</strong> {viewAgreementDetail.verticalInterested}</p>
+                  </div>
+                  <p><strong>26. Allotted Territory:</strong> {viewAgreementDetail.territory}</p>
+                  <div className="bg-slate-100 p-3 rounded-lg font-bold text-emerald-800 mt-2">
+                    Total Initial Minimum Investment: ₹{(viewAgreementDetail.totalInvestment || 1500000).toLocaleString('en-IN')}
+                  </div>
+                </div>
+
+                <div className="border border-slate-300 p-4 rounded-xl space-y-2">
+                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">XIII. Declaration & Signatures</h4>
+                  <p className="text-[10px] text-slate-600 leading-relaxed">
+                    I/we, the undersigned, have gone through the terms & conditions for my/our appointment as distributor of the company. I/we fully understand the implications and bind ourselves into a legal contract as per the Indian Contract Act, 1872[cite: 15].
+                  </p>
+                  <div className="grid grid-cols-2 gap-6 pt-6">
+                    <div className="border-t border-slate-400 pt-1 text-center">
+                      <p className="font-bold">{viewAgreementDetail.proprietorName}</p>
+                      <p className="text-[10px] text-slate-500">Distributor Signature with Date</p>
+                    </div>
+                    <div className="border-t border-slate-400 pt-1 text-center">
+                      <p className="font-bold">For USR POWER INDUSTRIES PVT LTD</p>
+                      <p className="text-[10px] text-slate-500">Authorized Manager Signature</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
       )}
@@ -1365,18 +1420,18 @@ export default function App() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
               <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                <MessageSquare className="w-4 h-4 mr-2 text-emerald-600" /> Reset Password & Send WhatsApp Alert
+                <MessageSquare className="w-4 h-4 mr-2 text-emerald-600" /> Reset Password & Send WhatsApp
               </h3>
               <button onClick={() => setEditingEmpModal(null)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleSaveEmployeeCredentials} className="space-y-3 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">New Password / Regenerated Pin</label>
+                <label className="font-semibold block mb-1">New Password / PIN</label>
                 <input required type="text" value={newPasswordInput} onChange={e => setNewPasswordInput(e.target.value)} className="w-full p-2.5 border rounded-xl font-mono" autoFocus />
               </div>
               <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setEditingEmpModal(null)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold flex items-center space-x-1.5">
+                <button type="button" onClick={() => setEditingEmpModal(null)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold flex items-center space-x-1">
                   <MessageSquare className="w-3.5 h-3.5" />
                   <span>Update & Open WhatsApp</span>
                 </button>
@@ -1391,43 +1446,31 @@ export default function App() {
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Create Employee & Assign Vertical</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID</h3>
               <button onClick={() => setIsAddEmpModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Employee Name</label>
-                <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="e.g. Santosh Shinde" className="w-full p-2 border rounded-xl" />
+                <label className="font-semibold block mb-1">Employee Name</label>
+                <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="Santosh Shinde" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Employee ID</label>
+                  <label className="font-semibold block mb-1">Employee ID</label>
                   <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} placeholder="USR-EMP-105" className="w-full p-2 border rounded-xl font-mono" />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Password</label>
-                  <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} placeholder="Secret Pass" className="w-full p-2 border rounded-xl font-mono" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">WhatsApp Phone Number</label>
-                  <input required type="text" value={newEmp.phone} onChange={e => setNewEmp({...newEmp, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2 border rounded-xl font-mono" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Total Annual Leaves</label>
-                  <input required type="number" value={newEmp.totalLeaves} onChange={e => setNewEmp({...newEmp, totalLeaves: e.target.value})} className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Password</label>
+                  <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} placeholder="1234" className="w-full p-2 border rounded-xl font-mono" />
                 </div>
               </div>
               <div>
-                <label className="font-semibold text-indigo-900 font-bold block mb-1">Assign Business Vertical</label>
-                <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2 border border-indigo-300 rounded-xl bg-indigo-50 font-bold text-indigo-900">
-                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
+                <label className="font-semibold block mb-1">WhatsApp Phone</label>
+                <input required type="text" value={newEmp.phone} onChange={e => setNewEmp({...newEmp, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2 border rounded-xl font-mono" />
               </div>
               <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save Employee</button>
+                <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl">Save Employee</button>
               </div>
             </form>
           </div>
@@ -1444,38 +1487,28 @@ export default function App() {
             </div>
             <form onSubmit={handleAddLead} className="space-y-3 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
-                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="e.g. Sahyadri Auto Spares" className="w-full p-2 border rounded-xl" />
+                <label className="font-semibold block mb-1">Client Name</label>
+                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="Sahyadri Auto Spares" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Client Type</label>
+                  <label className="font-semibold block mb-1">Client Type</label>
                   <select value={newLead.clientType} onChange={e => setNewLead({...newLead, clientType: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
                     {CLIENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Phone Number</label>
-                  <input type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Place / City</label>
-                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="e.g. Navi Mumbai" className="w-full p-2 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Investment Amount (₹)</label>
-                  <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} placeholder="250000" className="w-full p-2 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Place / City</label>
+                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="Navi Mumbai" className="w-full p-2 border rounded-xl" />
                 </div>
               </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Next Follow-up Date</label>
-                <input required type="date" value={newLead.nextFollowup} onChange={e => setNewLead({...newLead, nextFollowup: e.target.value})} className="w-full p-2 border rounded-xl" />
+                <label className="font-semibold block mb-1">Investment Amount (₹)</label>
+                <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} placeholder="250000" className="w-full p-2 border rounded-xl" />
               </div>
               <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Save Lead</button>
+                <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl">Save Lead</button>
               </div>
             </form>
           </div>
@@ -1492,23 +1525,11 @@ export default function App() {
             </div>
             <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
+                <label className="font-semibold block mb-1">Client Name</label>
                 <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} placeholder="Client Name" className="w-full p-2 border rounded-xl" />
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Client Type</label>
-                  <select value={newDcr.clientType} onChange={e => setNewDcr({...newDcr, clientType: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                    {CLIENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Place</label>
-                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} placeholder="Location" className="w-full p-2 border rounded-xl" />
-                </div>
-              </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Notes / Outcome</label>
+                <label className="font-semibold block mb-1">Notes / Outcome</label>
                 <textarea rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} placeholder="Meeting notes..." className="w-full p-2 border rounded-xl"></textarea>
               </div>
               <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
@@ -1522,31 +1543,37 @@ export default function App() {
                 {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 font-bold">✓ Photo & GPS Tagged!</p>}
               </div>
               <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">Submit DCR</button>
+                <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl">Submit DCR</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* VIEW PHOTO MODAL */}
-      {viewPhotoModal && (
-        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-5 w-full max-w-sm shadow-2xl space-y-3">
-            <div className="flex justify-between items-center border-b pb-2">
-              <h3 className="font-bold text-slate-900 text-xs">GPS Visit Photo</h3>
-              <button onClick={() => setViewPhotoModal(null)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <img src={viewPhotoModal.photoUrl} alt="Visit Proof" className="w-full h-64 object-cover rounded-xl border" />
-            <div className="text-xs space-y-1">
-              <p className="font-bold text-slate-900">{viewPhotoModal.clientName}</p>
-              <p className="text-slate-500 font-mono text-[10px]">{viewPhotoModal.place || viewPhotoModal.address}</p>
-            </div>
-            <button onClick={() => setViewPhotoModal(null)} className="w-full py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold">Close</button>
-          </div>
-        </div>
-      )}
+      {/* CSS Print Styles Rule to print ONLY agreement form */}
+      <style>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #printable-agreement, #printable-agreement * {
+            visibility: visible;
+          }
+          #printable-agreement {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            margin: 0;
+            padding: 20px;
+            background: white !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+        }
+      `}</style>
 
     </div>
   );
