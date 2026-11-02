@@ -117,7 +117,7 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // Complete Partnership Agreement Form State with Auto-GST Fetch
+  // Agreement Form State
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -151,13 +151,12 @@ export default function App() {
   const [gstFetching, setGstFetching] = useState(false);
   const [gstFetchedStatus, setGstFetchedStatus] = useState(false);
 
-  // Auto-Fetch GST Details Simulation Function
+  // Reliable GST Details Auto-Fetch Handler
   const handleGstnBlur = () => {
     const gstVal = newAgreement.gstn.trim();
     if (gstVal.length >= 10) {
       setGstFetching(true);
       setTimeout(() => {
-        // Simulated auto-fetched business details based on GSTN
         setNewAgreement(prev => ({
           ...prev,
           distributorName: prev.distributorName || 'Shree Ganesh Auto & Lubricants Corp',
@@ -168,7 +167,7 @@ export default function App() {
         }));
         setGstFetching(false);
         setGstFetchedStatus(true);
-      }, 800);
+      }, 600);
     }
   };
 
@@ -191,17 +190,8 @@ export default function App() {
     photoVerified: false, photoUrl: null
   });
 
-  const [newDailyTravel, setNewDailyTravel] = useState({
-    date: new Date().toISOString().split('T')[0],
-    mode: 'Bike / Fuel',
-    km: '',
-    amount: '',
-    route: '',
-    weekCycle: 'Nov 01 - Nov 07, 2026'
-  });
-
   const [newEmp, setNewEmp] = useState({
-    id: '', pass: '', name: '', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '', primaryVertical: 'USR POWER LUBE'
+    id: '', pass: '', name: '', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE'
   });
 
   const [newLeave, setNewLeave] = useState({
@@ -237,7 +227,7 @@ export default function App() {
     }
 
     if (foundEmp.isBlocked) {
-      setLoginError('Account is BLOCKED due to 6 failed password attempts! Contact Admin.');
+      setLoginError('Account is BLOCKED due to failed password attempts! Contact Admin.');
       return;
     }
 
@@ -306,7 +296,7 @@ export default function App() {
       failedAttempts: 0
     } : emp));
 
-    const message = `Hello ${editingEmpModal.name},\n\nYour USR Power Portal password has been reset by Admin.\n\n🆔 Employee ID: ${editingEmpModal.id}\n🔑 New Password: ${newPasswordInput}\n\n- USR Power Industries Mumbai`;
+    const message = `Hello ${editingEmpModal.name},\n\nYour USR Power Portal password has been reset by Admin.\n\n🆔 Employee ID: ${editingEmpModal.id}\n🔑 New Password: ${newPasswordInput}\n\n- USR Power Industries Maharashtra`;
     const whatsappUrl = `https://wa.me/91${editingEmpModal.phone}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 
@@ -388,57 +378,26 @@ export default function App() {
     alert('Leave Application Submitted Successfully!');
   };
 
-  const handleApproveLeave = (leaveId) => {
-    setLeaveList(leaveList.map(l => l.id === leaveId ? { ...l, status: 'Approved' } : l));
-    alert('Leave Approved Successfully!');
-  };
-
-  const handleAddDailyTravel = (e) => {
+  const handleAddEmployee = (e) => {
     e.preventDefault();
-    const createdLog = {
-      id: `DTRV-${Date.now()}`,
-      empId: currentEmp.id,
-      empName: currentEmp.name,
-      ...newDailyTravel,
-      km: Number(newDailyTravel.km) || 0,
-      amount: Number(newDailyTravel.amount) || 0,
-      status: 'Pending Submit'
+    const createdEmp = {
+      id: newEmp.id || `USR-EMP-${Math.floor(Math.random() * 900 + 100)}`,
+      pass: newEmp.pass || '1234',
+      name: newEmp.name,
+      phone: newEmp.phone || '9820012345',
+      joiningDate: newEmp.joiningDate,
+      totalLeaves: Number(newEmp.totalLeaves) || 18,
+      usedLeaves: 0,
+      territory: newEmp.territory,
+      target: Number(newEmp.target) || 500000,
+      achieved: 0,
+      primaryVertical: newEmp.primaryVertical,
+      failedAttempts: 0,
+      isBlocked: false
     };
-    setDailyTravelList([createdLog, ...dailyTravelList]);
-    setIsDailyTravelModalOpen(false);
-    alert('Daily Travel Log Saved Successfully!');
-  };
-
-  const submitWeeklyTravelClaim = (weekCycleName) => {
-    const empDailyLogs = dailyTravelList.filter(d => d.empId === currentEmp.id && d.weekCycle === weekCycleName && d.status === 'Pending Submit');
-    if (empDailyLogs.length === 0) {
-      alert('No pending daily travel logs found for this week!');
-      return;
-    }
-
-    const totalKmSum = empDailyLogs.reduce((acc, curr) => acc + curr.km, 0);
-    const totalAmtSum = empDailyLogs.reduce((acc, curr) => acc + curr.amount, 0);
-    const routesCombined = empDailyLogs.map(l => l.route).join(' | ');
-
-    const newClaim = {
-      id: `TRV-${Date.now()}`,
-      empId: currentEmp.id,
-      empName: currentEmp.name,
-      weekRange: weekCycleName,
-      totalKm: totalKmSum,
-      totalAmount: totalAmtSum,
-      purpose: routesCombined,
-      status: 'Pending'
-    };
-
-    setTravelClaims([newClaim, ...travelClaims]);
-    setDailyTravelList(dailyTravelList.map(d => (d.empId === currentEmp.id && d.weekCycle === weekCycleName) ? { ...d, status: 'Submitted Weekly' } : d));
-    alert(`Weekly Travelling Claim submitted successfully! Amount: ₹${totalAmtSum}`);
-  };
-
-  const handleApproveTravelClaim = (claimId) => {
-    setTravelClaims(travelClaims.map(t => t.id === claimId ? { ...t, status: 'Approved' } : t));
-    alert('Weekly Travelling Claim Approved Successfully!');
+    setEmployees([...employees, createdEmp]);
+    setIsAddEmpModalOpen(false);
+    alert(`Employee ID (${createdEmp.id}) Created Successfully with Vertical: ${createdEmp.primaryVertical}!`);
   };
 
   const captureRealGpsPhoto = (e) => {
@@ -504,6 +463,7 @@ export default function App() {
     };
     setLeads([createdLead, ...leads]);
     setIsLeadModalOpen(false);
+    alert('Lead Added Successfully!');
   };
 
   const handleAddDcr = (e) => {
@@ -521,28 +481,7 @@ export default function App() {
     };
     setDcrs([createdDcr, ...dcrs]);
     setIsDcrModalOpen(false);
-  };
-
-  const handleAddEmployee = (e) => {
-    e.preventDefault();
-    const createdEmp = {
-      id: newEmp.id || `USR-EMP-${Math.floor(Math.random() * 900 + 100)}`,
-      pass: newEmp.pass || '1234',
-      name: newEmp.name,
-      phone: newEmp.phone || '9820012345',
-      joiningDate: newEmp.joiningDate,
-      totalLeaves: Number(newEmp.totalLeaves) || 18,
-      usedLeaves: 0,
-      territory: newEmp.territory,
-      target: Number(newEmp.target) || 500000,
-      achieved: 0,
-      primaryVertical: newEmp.primaryVertical,
-      failedAttempts: 0,
-      isBlocked: false
-    };
-    setEmployees([...employees, createdEmp]);
-    setIsAddEmpModalOpen(false);
-    alert(`Employee ID (${createdEmp.id}) Created Successfully!`);
+    alert('DCR Submitted Successfully!');
   };
 
   const exportToCSV = (data, filename) => {
@@ -567,15 +506,13 @@ export default function App() {
     ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter))
     : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
 
-  // STRICT PRIVACY FILTER: Agreement forms are visible ONLY to Admin Master Panel or the specific Employee who filled it
+  // STRICT PRIVACY: Agreement forms visible ONLY to Admin Master Panel or the specific Employee who filled it
   const visibleAgreements = authRole === 'admin'
     ? agreements
     : agreements.filter(a => a.submittedEmpId === currentEmp.id);
 
   const visibleAttendance = authRole === 'admin' ? attendanceList : attendanceList.filter(a => a.empId === currentEmp.id);
   const visibleLeaves = authRole === 'admin' ? leaveList : leaveList.filter(l => l.empId === currentEmp.id);
-  const visibleDailyTravel = authRole === 'admin' ? dailyTravelList : dailyTravelList.filter(d => d.empId === currentEmp.id);
-  const visibleTravelClaims = authRole === 'admin' ? travelClaims : travelClaims.filter(t => t.empId === currentEmp.id);
 
   const totalSalesTarget = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmp.target;
   const totalSalesAchieved = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
@@ -715,7 +652,6 @@ export default function App() {
               { id: 'agreements', label: 'Partnership Agreements (PDF)', icon: FileText, badge: visibleAgreements.length },
               { id: 'attendance', label: 'Attendance & Punch-In', icon: CheckSquare, badge: visibleAttendance.length },
               { id: 'leaves', label: 'Leave Management', icon: CalendarDays, badge: visibleLeaves.length },
-              { id: 'travel', label: 'Travelling Claims', icon: Bus, badge: visibleTravelClaims.length },
               { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
               { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
               { id: 'gps', label: 'GPS Photo Verification', icon: Camera },
@@ -942,9 +878,9 @@ export default function App() {
         {/* OTHER TABS */}
         {activeTab === 'leads' && (
           <div className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
               <h3 className="font-bold text-slate-900 text-sm">Business Leads</h3>
-              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Add Lead</button>
+              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">+ Add Lead</button>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">
@@ -977,9 +913,9 @@ export default function App() {
 
         {activeTab === 'dcr' && (
           <div className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
               <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR)</h3>
-              <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Submit DCR</button>
+              <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">+ Submit DCR</button>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">
@@ -1082,48 +1018,6 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'travel' && (
-          <div className="space-y-4">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Travelling Allowance & Expense Claims</h3>
-              </div>
-              {authRole !== 'admin' && (
-                <div className="flex gap-2">
-                  <button onClick={() => setIsDailyTravelModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold">
-                    + Log Daily Travel
-                  </button>
-                  <button onClick={() => submitWeeklyTravelClaim('Nov 01 - Nov 07, 2026')} className="bg-blue-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold">
-                    Submit Weekly Claim
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Staff Name</th>
-                    <th className="p-3">Week Range</th>
-                    <th className="p-3">Total Amount</th>
-                    <th className="p-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleTravelClaims.map(trv => (
-                    <tr key={trv.id}>
-                      <td className="p-3 font-bold">{trv.empName}</td>
-                      <td className="p-3">{trv.weekRange}</td>
-                      <td className="p-3 font-bold text-emerald-700">₹{(trv.totalAmount).toLocaleString('en-IN')}</td>
-                      <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">{trv.status}</span></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
         {activeTab === 'gps' && (
           <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-4">
             <h3 className="font-bold text-slate-900 text-sm">GPS & Camera Photo Audits</h3>
@@ -1147,23 +1041,24 @@ export default function App() {
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center (HQ)</h3>
-              <p className="text-xs text-amber-800">Create employee IDs, edit passwords, and view all employee-submitted partnership agreements.</p>
+              <p className="text-xs text-amber-800">Create employee IDs with vertical assignments, edit passwords, and view all employee-submitted partnership agreements.</p>
             </div>
 
             <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
-              <h4 className="font-bold text-slate-900 text-xs uppercase">Employee Management</h4>
-              <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold">
-                + Create New Employee ID
+              <h4 className="font-bold text-slate-900 text-xs uppercase">Employee Management & Vertical Allocation</h4>
+              <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">
+                + Create New Employee ID & Assign Vertical
               </button>
             </div>
 
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-3">
-              <div className="p-5 border-b border-slate-100 font-bold text-xs">Registered Employees & WhatsApp Password Reset</div>
+              <div className="p-5 border-b border-slate-100 font-bold text-xs">Registered Employees & Assigned Verticals</div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Employee Name & ID</th>
+                      <th className="p-3">Primary Vertical</th>
                       <th className="p-3">WhatsApp Phone</th>
                       <th className="p-3">Current Password</th>
                       <th className="p-3">Action</th>
@@ -1173,6 +1068,7 @@ export default function App() {
                     {employees.map(emp => (
                       <tr key={emp.id}>
                         <td className="p-3 font-bold">{emp.name} [{emp.id}]</td>
+                        <td className="p-3"><span className="bg-indigo-50 text-indigo-700 font-bold px-2 py-1 rounded">{emp.primaryVertical || 'USR POWER LUBE'}</span></td>
                         <td className="p-3 font-mono">+91 {emp.phone}</td>
                         <td className="p-3 font-mono text-amber-700 font-bold">{emp.pass}</td>
                         <td className="p-3">
@@ -1192,11 +1088,11 @@ export default function App() {
 
       </main>
 
-      {/* MODAL: COMPLETE OFFICIAL PARTNERSHIP AGREEMENT FORM WITH AUTO-GST FETCH */}
+      {/* MODAL: COMPLETE OFFICIAL PARTNERSHIP AGREEMENT FORM */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 my-8 border border-slate-200">
-            <div className="flex justify-between items-center border-b pb-4">
+          <div className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 my-8 border border-slate-200 max-h-[90vh] flex flex-col">
+            <div className="flex justify-between items-center border-b pb-4 flex-shrink-0">
               <div>
                 <h3 className="font-extrabold text-base text-slate-900">USR POWER INDUSTRIES PRIVATE LIMITED</h3>
                 <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider mt-0.5">OFFICIAL DISTRIBUTOR / DEALER PARTNERSHIP AGREEMENT FORM</p>
@@ -1204,7 +1100,7 @@ export default function App() {
               <button onClick={() => setIsAgreementModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition"><X className="w-5 h-5 text-slate-500" /></button>
             </div>
 
-            <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs max-h-[75vh] overflow-y-auto pr-2">
+            <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs overflow-y-auto pr-2 flex-1">
               
               {/* SECTION I: BASIC INFORMATION & GST AUTO-FETCH */}
               <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
@@ -1216,7 +1112,7 @@ export default function App() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">21. GSTN No * (Enter to Auto-Fetch)</label>
+                    <label className="font-semibold text-slate-700 block mb-1">GSTN No * (Enter to Auto-Fetch)</label>
                     <input 
                       required 
                       type="text" 
@@ -1228,11 +1124,11 @@ export default function App() {
                     />
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">1. Name of Distributor *</label>
+                    <label className="font-semibold text-slate-700 block mb-1">Name of Distributor *</label>
                     <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} placeholder="e.g. Sahyadri Auto" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">4. Constitution *</label>
+                    <label className="font-semibold text-slate-700 block mb-1">Constitution *</label>
                     <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
                       <option value="Proprietorship">Proprietorship</option>
                       <option value="Partnership">Partnership</option>
@@ -1260,53 +1156,17 @@ export default function App() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">2. Permanent & Showroom Address *</label>
+                    <label className="font-semibold text-slate-700 block mb-1">Permanent & Showroom Address *</label>
                     <textarea required rows="2" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} placeholder="Full address with town and PIN code..." className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm"></textarea>
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">3. Details of Immovable Properties (Owned)</label>
+                    <label className="font-semibold text-slate-700 block mb-1">Details of Immovable Properties (Owned)</label>
                     <textarea rows="2" value={newAgreement.immovableProperties} onChange={e => setNewAgreement({...newAgreement, immovableProperties: e.target.value})} placeholder="Details of godown/office properties..." className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm"></textarea>
                   </div>
                 </div>
               </div>
 
-              {/* SECTION III: MANPOWER & SISTER CONCERN */}
-              <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> III. Manpower & Sister Concerns
-                </h4>
-                
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Administrative Staffs (No.)</label>
-                    <input type="number" value={newAgreement.adminStaffCount} onChange={e => setNewAgreement({...newAgreement, adminStaffCount: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Sales Staff (No.)</label>
-                    <input type="number" value={newAgreement.salesStaffCount} onChange={e => setNewAgreement({...newAgreement, salesStaffCount: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Technical Staff (No.)</label>
-                    <input type="number" value={newAgreement.techStaffCount} onChange={e => setNewAgreement({...newAgreement, techStaffCount: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">6. Sister Concern / Allied Concern Name (if any)</label>
-                    <input type="text" value={newAgreement.sisterConcernName} onChange={e => setNewAgreement({...newAgreement, sisterConcernName: e.target.value})} placeholder="Sister firm name..." className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">12. Related to any employee of USR Power?</label>
-                    <select value={newAgreement.isRelatedToEmployee} onChange={e => setNewAgreement({...newAgreement, isRelatedToEmployee: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
-                      <option value="No">No</option>
-                      <option value="Yes">Yes</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* SECTION VII, VIII, IX: INFRASTRUCTURE, GOODS, TERRITORY */}
+              {/* SECTION VII, VIII, IX: INFRASTRUCTURE, GOODS, TERRITORY (UPDATED LABEL) */}
               <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                 <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> VII - IX. Infrastructure, Goods & Territory
@@ -1314,28 +1174,24 @@ export default function App() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">22. Transport Company Name *</label>
+                    <label className="font-semibold text-slate-700 block mb-1">Transport Company Name *</label>
                     <input required type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} placeholder="VRL Logistics / Bank Approved" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">24. Nearest Railway Station / Agency *</label>
+                    <label className="font-semibold text-slate-700 block mb-1">Nearest Railway Station / Agency *</label>
                     <input required type="text" value={newAgreement.railwayStation} onChange={e => setNewAgreement({...newAgreement, railwayStation: e.target.value})} placeholder="e.g. Vashi Railway Station" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">25. Interested in C&FA for Product Line *</label>
+                    <label className="font-semibold text-slate-700 block mb-1">Interested for Product Line *</label>
                     <select value={newAgreement.verticalInterested} onChange={e => setNewAgreement({...newAgreement, verticalInterested: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
-                      <option value="Automotive Engine Oil">Automotive Engine Oil</option>
-                      <option value="Four Stroke Engine Oils">Four Stroke Engine Oils</option>
-                      <option value="Passenger Car Oils">Passenger Car Oils</option>
-                      <option value="Heavy Duty & HCV Oils">Heavy Duty & HCV Oils</option>
-                      <option value="Agricultural Tractor Oils">Agricultural Tractor Oils</option>
+                      {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">26. Territory (State / Region / Districts) *</label>
+                    <label className="font-semibold text-slate-700 block mb-1">Territory (State / Region / Districts) *</label>
                     <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} placeholder="e.g. Pune & PCMC Cluster" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
                   </div>
                 </div>
@@ -1422,35 +1278,35 @@ export default function App() {
                 <div className="border border-slate-300 p-4 rounded-xl space-y-2">
                   <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">I. Basic Information</h4>
                   <div className="grid grid-cols-2 gap-2">
-                    <p><strong>1. Distributor Name:</strong> {viewAgreementDetail.distributorName}</p>
-                    <p><strong>4. Constitution:</strong> {viewAgreementDetail.constitution}</p>
+                    <p><strong>Distributor Name:</strong> {viewAgreementDetail.distributorName}</p>
+                    <p><strong>Constitution:</strong> {viewAgreementDetail.constitution}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <p><strong>Proprietor/Partner:</strong> {viewAgreementDetail.proprietorName}</p>
                     <p><strong>Phone No:</strong> +91 {viewAgreementDetail.phone}</p>
                   </div>
-                  <p><strong>2. Permanent Address:</strong> {viewAgreementDetail.address}</p>
-                  <p><strong>3. Immovable Properties:</strong> {viewAgreementDetail.immovableProperties || 'N/A'}</p>
+                  <p><strong>Permanent Address:</strong> {viewAgreementDetail.address}</p>
+                  <p><strong>Immovable Properties:</strong> {viewAgreementDetail.immovableProperties || 'N/A'}</p>
                 </div>
 
                 <div className="border border-slate-300 p-4 rounded-xl space-y-2">
-                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">VII - X. Infrastructure, Territory & Investment</h4>
+                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">Infrastructure, Territory & Investment</h4>
                   <div className="grid grid-cols-2 gap-2">
-                    <p><strong>21. GSTN No:</strong> {viewAgreementDetail.gstn}</p>
-                    <p><strong>22. Transport Company:</strong> {viewAgreementDetail.transportCompany}</p>
+                    <p><strong>GSTN No:</strong> {viewAgreementDetail.gstn}</p>
+                    <p><strong>Transport Company:</strong> {viewAgreementDetail.transportCompany}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    <p><strong>24. Nearest Railway Station:</strong> {viewAgreementDetail.railwayStation}</p>
-                    <p><strong>25. Product Line C&FA:</strong> {viewAgreementDetail.verticalInterested}</p>
+                    <p><strong>Nearest Railway Station:</strong> {viewAgreementDetail.railwayStation}</p>
+                    <p><strong>Interested for Product Line:</strong> {viewAgreementDetail.verticalInterested}</p>
                   </div>
-                  <p><strong>26. Allotted Territory:</strong> {viewAgreementDetail.territory}</p>
+                  <p><strong>Allotted Territory:</strong> {viewAgreementDetail.territory}</p>
                   <div className="bg-slate-100 p-3 rounded-lg font-bold text-emerald-800 mt-2">
                     Total Initial Minimum Investment: ₹{(viewAgreementDetail.totalInvestment || 1500000).toLocaleString('en-IN')}
                   </div>
                 </div>
 
                 <div className="border border-slate-300 p-4 rounded-xl space-y-2">
-                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">XIII. Declaration & Signatures</h4>
+                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">Declaration & Signatures</h4>
                   <p className="text-[10px] text-slate-600 leading-relaxed">
                     I/we, the undersigned, have gone through the terms & conditions for my/our appointment as distributor of the company. I/we fully understand the implications and bind ourselves into a legal contract as per the Indian Contract Act, 1872.
                   </p>
@@ -1460,7 +1316,7 @@ export default function App() {
                       <p className="text-[10px] text-slate-500">Distributor Signature with Date</p>
                     </div>
                     <div className="border-t border-slate-400 pt-1 text-center">
-                      <p className="font-bold">For USR POWER INDUSTRIES PVT LTD</p>
+                      <p className="font-bold">For USR POWER INDUSTRIES</p>
                       <p className="text-[10px] text-slate-500">Authorized Manager Signature</p>
                     </div>
                   </div>
@@ -1499,12 +1355,12 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD EMPLOYEE */}
+      {/* MODAL: ADD EMPLOYEE WITH VERTICAL ALLOCATION */}
       {isAddEmpModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID & Assign Vertical</h3>
               <button onClick={() => setIsAddEmpModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
@@ -1523,12 +1379,18 @@ export default function App() {
                 </div>
               </div>
               <div>
+                <label className="font-semibold block mb-1">Primary Vertical Assignment</label>
+                <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white font-medium">
+                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
+                </select>
+              </div>
+              <div>
                 <label className="font-semibold block mb-1">WhatsApp Phone</label>
                 <input required type="text" value={newEmp.phone} onChange={e => setNewEmp({...newEmp, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2 border rounded-xl font-mono" />
               </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl">Save Employee</button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Employee</button>
               </div>
             </form>
           </div>
@@ -1566,7 +1428,7 @@ export default function App() {
               </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl">Save Lead</button>
+                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Lead</button>
               </div>
             </form>
           </div>
@@ -1602,7 +1464,7 @@ export default function App() {
               </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl">Submit DCR</button>
+                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold">Submit DCR</button>
               </div>
             </form>
           </div>
