@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { 
   Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
   Search, Filter, CheckCircle, Clock, Award, 
-  Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag
+  Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag,
+  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key
 } from 'lucide-react';
 
 // Product Lines & Business Verticals
@@ -35,34 +36,41 @@ const INITIAL_LEADS = [
 
 // Initial Daily Call Reports
 const INITIAL_DCR = [
-  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Punchkuteer Resort & Eco Stay', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract for heavy lube and Turbo Oil. Payment terms agreed.', nextDate: '2026-11-10', lat: '24.5821 N', lng: '84.9754 E', address: 'NH-2 Dobhi, Gaya', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' },
+  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Punchkuteer Resort & Eco Stay', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract for heavy lube and Turbo Oil.', nextDate: '2026-11-10', lat: '24.5821 N', lng: '84.9754 E', address: 'NH-2 Dobhi, Gaya', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80' },
   { id: 'DCR-502', empId: 'USR-EMP-101', empName: 'Rohan Sharma', vertical: 'DIGITAL MARKETING', clientName: 'Bihar Auto Spares', visitTime: '12:15 PM', callType: 'Phone Call', outcome: 'Follow Up Required', notes: 'Pitched customized packaging & digital promotional campaign bundle.', nextDate: '2026-11-04', lat: '25.6121 N', lng: '85.1412 E', address: 'Exhibition Road, Patna', photoVerified: false, photoUrl: null },
   { id: 'DCR-503', empId: 'USR-EMP-103', empName: 'Priya Singh', vertical: 'TAX AND LEGAL', clientName: 'Zenith Corporate Advisors', visitTime: '02:45 PM', callType: 'Field Visit', outcome: 'Demo Provided', notes: 'Demonstrated tax compliance audit package and legal advisory workflow.', nextDate: '2026-11-05', lat: '26.1209 N', lng: '85.3647 E', address: 'Boreing Road, Patna', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=400&q=80' }
 ];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [employees] = useState(INITIAL_EMPLOYEES);
+  const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
   const [leads, setLeads] = useState(INITIAL_LEADS);
   const [dcrs, setDcrs] = useState(INITIAL_DCR);
+  
+  // Admin Mode & Security State
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState('');
+  const [adminError, setAdminError] = useState('');
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   
   // Filters
   const [selectedEmpFilter, setSelectedEmpFilter] = useState('All');
   const [selectedVerticalFilter, setSelectedVerticalFilter] = useState('All');
 
-  // Modal States
+  // Modals
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isDcrModalOpen, setIsDcrModalOpen] = useState(false);
   const [isGpsModalOpen, setIsGpsModalOpen] = useState(false);
+  const [isAddEmpModalOpen, setIsAddEmpModalOpen] = useState(false);
   const [viewPhotoModal, setViewPhotoModal] = useState(null);
 
-  // New Lead Form State
+  // New Lead State
   const [newLead, setNewLead] = useState({
     clientName: '', contactPerson: '', phone: '', address: '',
     status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: ''
   });
 
-  // New DCR Form State
+  // New DCR State
   const [newDcr, setNewDcr] = useState({
     empId: 'USR-EMP-101', clientName: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
     outcome: 'Follow Up Required', notes: '', nextDate: '',
@@ -70,9 +78,34 @@ export default function App() {
     photoVerified: false, photoUrl: null
   });
 
+  // New Employee State (Admin)
+  const [newEmp, setNewEmp] = useState({
+    id: '', name: '', territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE'
+  });
+
   // GPS Simulation
   const [capturingGps, setCapturingGps] = useState(false);
   const [capturedLocation, setCapturedLocation] = useState(null);
+
+  // Admin Login Handler
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    if (adminPasswordInput === 'admin123') {
+      setIsAdminLoggedIn(true);
+      setIsAdminModalOpen(false);
+      setAdminError('');
+      setAdminPasswordInput('');
+    } else {
+      setAdminError('Invalid Admin Password! Try: admin123');
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdminLoggedIn(false);
+    if (activeTab === 'admin-manage') {
+      setActiveTab('dashboard');
+    }
+  };
 
   const simulateGPS = () => {
     setCapturingGps(true);
@@ -135,6 +168,38 @@ export default function App() {
     setCapturedLocation(null);
   };
 
+  const handleAddEmployee = (e) => {
+    e.preventDefault();
+    const createdEmp = {
+      id: newEmp.id || `USR-EMP-${Math.floor(Math.random() * 900 + 100)}`,
+      name: newEmp.name,
+      territory: newEmp.territory,
+      target: Number(newEmp.target) || 500000,
+      achieved: 0,
+      visitsToday: 0,
+      status: 'Active',
+      primaryVertical: newEmp.primaryVertical
+    };
+    setEmployees([...employees, createdEmp]);
+    setIsAddEmpModalOpen(false);
+    setNewEmp({ id: '', name: '', territory: 'Patna Division', target: '', primaryVertical: 'USR POWER LUBE' });
+  };
+
+  // CSV Export Utility
+  const exportToCSV = (data, filename) => {
+    if (!data || !data.length) return;
+    const headers = Object.keys(data[0]).join(',');
+    const rows = data.map(obj => Object.values(obj).map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${filename}_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Metrics Calculations
   const totalSalesTarget = employees.reduce((acc, curr) => acc + curr.target, 0);
   const totalSalesAchieved = employees.reduce((acc, curr) => acc + curr.achieved, 0);
@@ -161,7 +226,7 @@ export default function App() {
               </div>
             </div>
             <div className="bg-slate-800/80 px-2.5 py-1 rounded text-[11px] text-slate-300 flex items-center justify-between border border-slate-700/50">
-              <span className="text-slate-400">Field CRM & DCR Portal</span>
+              <span className="text-slate-400">Sales & DCR Management</span>
               <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
             </div>
           </div>
@@ -201,22 +266,56 @@ export default function App() {
                 </button>
               );
             })}
+
+            {/* Admin Dedicated Section */}
+            {isAdminLoggedIn && (
+              <button
+                onClick={() => setActiveTab('admin-manage')}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-xs mt-3 transition-all ${
+                  activeTab === 'admin-manage' ? 'bg-amber-600 text-white' : 'bg-amber-950/40 text-amber-300 border border-amber-800/50 hover:bg-amber-900/50'
+                }`}
+              >
+                <ShieldCheck className="w-5 h-5" />
+                <span>Admin Control Center</span>
+              </button>
+            )}
           </nav>
         </div>
 
-        {/* User Info */}
-        <div className="p-4 border-t border-slate-800">
-          <div className="bg-slate-800/60 p-3 rounded-xl flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-xs">
-                USR
+        {/* ADMIN LOGIN / USER BAR */}
+        <div className="p-4 border-t border-slate-800 space-y-2">
+          {isAdminLoggedIn ? (
+            <div className="bg-amber-950/60 border border-amber-800/60 p-3 rounded-xl flex items-center justify-between text-xs">
+              <div className="flex items-center space-x-2">
+                <ShieldCheck className="w-4 h-4 text-amber-400" />
+                <div>
+                  <p className="font-bold text-amber-200">Admin Mode Active</p>
+                  <p className="text-[10px] text-amber-400">Full Privileges Granted</p>
+                </div>
               </div>
-              <div className="text-xs">
-                <p className="font-semibold text-slate-200">Admin Control</p>
-                <p className="text-slate-400 text-[10px]">ID: USR-ADMIN-01</p>
-              </div>
+              <button 
+                onClick={handleAdminLogout} 
+                className="text-amber-300 hover:text-white p-1 rounded hover:bg-amber-900/50"
+                title="Logout Admin"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
-            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" title="Connected"></span>
+          ) : (
+            <button 
+              onClick={() => setIsAdminModalOpen(true)}
+              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 p-2.5 rounded-xl flex items-center justify-between text-xs border border-slate-700/60 transition"
+            >
+              <div className="flex items-center space-x-2">
+                <Lock className="w-4 h-4 text-amber-400" />
+                <span className="font-semibold">Admin Login</span>
+              </div>
+              <span className="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded">PIN Access</span>
+            </button>
+          )}
+
+          <div className="text-[10px] text-center text-slate-500 pt-1">
+            USR POWER INDUSTRIES PVT LTD © 2026
           </div>
         </div>
       </aside>
@@ -229,14 +328,14 @@ export default function App() {
           <div>
             <div className="flex items-center space-x-2">
               <h2 className="text-xl font-bold text-slate-900 capitalize">
-                {activeTab.replace('-', ' ')}
+                {activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}
               </h2>
               <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">
                 USR POWER IND.
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Field Force Tracker, DCR Logging, GPS Photo Verification & Product Vertical Dashboard
+              Sales Rep DCR Logs, Leads, Employee ID Target Allocation & Admin Verification Portal
             </p>
           </div>
 
@@ -269,7 +368,7 @@ export default function App() {
               </select>
             </div>
 
-            {/* Quick Action Buttons */}
+            {/* Quick Actions */}
             <button 
               onClick={() => setIsLeadModalOpen(true)}
               className="flex items-center space-x-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow transition"
@@ -340,7 +439,7 @@ export default function App() {
                   <p className="text-xs font-medium text-slate-500">GPS Photo Verified</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">{gpsVerifiedVisitsCount} / {dcrs.length}</h3>
                   <span className="text-[11px] text-teal-600 font-medium flex items-center mt-1">
-                    <CheckCircle className="w-3 h-3 mr-1" /> Camera & Location Tagged
+                    <CheckCircle className="w-3 h-3 mr-1" /> Camera Tagged
                   </span>
                 </div>
                 <div className="p-3 bg-teal-50 text-teal-600 rounded-xl">
@@ -430,7 +529,7 @@ export default function App() {
               {/* Staff Roster */}
               <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
                 <h3 className="font-bold text-slate-900 text-sm flex items-center border-b border-slate-100 pb-3">
-                  <Navigation className="w-4 h-4 mr-2 text-indigo-600" /> Employee ID Directory
+                  <Navigation className="w-4 h-4 mr-2 text-indigo-600" /> Employee Directory
                 </h3>
 
                 <div className="space-y-3">
@@ -813,7 +912,162 @@ export default function App() {
           </div>
         )}
 
+        {/* TAB 7: PASSWORD PROTECTED ADMIN PANEL */}
+        {activeTab === 'admin-manage' && isAdminLoggedIn && (
+          <div className="space-y-6">
+            
+            {/* Admin Header Banner */}
+            <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+              <div>
+                <span className="bg-amber-500 text-slate-950 font-bold text-[10px] px-2.5 py-0.5 rounded uppercase tracking-wider">
+                  Master Control Access
+                </span>
+                <h3 className="text-xl font-extrabold mt-1">Admin Command Center</h3>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  Manage Employee IDs, Assign Sales Targets, & Export Master Reports
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <button 
+                  onClick={() => setIsAddEmpModalOpen(true)}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>+ Create Employee ID</span>
+                </button>
+
+                <button 
+                  onClick={() => exportToCSV(dcrs, 'USR_Power_DCR_Report')}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Export DCR (CSV)</span>
+                </button>
+
+                <button 
+                  onClick={() => exportToCSV(leads, 'USR_Power_Leads_Report')}
+                  className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Export Leads (CSV)</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Employee Management Table */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h4 className="font-bold text-slate-900 text-sm flex items-center">
+                  <ShieldCheck className="w-4 h-4 text-amber-600 mr-2" /> Employee Roster & Target Configuration
+                </h4>
+                <span className="text-xs text-slate-400">Total Staff: {employees.length}</span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                      <th className="p-3">Employee ID</th>
+                      <th className="p-3">Staff Name</th>
+                      <th className="p-3">Assigned Territory</th>
+                      <th className="p-3">Primary Vertical</th>
+                      <th className="p-3">Monthly Target (₹)</th>
+                      <th className="p-3">Sales Achieved (₹)</th>
+                      <th className="p-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {employees.map((emp) => (
+                      <tr key={emp.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-mono font-bold text-indigo-600">{emp.id}</td>
+                        <td className="p-3 font-bold text-slate-900">{emp.name}</td>
+                        <td className="p-3 text-slate-600">{emp.territory}</td>
+                        <td className="p-3">
+                          <span className="bg-slate-100 text-slate-800 text-[10px] font-semibold px-2 py-0.5 rounded">
+                            {emp.primaryVertical}
+                          </span>
+                        </td>
+                        <td className="p-3 font-bold text-slate-800">₹{(emp.target).toLocaleString('en-IN')}</td>
+                        <td className="p-3 font-bold text-emerald-600">₹{(emp.achieved).toLocaleString('en-IN')}</td>
+                        <td className="p-3 text-right">
+                          <button 
+                            onClick={() => {
+                              const newTarget = prompt(`Enter new target for ${emp.name} (${emp.id}):`, emp.target);
+                              if (newTarget && !isNaN(newTarget)) {
+                                setEmployees(employees.map(e => e.id === emp.id ? { ...e, target: Number(newTarget) } : e));
+                              }
+                            }}
+                            className="bg-indigo-50 text-indigo-700 px-2 py-1 rounded text-[10px] font-semibold hover:bg-indigo-100 mr-1"
+                          >
+                            Edit Target
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        )}
+
       </main>
+
+      {/* MODAL 0: ADMIN LOGIN MODAL */}
+      {isAdminModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
+            <div className="p-5 bg-slate-900 text-white text-center relative">
+              <div className="w-12 h-12 bg-amber-500/20 border border-amber-500/40 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Lock className="w-6 h-6" />
+              </div>
+              <h3 className="font-extrabold text-base">Admin Security Login</h3>
+              <p className="text-[10px] text-amber-400 mt-0.5">USR POWER INDUSTRIES PRIVATE LIMITED</p>
+              <button 
+                onClick={() => setIsAdminModalOpen(false)} 
+                className="absolute top-3 right-3 text-slate-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAdminLogin} className="p-5 space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-slate-700 block mb-1">Enter Security Password</label>
+                <input 
+                  type="password" 
+                  required
+                  value={adminPasswordInput}
+                  onChange={(e) => setAdminPasswordInput(e.target.value)}
+                  placeholder="Enter Password (admin123)"
+                  className="w-full p-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 outline-none font-mono"
+                />
+                {adminError && <p className="text-[10px] text-rose-600 font-semibold mt-1">{adminError}</p>}
+                <p className="text-[10px] text-slate-400 mt-1 italic">Default Security PIN: <strong>admin123</strong></p>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-2">
+                <button 
+                  type="button" 
+                  onClick={() => setIsAdminModalOpen(false)} 
+                  className="px-4 py-2 text-slate-500 text-xs font-semibold"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs rounded-xl font-bold transition flex items-center space-x-1"
+                >
+                  <Key className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Unlock Admin</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* MODAL 1: ADD NEW LEAD */}
       {isLeadModalOpen && (
@@ -1062,7 +1316,87 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL 3: VIEW PHOTO & GPS PROOF */}
+      {/* MODAL 3: ADMIN CREATE EMPLOYEE */}
+      {isAddEmpModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden">
+            <div className="p-4 bg-slate-900 text-white flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-sm">Add New Employee ID</h3>
+                <p className="text-[10px] text-amber-400">Admin Control Panel</p>
+              </div>
+              <button onClick={() => setIsAddEmpModalOpen(false)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddEmployee} className="p-5 space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Employee ID (e.g., USR-EMP-105)</label>
+                <input 
+                  type="text" required
+                  value={newEmp.id}
+                  onChange={e => setNewEmp({...newEmp, id: e.target.value})}
+                  className="w-full border border-slate-300 rounded-lg p-2 font-mono font-bold outline-none"
+                  placeholder="USR-EMP-105"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Full Employee Name</label>
+                <input 
+                  type="text" required
+                  value={newEmp.name}
+                  onChange={e => setNewEmp({...newEmp, name: e.target.value})}
+                  className="w-full border border-slate-300 rounded-lg p-2 outline-none"
+                  placeholder="Enter Name"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Territory Division</label>
+                  <input 
+                    type="text" required
+                    value={newEmp.territory}
+                    onChange={e => setNewEmp({...newEmp, territory: e.target.value})}
+                    className="w-full border border-slate-300 rounded-lg p-2 outline-none"
+                    placeholder="e.g. Patna Central"
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Monthly Target (₹)</label>
+                  <input 
+                    type="number" required
+                    value={newEmp.target}
+                    onChange={e => setNewEmp({...newEmp, target: e.target.value})}
+                    className="w-full border border-slate-300 rounded-lg p-2 outline-none"
+                    placeholder="750000"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Primary Division / Vertical</label>
+                <select 
+                  value={newEmp.primaryVertical}
+                  onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})}
+                  className="w-full border border-slate-300 rounded-lg p-2 outline-none font-semibold text-indigo-900"
+                >
+                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
+                </select>
+              </div>
+
+              <div className="pt-3 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 text-slate-500 font-semibold">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-800">Add Staff Member</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: VIEW PHOTO & GPS PROOF */}
       {viewPhotoModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden">
@@ -1095,7 +1429,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL 4: STANDALONE GPS CAPTURE SIMULATOR */}
+      {/* MODAL 5: STANDALONE GPS CAPTURE SIMULATOR */}
       {isGpsModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-sm rounded-2xl shadow-xl p-5 space-y-4 text-center">
