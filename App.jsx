@@ -3,7 +3,7 @@ import {
   Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
   Search, Filter, CheckCircle, Clock, Award, 
   Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag,
-  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key
+  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User
 } from 'lucide-react';
 
 // Product Lines & Business Verticals
@@ -47,11 +47,15 @@ export default function App() {
   const [leads, setLeads] = useState(INITIAL_LEADS);
   const [dcrs, setDcrs] = useState(INITIAL_DCR);
   
-  // Admin Mode & Security State
+  // Authentication & Role State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [adminPasswordInput, setAdminPasswordInput] = useState('');
   const [adminError, setAdminError] = useState('');
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+
+  // Employee Portal Login State (For restriction per employee)
+  const [loggedInEmployeeId, setLoggedInEmployeeId] = useState('USR-EMP-101'); // Default logged in staff
+  const [isEmpLoginModalOpen, setIsEmpLoginModalOpen] = useState(false);
   
   // Filters
   const [selectedEmpFilter, setSelectedEmpFilter] = useState('All');
@@ -66,12 +70,12 @@ export default function App() {
   // New Lead State
   const [newLead, setNewLead] = useState({
     clientName: '', contactPerson: '', phone: '', address: '',
-    status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: ''
+    status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: loggedInEmployeeId, vertical: 'USR POWER LUBE', nextFollowup: ''
   });
 
   // New DCR State
   const [newDcr, setNewDcr] = useState({
-    empId: 'USR-EMP-101', clientName: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
+    empId: loggedInEmployeeId, clientName: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
     outcome: 'Follow Up Required', notes: '', nextDate: '',
     lat: '25.5941 N', lng: '85.1376 E', address: 'Main Market, Patna',
     photoVerified: false, photoUrl: null
@@ -86,7 +90,10 @@ export default function App() {
   const [capturingGpsPhoto, setCapturingGpsPhoto] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Admin Login Handler with Updated Password
+  // Get current logged-in employee object
+  const currentEmpObj = employees.find(e => e.id === loggedInEmployeeId) || employees[0];
+
+  // Admin Login Handler
   const handleAdminLogin = (e) => {
     e.preventDefault();
     if (adminPasswordInput === '70212@Usrpowermhadmin') {
@@ -94,6 +101,7 @@ export default function App() {
       setIsAdminModalOpen(false);
       setAdminError('');
       setAdminPasswordInput('');
+      setActiveTab('admin-manage');
     } else {
       setAdminError('Invalid Admin Password!');
     }
@@ -113,14 +121,12 @@ export default function App() {
 
     setCapturingGpsPhoto(true);
 
-    // Fetch Real Device GPS Coordinates via Geolocation API
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const lat = position.coords.latitude.toFixed(4) + ' N';
           const lng = position.coords.longitude.toFixed(4) + ' E';
           
-          // Create object URL for the captured photo
           const reader = new FileReader();
           reader.onloadend = () => {
             setNewDcr(prev => ({
@@ -136,7 +142,6 @@ export default function App() {
           reader.readAsDataURL(file);
         },
         (error) => {
-          // Fallback if GPS permission denied or unavailable
           const reader = new FileReader();
           reader.onloadend = () => {
             setNewDcr(prev => ({
@@ -161,11 +166,13 @@ export default function App() {
 
   const handleAddLead = (e) => {
     e.preventDefault();
-    const empObj = employees.find(emp => emp.id === newLead.assignedToId);
+    const targetEmpId = isAdminLoggedIn ? newLead.assignedToId : loggedInEmployeeId;
+    const empObj = employees.find(emp => emp.id === targetEmpId);
     const createdLead = {
       ...newLead,
+      assignedToId: targetEmpId,
       id: `LD-${Math.floor(Math.random() * 900 + 100)}`,
-      assignedToName: empObj ? empObj.name : 'Rohan Sharma',
+      assignedToName: empObj ? empObj.name : currentEmpObj.name,
       lastFollowup: new Date().toISOString().split('T')[0],
       estimatedValue: Number(newLead.estimatedValue) || 0
     };
@@ -173,23 +180,25 @@ export default function App() {
     setIsLeadModalOpen(false);
     setNewLead({
       clientName: '', contactPerson: '', phone: '', address: '',
-      status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: ''
+      status: 'Hot', stage: 'Contacted', estimatedValue: '', assignedToId: loggedInEmployeeId, vertical: currentEmpObj.primaryVertical, nextFollowup: ''
     });
   };
 
   const handleAddDcr = (e) => {
     e.preventDefault();
-    const empObj = employees.find(emp => emp.id === newDcr.empId);
+    const targetEmpId = isAdminLoggedIn ? newDcr.empId : loggedInEmployeeId;
+    const empObj = employees.find(emp => emp.id === targetEmpId);
     const createdDcr = {
       ...newDcr,
+      empId: targetEmpId,
       id: `DCR-${Math.floor(Math.random() * 900 + 100)}`,
-      empName: empObj ? empObj.name : 'Rohan Sharma',
+      empName: empObj ? empObj.name : currentEmpObj.name,
       visitTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
     setDcrs([createdDcr, ...dcrs]);
     setIsDcrModalOpen(false);
     setNewDcr({
-      empId: 'USR-EMP-101', clientName: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
+      empId: loggedInEmployeeId, clientName: '', vertical: currentEmpObj.primaryVertical, callType: 'Field Visit',
       outcome: 'Follow Up Required', notes: '', nextDate: '',
       lat: '25.5941 N', lng: '85.1376 E', address: 'Main Market, Patna',
       photoVerified: false, photoUrl: null
@@ -228,11 +237,22 @@ export default function App() {
     document.body.removeChild(link);
   };
 
-  // Metrics Calculations
-  const totalSalesTarget = employees.reduce((acc, curr) => acc + curr.target, 0);
-  const totalSalesAchieved = employees.reduce((acc, curr) => acc + curr.achieved, 0);
-  const totalLeadsValue = leads.reduce((acc, curr) => acc + curr.estimatedValue, 0);
-  const gpsVerifiedVisitsCount = dcrs.filter(d => d.photoVerified).length;
+  // --- ROLE-BASED DATA FILTERING ---
+  // If Admin is logged in, show all data (or filtered by admin selection).
+  // If regular Employee is logged in, strictly show ONLY their ID data and their assigned vertical.
+  const visibleLeads = isAdminLoggedIn 
+    ? leads.filter(l => (selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || l.vertical === selectedVerticalFilter))
+    : leads.filter(l => l.assignedToId === loggedInEmployeeId || l.vertical === currentEmpObj.primaryVertical);
+
+  const visibleDcrs = isAdminLoggedIn
+    ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || d.vertical === selectedVerticalFilter))
+    : dcrs.filter(d => d.empId === loggedInEmployeeId || d.vertical === currentEmpObj.primaryVertical);
+
+  // Metrics Calculations based on Role
+  const totalSalesTarget = isAdminLoggedIn ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmpObj.target;
+  const totalSalesAchieved = isAdminLoggedIn ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmpObj.achieved;
+  const totalLeadsValue = visibleLeads.reduce((acc, curr) => acc + curr.estimatedValue, 0);
+  const gpsVerifiedVisitsCount = visibleDcrs.filter(d => d.photoVerified).length;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col md:flex-row">
@@ -253,17 +273,21 @@ export default function App() {
                 <p className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider">PRIVATE LIMITED</p>
               </div>
             </div>
-            <div className="bg-slate-800/80 px-2.5 py-1 rounded text-[11px] text-slate-300 flex items-center justify-between border border-slate-700/50">
-              <span className="text-slate-400">Sales & DCR Management</span>
-              <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
+            
+            {/* Role Badge Indicator */}
+            <div className="mt-2 bg-slate-800/80 px-2.5 py-1.5 rounded-lg text-[11px] text-slate-300 flex items-center justify-between border border-slate-700/50">
+              <span className="text-slate-400">
+                {isAdminLoggedIn ? '👑 Admin Master Mode' : `👤 Staff: ${currentEmpObj.name}`}
+              </span>
+              <span className={`w-2 h-2 rounded-full ${isAdminLoggedIn ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
             </div>
           </div>
 
           <nav className="p-4 space-y-1">
             {[
               { id: 'dashboard', label: 'Dashboard Overview', icon: TrendingUp },
-              { id: 'leads', label: 'Lead Management', icon: Users, badge: leads.length },
-              { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: dcrs.length },
+              { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
+              { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
               { id: 'gps', label: 'GPS Photo Verification', icon: Camera, badge: gpsVerifiedVisitsCount },
               { id: 'verticals', label: 'Business Verticals', icon: Tag, badge: BUSINESS_VERTICALS.length },
               { id: 'performance', label: 'Staff Performance', icon: Award },
@@ -310,15 +334,33 @@ export default function App() {
           </nav>
         </div>
 
-        {/* ADMIN LOGIN / USER BAR */}
+        {/* AUTHENTICATION / SWITCH USER BAR */}
         <div className="p-4 border-t border-slate-800 space-y-2">
+          {!isAdminLoggedIn && (
+            <div className="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/50 space-y-2 text-xs">
+              <div className="flex items-center justify-between text-slate-300">
+                <span className="text-[10px] text-slate-400 uppercase font-bold">Switch Employee ID:</span>
+                <span className="text-indigo-400 font-mono font-bold">{loggedInEmployeeId}</span>
+              </div>
+              <select 
+                value={loggedInEmployeeId}
+                onChange={(e) => setLoggedInEmployeeId(e.target.value)}
+                className="w-full bg-slate-900 text-slate-200 text-xs p-1.5 rounded-lg border border-slate-700 outline-none"
+              >
+                {employees.map(emp => (
+                  <option key={emp.id} value={emp.id}>[{emp.id}] {emp.name} ({emp.primaryVertical})</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {isAdminLoggedIn ? (
             <div className="bg-amber-950/60 border border-amber-800/60 p-3 rounded-xl flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
                 <ShieldCheck className="w-4 h-4 text-amber-400" />
                 <div>
                   <p className="font-bold text-amber-200">Admin Mode Active</p>
-                  <p className="text-[10px] text-amber-400">Full Privileges Granted</p>
+                  <p className="text-[10px] text-amber-400">Full System Privileges</p>
                 </div>
               </div>
               <button 
@@ -359,42 +401,31 @@ export default function App() {
                 {activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}
               </h2>
               <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">
-                USR POWER IND.
+                {isAdminLoggedIn ? 'ADMIN VIEW' : `EMPLOYEE VIEW (${currentEmpObj.primaryVertical})`}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Sales Rep DCR Logs, Leads, Employee ID Target Allocation & Admin Verification Portal
+              {isAdminLoggedIn ? 'Viewing all company records and master controls.' : `Viewing records restricted to your ID (${loggedInEmployeeId}) & vertical (${currentEmpObj.primaryVertical}).`}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {/* Employee Filter */}
-            <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 shadow-sm">
-              <Filter className="w-3.5 h-3.5 text-slate-400 mr-1.5" />
-              <select 
-                value={selectedEmpFilter} 
-                onChange={(e) => setSelectedEmpFilter(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-slate-700 outline-none cursor-pointer"
-              >
-                <option value="All">All Staff / Emp IDs</option>
-                {employees.map(e => (
-                  <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Vertical Filter */}
-            <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 shadow-sm">
-              <Tag className="w-3.5 h-3.5 text-slate-400 mr-1.5" />
-              <select 
-                value={selectedVerticalFilter} 
-                onChange={(e) => setSelectedVerticalFilter(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-slate-700 outline-none cursor-pointer"
-              >
-                <option value="All">All Verticals</option>
-                {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-              </select>
-            </div>
+            {/* Employee Filter (Only for Admin) */}
+            {isAdminLoggedIn && (
+              <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 shadow-sm">
+                <Filter className="w-3.5 h-3.5 text-slate-400 mr-1.5" />
+                <select 
+                  value={selectedEmpFilter} 
+                  onChange={(e) => setSelectedEmpFilter(e.target.value)}
+                  className="bg-transparent text-xs font-semibold text-slate-700 outline-none cursor-pointer"
+                >
+                  <option value="All">All Staff / Emp IDs</option>
+                  {employees.map(e => (
+                    <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* Quick Actions */}
             <button 
@@ -423,12 +454,12 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">Company Revenue Target</p>
+                  <p className="text-xs font-medium text-slate-500">{isAdminLoggedIn ? 'Company Revenue Target' : 'Your Revenue Target'}</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">
                     ₹{(totalSalesAchieved).toLocaleString('en-IN')}
                   </h3>
                   <span className="text-[11px] text-emerald-600 font-medium flex items-center mt-1">
-                    <TrendingUp className="w-3 h-3 mr-1" /> {Math.round((totalSalesAchieved/totalSalesTarget)*100)}% Overall Achieved
+                    <TrendingUp className="w-3 h-3 mr-1" /> {Math.round((totalSalesAchieved/totalSalesTarget)*100)}% Achieved
                   </span>
                 </div>
                 <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
@@ -438,8 +469,8 @@ export default function App() {
 
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">Active Business Leads</p>
-                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{leads.length} Active</h3>
+                  <p className="text-xs font-medium text-slate-500">Accessible Leads</p>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{visibleLeads.length} Leads</h3>
                   <span className="text-[11px] text-indigo-600 font-medium mt-1 inline-block">
                     Pipeline: ₹{(totalLeadsValue).toLocaleString('en-IN')}
                   </span>
@@ -452,9 +483,9 @@ export default function App() {
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-slate-500">Submitted DCR Reports</p>
-                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{dcrs.length} Reports</h3>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{visibleDcrs.length} Reports</h3>
                   <span className="text-[11px] text-amber-600 font-medium mt-1 inline-block">
-                    {dcrs.filter(d => d.callType === 'Field Visit').length} On-Site Visits
+                    {visibleDcrs.filter(d => d.callType === 'Field Visit').length} On-Site Visits
                   </span>
                 </div>
                 <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
@@ -465,7 +496,7 @@ export default function App() {
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-slate-500">GPS Photo Verified</p>
-                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{gpsVerifiedVisitsCount} / {dcrs.length}</h3>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{gpsVerifiedVisitsCount} / {visibleDcrs.length}</h3>
                   <span className="text-[11px] text-teal-600 font-medium flex items-center mt-1">
                     <CheckCircle className="w-3 h-3 mr-1" /> Camera Tagged
                   </span>
@@ -476,28 +507,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* BUSINESS VERTICALS OVERVIEW GRID */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center border-b border-slate-100 pb-3">
-                <Tag className="w-4 h-4 mr-2 text-indigo-600" /> Active Business Verticals & Divisions
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {BUSINESS_VERTICALS.map((vertical) => {
-                  const verticalLeads = leads.filter(l => l.vertical === vertical);
-                  const verticalDcrs = dcrs.filter(d => d.vertical === vertical);
-                  return (
-                    <div key={vertical} className="p-3 border border-slate-200 rounded-xl bg-slate-50/50 hover:border-indigo-300 transition">
-                      <p className="font-bold text-xs text-indigo-900 truncate">{vertical}</p>
-                      <div className="mt-2 flex justify-between text-[11px] text-slate-500">
-                        <span>Leads: <strong>{verticalLeads.length}</strong></span>
-                        <span>DCRs: <strong>{verticalDcrs.length}</strong></span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* FIELD ACTIVITY & STAFF SUMMARY */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
@@ -505,18 +514,15 @@ export default function App() {
               <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                    <Clock className="w-4 h-4 mr-2 text-indigo-600" /> Recent Employee DCR Logs
+                    <Clock className="w-4 h-4 mr-2 text-indigo-600" /> {isAdminLoggedIn ? 'All Employee DCR Logs' : `Your Vertical DCR Logs (${currentEmpObj.primaryVertical})`}
                   </h3>
                   <button onClick={() => setActiveTab('dcr')} className="text-xs text-indigo-600 font-semibold hover:underline">
-                    View All DCRs &rarr;
+                    View All &rarr;
                   </button>
                 </div>
 
                 <div className="space-y-3">
-                  {dcrs
-                    .filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || d.vertical === selectedVerticalFilter))
-                    .slice(0, 4)
-                    .map((dcr) => (
+                  {visibleDcrs.slice(0, 4).map((dcr) => (
                     <div key={dcr.id} className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition flex items-start justify-between">
                       <div className="flex items-start space-x-3">
                         <div className={`p-2 rounded-lg mt-0.5 ${dcr.photoVerified ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}>
@@ -554,44 +560,46 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Staff Roster */}
+              {/* Staff Roster / Profile Card */}
               <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
                 <h3 className="font-bold text-slate-900 text-sm flex items-center border-b border-slate-100 pb-3">
-                  <Navigation className="w-4 h-4 mr-2 text-indigo-600" /> Employee Directory
+                  <Navigation className="w-4 h-4 mr-2 text-indigo-600" /> {isAdminLoggedIn ? 'Employee Directory' : 'Your Profile & Vertical'}
                 </h3>
 
-                <div className="space-y-3">
-                  {employees.map((emp) => {
-                    const pct = Math.round((emp.achieved / emp.target) * 100);
-                    return (
-                      <div key={emp.id} className="p-3 border border-slate-100 rounded-xl bg-slate-50/60">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <span className="font-bold text-xs text-indigo-950">{emp.name}</span>
-                            <span className="text-[10px] font-mono font-bold text-indigo-600 block">{emp.id}</span>
-                            <p className="text-[10px] text-slate-400">{emp.territory}</p>
-                          </div>
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-                            {emp.status}
-                          </span>
-                        </div>
-
-                        <div className="mt-2">
-                          <div className="flex justify-between text-[10px] font-medium text-slate-500 mb-1">
-                            <span>Target ({pct}%)</span>
-                            <span>₹{(emp.achieved).toLocaleString('en-IN')}</span>
-                          </div>
-                          <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-                            <div 
-                              className="bg-indigo-600 h-1.5 rounded-full" 
-                              style={{ width: `${Math.min(pct, 100)}%` }}
-                            ></div>
+                {isAdminLoggedIn ? (
+                  <div className="space-y-3">
+                    {employees.map((emp) => {
+                      const pct = Math.round((emp.achieved / emp.target) * 100);
+                      return (
+                        <div key={emp.id} className="p-3 border border-slate-100 rounded-xl bg-slate-50/60">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <span className="font-bold text-xs text-indigo-950">{emp.name}</span>
+                              <span className="text-[10px] font-mono font-bold text-indigo-600 block">{emp.id}</span>
+                              <p className="text-[10px] text-slate-400">{emp.territory} • {emp.primaryVertical}</p>
+                            </div>
+                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                              {emp.status}
+                            </span>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="p-4 border border-indigo-100 rounded-xl bg-indigo-50/40 space-y-3">
+                    <div>
+                      <span className="text-[10px] font-bold text-indigo-600 uppercase">Logged In Staff</span>
+                      <h4 className="font-extrabold text-slate-900 text-sm">{currentEmpObj.name}</h4>
+                      <p className="text-xs font-mono text-indigo-700">{currentEmpObj.id}</p>
+                    </div>
+                    <div className="text-xs space-y-1 border-t border-indigo-100 pt-2">
+                      <p><strong>Territory:</strong> {currentEmpObj.territory}</p>
+                      <p><strong>Assigned Vertical:</strong> <span className="text-indigo-700 font-bold">{currentEmpObj.primaryVertical}</span></p>
+                      <p className="text-[11px] text-slate-500 mt-1">🔒 RBAC Active: You can only view leads and DCRs matching your vertical or Employee ID.</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
             </div>
@@ -606,7 +614,7 @@ export default function App() {
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 <input 
                   type="text" 
-                  placeholder="Search leads, clients, emp ID..." 
+                  placeholder="Search your vertical leads..." 
                   className="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 outline-none"
                 />
               </div>
@@ -634,7 +642,7 @@ export default function App() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {leads.map((lead) => (
+                    {visibleLeads.map((lead) => (
                       <tr key={lead.id} className="hover:bg-slate-50/80">
                         <td className="p-3">
                           <p className="font-bold text-slate-900">{lead.clientName}</p>
@@ -676,7 +684,7 @@ export default function App() {
         {activeTab === 'dcr' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <h3 className="font-bold text-slate-900 text-sm">Employee Field Call Logs & DCR</h3>
+              <h3 className="font-bold text-slate-900 text-sm">{isAdminLoggedIn ? 'All DCR Logs' : `Your Vertical DCR Logs (${currentEmpObj.primaryVertical})`}</h3>
               <button 
                 onClick={() => setIsDcrModalOpen(true)}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow"
@@ -700,7 +708,7 @@ export default function App() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {dcrs.map((dcr) => (
+                    {visibleDcrs.map((dcr) => (
                       <tr key={dcr.id} className="hover:bg-slate-50/80">
                         <td className="p-3">
                           <span className="font-bold text-slate-900">{dcr.empName}</span>
@@ -746,12 +754,12 @@ export default function App() {
                 <Camera className="w-4 h-4 mr-2 text-indigo-600" /> GPS & Live Geo-Tagging Audit
               </h3>
               <p className="text-xs text-slate-500">
-                All field visits logged by employees are verified with real-time GPS coordinates and camera stamps.
+                Verified field visits restricted to your vertical scope.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {dcrs.filter(d => d.photoVerified).map((dcr) => (
+              {visibleDcrs.filter(d => d.photoVerified).map((dcr) => (
                 <div key={dcr.id} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                     <div>
@@ -759,7 +767,7 @@ export default function App() {
                       <span className="text-[10px] font-mono text-indigo-600 ml-2">({dcr.empId})</span>
                     </div>
                     <span className="text-[10px] bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded border border-emerald-100">
-                      Verified Visit
+                      {dcr.vertical}
                     </span>
                   </div>
 
@@ -785,16 +793,21 @@ export default function App() {
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
               <h3 className="font-bold text-slate-900 text-sm mb-3">USR Power Industries Business Verticals</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {BUSINESS_VERTICALS.map((vertical, idx) => (
-                  <div key={vertical} className="p-4 border border-slate-200 rounded-xl bg-slate-50 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono text-indigo-600 font-bold">0{idx + 1}</span>
-                      <span className="text-[10px] bg-indigo-100 text-indigo-800 font-semibold px-2 py-0.5 rounded">Active</span>
+                {BUSINESS_VERTICALS.map((vertical, idx) => {
+                  const isAssignedToMe = !isAdminLoggedIn && currentEmpObj.primaryVertical === vertical;
+                  return (
+                    <div key={vertical} className={`p-4 border rounded-xl space-y-2 ${isAssignedToMe ? 'border-indigo-500 bg-indigo-50/40' : 'border-slate-200 bg-slate-50'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono text-indigo-600 font-bold">0{idx + 1}</span>
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${isAssignedToMe ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-800'}`}>
+                          {isAssignedToMe ? 'Your Vertical' : 'Active'}
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-sm">{vertical}</h4>
+                      <p className="text-xs text-slate-500">Managed under USR Power Industries Private Limited network.</p>
                     </div>
-                    <h4 className="font-bold text-slate-900 text-sm">{vertical}</h4>
-                    <p className="text-xs text-slate-500">Managed under USR Power Industries Private Limited network.</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -804,9 +817,9 @@ export default function App() {
         {activeTab === 'performance' && (
           <div className="space-y-4">
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-900 text-sm mb-4">Staff Target vs Achievement Leaderboard</h3>
+              <h3 className="font-bold text-slate-900 text-sm mb-4">{isAdminLoggedIn ? 'Staff Target Leaderboard (All)' : `Your Performance (${currentEmpObj.name})`}</h3>
               <div className="space-y-4">
-                {employees.map((emp) => {
+                {(isAdminLoggedIn ? employees : [currentEmpObj]).map((emp) => {
                   const pct = Math.round((emp.achieved / emp.target) * 100);
                   return (
                     <div key={emp.id} className="p-4 border border-slate-100 rounded-xl bg-slate-50/50 space-y-2">
@@ -814,7 +827,7 @@ export default function App() {
                         <div>
                           <span className="font-bold text-slate-900">{emp.name}</span>
                           <span className="text-xs font-mono text-indigo-600 ml-2">[{emp.id}]</span>
-                          <span className="text-xs text-slate-500 block">{emp.territory} • Primary: {emp.primaryVertical}</span>
+                          <span className="text-xs text-slate-500 block">{emp.territory} • Primary Vertical: <strong className="text-indigo-700">{emp.primaryVertical}</strong></span>
                         </div>
                         <div className="text-right">
                           <span className="font-extrabold text-slate-900">₹{(emp.achieved).toLocaleString('en-IN')}</span>
@@ -841,14 +854,14 @@ export default function App() {
                 <h3 className="font-bold text-sm">Admin Master Control Panel</h3>
               </div>
               <p className="text-xs text-amber-800">
-                Manage employee IDs, allocate sales targets, and export complete DCR or Lead logs into Excel (CSV).
+                You have full Master privileges. You can manage employee IDs, allocate vertical targets, and export complete DCR or Lead logs into Excel (CSV).
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                 <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Employee Management</h4>
-                <p className="text-xs text-slate-500">Create new employee IDs for field staff and sales executives.</p>
+                <p className="text-xs text-slate-500">Create new employee IDs and assign primary verticals.</p>
                 <button 
                   onClick={() => setIsAddEmpModalOpen(true)}
                   className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1"
@@ -899,7 +912,7 @@ export default function App() {
 
             <form onSubmit={handleAdminLogin} className="space-y-3">
               <div>
-                <label className="text-xs font-semibold text-slate-700 block mb-1">Admin Security PIN / Password</label>
+                <label className="text-xs font-semibold text-slate-700 block mb-1">Admin Security PIN</label>
                 <input 
                   type="password" 
                   value={adminPasswordInput}
@@ -924,7 +937,7 @@ export default function App() {
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead ({isAdminLoggedIn ? 'Admin Mode' : `Staff: ${loggedInEmployeeId}`})</h3>
               <button onClick={() => setIsLeadModalOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
             </div>
 
@@ -949,12 +962,16 @@ export default function App() {
                   {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
                 </select>
               </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Assigned Employee ID</label>
-                <select value={newLead.assignedToId} onChange={e=>setNewLead({...newLead, assignedToId: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                  {employees.map(e => <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>)}
-                </select>
-              </div>
+
+              {isAdminLoggedIn && (
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Assign to Employee ID</label>
+                  <select value={newLead.assignedToId} onChange={e=>setNewLead({...newLead, assignedToId: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                    {employees.map(e => <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>)}
+                  </select>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Est. Value (₹)</label>
@@ -980,17 +997,25 @@ export default function App() {
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit Daily Call Report (DCR)</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Submit DCR ({isAdminLoggedIn ? 'Admin Mode' : `Staff: ${loggedInEmployeeId}`})</h3>
               <button onClick={() => setIsDcrModalOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
             </div>
 
             <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Select Employee ID</label>
-                <select value={newDcr.empId} onChange={e=>setNewDcr({...newDcr, empId: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
-                  {employees.map(e => <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>)}
-                </select>
-              </div>
+              {isAdminLoggedIn ? (
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Select Employee ID</label>
+                  <select value={newDcr.empId} onChange={e=>setNewDcr({...newDcr, empId: e.target.value})} className="w-full p-2 border rounded-xl bg-white">
+                    {employees.map(e => <option key={e.id} value={e.id}>[{e.id}] {e.name}</option>)}
+                  </select>
+                </div>
+              ) : (
+                <div className="p-2.5 bg-indigo-50 rounded-xl border border-indigo-100 flex items-center justify-between">
+                  <span>Submitting as: <strong>{currentEmpObj.name}</strong></span>
+                  <span className="font-mono font-bold text-indigo-700">{loggedInEmployeeId}</span>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Client Name</label>
@@ -1016,7 +1041,6 @@ export default function App() {
                     <span className="text-[10px] text-slate-500">Opens phone camera & records GPS coordinates</span>
                   </div>
                   
-                  {/* Hidden file input triggered by button */}
                   <input 
                     type="file" 
                     accept="image/*" 
@@ -1084,7 +1108,7 @@ export default function App() {
                 </div>
               </div>
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Territory / Region</label>
+                <label className="font-semibold text-slate-700 character block mb-1">Territory / Region</label>
                 <input type="text" value={newEmp.territory} onChange={e=>setNewEmp({...newEmp, territory: e.target.value})} placeholder="Patna / Gaya" className="w-full p-2 border rounded-xl" />
               </div>
               <div>
@@ -1124,48 +1148,3 @@ export default function App() {
     </div>
   );
 }
-import React, { useState, useRef } from 'react';
-import { 
-  Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
-  Search, Filter, CheckCircle, Clock, Award, 
-  Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag,
-  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, CheckSquare
-} from 'lucide-react';
-
-// Product Lines & Business Verticals
-const BUSINESS_VERTICALS = [
-  'USR POWER LUBE',
-  'TURBO OIL',
-  'NUTRI TRIBE',
-  'TAX AND LEGAL',
-  'PUNCHKUTEER',
-  'CUSTOMIZED PACKAGING',
-  'DIGITAL MARKETING'
-];
-
-// Initial Staff Data with USR Employee IDs
-const INITIAL_EMPLOYEES = [
-  { id: 'USR-EMP-101', name: 'Rohan Sharma', territory: 'Patna Division', target: 800000, achieved: 640000, visitsToday: 6, status: 'Active', primaryVertical: 'USR POWER LUBE' },
-  { id: 'USR-EMP-102', name: 'Amit Kumar', territory: 'Gaya & South Bihar', target: 650000, achieved: 580000, visitsToday: 5, status: 'Active', primaryVertical: 'TURBO OIL' },
-  { id: 'USR-EMP-103', name: 'Priya Singh', territory: 'Muzaffarpur Cluster', target: 900000, achieved: 870000, visitsToday: 7, status: 'Active', primaryVertical: 'TAX AND LEGAL' },
-  { id: 'USR-EMP-104', name: 'Vikram Verma', territory: 'Bhagalpur Region', target: 500000, achieved: 320000, visitsToday: 3, status: 'Active', primaryVertical: 'DIGITAL MARKETING' }
-];
-
-// Initial Attendance Records
-const INITIAL_ATTENDANCE = [
-  { id: 'ATT-101', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', checkInTime: '09:15 AM', status: 'Present', location: 'Patna Division' },
-  { id: 'ATT-102', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', checkInTime: '09:30 AM', status: 'Present', location: 'Gaya Hub' },
-  { id: 'ATT-103', empId: 'USR-EMP-103', empName: 'Priya Singh', date: '2026-11-02', checkInTime: '09:45 AM', status: 'Present', location: 'Muzaffarpur Cluster' }
-];
-
-// Initial Leads
-const INITIAL_LEADS = [
-  { id: 'LD-101', clientName: 'Bihar Auto Spares & Lubricants', contactPerson: 'Suresh Prasad', phone: '9835012345', address: 'Baksoti Road, Gaya', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-03' },
-  { id: 'LD-102', clientName: 'Maheshwari Logistics & Fleet Services', contactPerson: 'Mahesh Gupta', phone: '9431098765', address: 'Exhibition Road, Patna', status: 'Warm', stage: 'Proposal Sent', estimatedValue: 350000, assignedToId: 'USR-EMP-101', assignedToName: 'Rohan Sharma', vertical: 'TURBO OIL', lastFollowup: '2026-10-31', nextFollowup: '2026-11-04' },
-  { id: 'LD-103', clientName: 'NutriCare Organic Foods', contactPerson: 'Ramanathan S.', phone: '9771122334', address: 'Kanti Industrial Area, Muzaffarpur', status: 'Hot', stage: 'Contract Signed', estimatedValue: 450000, assignedToId: 'USR-EMP-103', assignedToName: 'Priya Singh', vertical: 'NUTRI TRIBE', lastFollowup: '2026-11-02', nextFollowup: '2026-11-06' },
-  { id: 'LD-104', clientName: 'Punchkuteer Resort & Eco Stay', contactPerson: 'Deepak Roy', phone: '9934455667', address: 'NH-2 Dobhi, Gaya', status: 'Hot', stage: 'Closed Won', estimatedValue: 520000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'PUNCHKUTEER', lastFollowup: '2026-11-02', nextFollowup: '2026-11-10' },
-  { id: 'LD-105', clientName: 'Zenith Legal & Corporate Advisors', contactPerson: 'Sunil Malhotra', phone: '9811223344', address: 'Boreing Road, Patna', status: 'Warm', stage: 'Contacted', estimatedValue: 220000, assignedToId: 'USR-EMP-103', assignedToName: 'Priya Singh', vertical: 'TAX AND LEGAL', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05' }
-];
-
-// Initial Daily Call Reports
-const INITIAL_
