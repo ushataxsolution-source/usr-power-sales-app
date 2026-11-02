@@ -3,7 +3,7 @@ import {
   Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
   Search, Filter, CheckCircle, Clock, Award, 
   Navigation, DollarSign, UserPlus, Eye, FileText, Check, X, RefreshCw, Briefcase, Tag,
-  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare
+  Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare, ArrowRight
 } from 'lucide-react';
 
 // Product Lines & Business Verticals
@@ -28,8 +28,7 @@ const INITIAL_EMPLOYEES = [
 // Initial Attendance Records
 const INITIAL_ATTENDANCE = [
   { id: 'ATT-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-02', checkInTime: '09:15 AM', status: 'Present', location: 'Patna Hub' },
-  { id: 'ATT-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', checkInTime: '09:30 AM', status: 'Present', location: 'Gaya Hub' },
-  { id: 'ATT-3', empId: 'USR-EMP-103', empName: 'Priya Singh', date: '2026-11-02', checkInTime: '09:05 AM', status: 'Present', location: 'Muzaffarpur Hub' }
+  { id: 'ATT-2', empId: 'USR-EMP-102', empName: 'Amit Kumar', date: '2026-11-02', checkInTime: '09:30 AM', status: 'Present', location: 'Gaya Hub' }
 ];
 
 // Initial Leads
@@ -45,19 +44,21 @@ const INITIAL_DCR = [
 ];
 
 export default function App() {
+  // Authentication State: null = Not logged in, 'admin' = Admin logged in, 'employee' = Employee logged in
+  const [authRole, setAuthRole] = useState(null); 
+  const [loggedEmpId, setLoggedEmpId] = useState('');
+  
+  // Login Modal / Screen States
+  const [loginType, setLoginType] = useState('employee'); // 'employee' or 'admin'
+  const [loginIdInput, setLoginIdInput] = useState('');
+  const [loginPassInput, setLoginPassInput] = useState('');
+  const [loginError, setLoginError] = useState('');
+
   const [activeTab, setActiveTab] = useState('dashboard');
   const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
   const [attendanceList, setAttendanceList] = useState(INITIAL_ATTENDANCE);
   const [leads, setLeads] = useState(INITIAL_LEADS);
   const [dcrs, setDcrs] = useState(INITIAL_DCR);
-  
-  // Login State (Either Admin or Employee)
-  const [role, setRole] = useState('employee'); // 'admin' or 'employee'
-  const [loggedEmpId, setLoggedEmpId] = useState('USR-EMP-101');
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [loginIdInput, setLoginIdInput] = useState('');
-  const [loginPassInput, setLoginPassInput] = useState('');
-  const [loginError, setLoginError] = useState('');
 
   // Filters
   const [selectedEmpFilter, setSelectedEmpFilter] = useState('All');
@@ -95,39 +96,38 @@ export default function App() {
   // Current logged in staff object
   const currentEmp = employees.find(e => e.id === loggedEmpId) || employees[0];
 
-  // Handle Login (Employee ID + Password OR Admin PIN)
-  const handleLoginSubmit = (e) => {
+  // Handle Employee Login Submit
+  const handleEmployeeLogin = (e) => {
     e.preventDefault();
     setLoginError('');
-
-    // Check if Admin Login
-    if (loginIdInput.toLowerCase() === 'admin' && loginPassInput === '70212@Usrpowermhadmin') {
-      setRole('admin');
-      setLoginModalOpen(false);
-      setLoginIdInput('');
-      setLoginPassInput('');
-      setActiveTab('admin-manage');
-      return;
-    }
-
-    // Check Employee Login
     const foundEmp = employees.find(emp => emp.id === loginIdInput.trim() && emp.pass === loginPassInput.trim());
     if (foundEmp) {
-      setRole('employee');
+      setAuthRole('employee');
       setLoggedEmpId(foundEmp.id);
-      setLoginModalOpen(false);
       setLoginIdInput('');
       setLoginPassInput('');
       setActiveTab('dashboard');
     } else {
-      setLoginError('Invalid ID or Password! (For Admin use ID: admin, Password: 70212@Usrpowermhadmin)');
+      setLoginError('Invalid Employee ID or Password! (e.g. ID: USR-EMP-101, Pass: 1011)');
+    }
+  };
+
+  // Handle Admin Login Submit
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    setLoginError('');
+    if (loginPassInput === '70212@Usrpowermhadmin') {
+      setAuthRole('admin');
+      setLoginPassInput('');
+      setActiveTab('admin-manage');
+    } else {
+      setLoginError('Invalid Admin Password!');
     }
   };
 
   const handleLogout = () => {
-    setRole('employee');
-    setLoggedEmpId('USR-EMP-101');
-    setActiveTab('dashboard');
+    setAuthRole(null);
+    setLoggedEmpId('');
   };
 
   // Mark Attendance Function for Employee
@@ -203,7 +203,7 @@ export default function App() {
 
   const handleAddLead = (e) => {
     e.preventDefault();
-    const assignedId = role === 'admin' ? newLead.assignedToId : currentEmp.id;
+    const assignedId = authRole === 'admin' ? newLead.assignedToId : currentEmp.id;
     const empObj = employees.find(emp => emp.id === assignedId);
     const createdLead = {
       ...newLead,
@@ -219,7 +219,7 @@ export default function App() {
 
   const handleAddDcr = (e) => {
     e.preventDefault();
-    const targetId = role === 'admin' ? newDcr.empId : currentEmp.id;
+    const targetId = authRole === 'admin' ? newDcr.empId : currentEmp.id;
     const empObj = employees.find(emp => emp.id === targetId);
     const createdDcr = {
       ...newDcr,
@@ -266,22 +266,137 @@ export default function App() {
   };
 
   // RBAC Filtering
-  const visibleLeads = role === 'admin'
+  const visibleLeads = authRole === 'admin'
     ? leads.filter(l => (selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || l.vertical === selectedVerticalFilter))
     : leads.filter(l => l.assignedToId === currentEmp.id || l.vertical === currentEmp.primaryVertical);
 
-  const visibleDcrs = role === 'admin'
+  const visibleDcrs = authRole === 'admin'
     ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter) && (selectedVerticalFilter === 'All' || d.vertical === selectedVerticalFilter))
     : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
 
-  const visibleAttendance = role === 'admin'
+  const visibleAttendance = authRole === 'admin'
     ? attendanceList
     : attendanceList.filter(a => a.empId === currentEmp.id);
 
-  const totalSalesTarget = role === 'admin' ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmp.target;
-  const totalSalesAchieved = role === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
+  const totalSalesTarget = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.target, 0) : currentEmp.target;
+  const totalSalesAchieved = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
   const totalLeadsValue = visibleLeads.reduce((acc, curr) => acc + curr.estimatedValue, 0);
 
+  // ==========================================
+  // RENDER SEPARATE LOGIN SCREEN IF NOT LOGGED IN
+  // ==========================================
+  if (!authRole) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-800">
+          
+          {/* Header Branding */}
+          <div className="bg-gradient-to-r from-indigo-900 to-slate-900 p-6 text-white text-center space-y-2">
+            <div className="w-12 h-12 bg-indigo-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg">
+              <Briefcase className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="font-extrabold text-base tracking-wide">USR POWER INDUSTRIES</h1>
+            <p className="text-[10px] text-indigo-300 uppercase tracking-widest font-semibold">PRIVATE LIMITED • SALES & DCR PORTAL</p>
+          </div>
+
+          {/* Toggle Buttons: Employee Login vs Admin Login */}
+          <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2">
+            <button 
+              onClick={() => { setLoginType('employee'); setLoginError(''); }}
+              className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${
+                loginType === 'employee' ? 'bg-indigo-600 text-white shadow' : 'text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              <User className="w-4 h-4" />
+              <span>Employee Portal</span>
+            </button>
+            <button 
+              onClick={() => { setLoginType('admin'); setLoginError(''); }}
+              className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${
+                loginType === 'admin' ? 'bg-amber-600 text-white shadow' : 'text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Admin Master Login</span>
+            </button>
+          </div>
+
+          {/* Forms Section */}
+          <div className="p-6">
+            {loginType === 'employee' ? (
+              /* EMPLOYEE LOGIN FORM */
+              <form onSubmit={handleEmployeeLogin} className="space-y-4 text-xs">
+                <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-indigo-900 text-[11px]">
+                  <strong>Employee Instructions:</strong> Enter your assigned Employee ID and Password given by Admin.
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Employee ID</label>
+                  <input 
+                    required 
+                    type="text" 
+                    value={loginIdInput} 
+                    onChange={e => setLoginIdInput(e.target.value)} 
+                    placeholder="e.g. USR-EMP-101" 
+                    className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono uppercase outline-none focus:ring-2 focus:ring-indigo-500" 
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Password</label>
+                  <input 
+                    required 
+                    type="password" 
+                    value={loginPassInput} 
+                    onChange={e => setLoginPassInput(e.target.value)} 
+                    placeholder="Enter password..." 
+                    className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" 
+                  />
+                </div>
+                {loginError && <p className="text-red-600 font-semibold text-[11px]">{loginError}</p>}
+                
+                <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition shadow-md flex items-center justify-center space-x-2">
+                  <span>Login to Employee Portal</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <div className="text-[10px] text-slate-400 text-center pt-2">
+                  Demo Staff ID: <strong className="text-slate-600">USR-EMP-101</strong> | Pass: <strong className="text-slate-600">1011</strong>
+                </div>
+              </form>
+            ) : (
+              /* ADMIN LOGIN FORM */
+              <form onSubmit={handleAdminLogin} className="space-y-4 text-xs">
+                <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-amber-900 text-[11px]">
+                  <strong>Admin Restricted Area:</strong> Full control over staff credentials, targets, and master CSV reports.
+                </div>
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Admin Security Password / PIN</label>
+                  <input 
+                    required 
+                    type="password" 
+                    value={loginPassInput} 
+                    onChange={e => setLoginPassInput(e.target.value)} 
+                    placeholder="Enter admin password..." 
+                    className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-amber-500" 
+                    autoFocus
+                  />
+                </div>
+                {loginError && <p className="text-red-600 font-semibold text-[11px]">{loginError}</p>}
+
+                <button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl font-bold transition shadow-md flex items-center justify-center space-x-2">
+                  <span>Unlock Admin Control Center</span>
+                  <ShieldCheck className="w-4 h-4" />
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // RENDER MAIN APPLICATION AFTER LOGIN
+  // ==========================================
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col md:flex-row">
       
@@ -303,9 +418,9 @@ export default function App() {
             
             <div className="mt-2 bg-slate-800/80 px-2.5 py-1.5 rounded-lg text-[11px] text-slate-300 flex items-center justify-between border border-slate-700/50">
               <span className="text-slate-400">
-                {role === 'admin' ? '👑 Admin Master Mode' : `👤 Staff: ${currentEmp.name}`}
+                {authRole === 'admin' ? '👑 Admin Master Mode' : `👤 Staff: ${currentEmp.name}`}
               </span>
-              <span className={`w-2 h-2 rounded-full ${role === 'admin' ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
+              <span className={`w-2 h-2 rounded-full ${authRole === 'admin' ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
             </div>
           </div>
 
@@ -342,7 +457,7 @@ export default function App() {
               );
             })}
 
-            {role === 'admin' && (
+            {authRole === 'admin' && (
               <button
                 onClick={() => setActiveTab('admin-manage')}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-xs mt-3 transition-all ${
@@ -356,37 +471,15 @@ export default function App() {
           </nav>
         </div>
 
-        {/* LOGIN / AUTH BAR */}
+        {/* LOGOUT / PROFILE BAR */}
         <div className="p-4 border-t border-slate-800 space-y-2">
-          {role === 'admin' ? (
-            <div className="bg-amber-950/60 border border-amber-800/60 p-3 rounded-xl flex items-center justify-between text-xs">
-              <div className="flex items-center space-x-2">
-                <ShieldCheck className="w-4 h-4 text-amber-400" />
-                <div>
-                  <p className="font-bold text-amber-200">Admin Logged In</p>
-                  <p className="text-[10px] text-amber-400">Full Control Active</p>
-                </div>
-              </div>
-              <button onClick={handleLogout} className="text-amber-300 hover:text-white p-1 rounded hover:bg-amber-900/50" title="Logout">
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <div className="p-2.5 bg-slate-800/80 rounded-xl text-xs space-y-1">
-                <p className="text-[10px] text-slate-400 uppercase font-bold">Logged In Staff:</p>
-                <p className="font-bold text-slate-200">{currentEmp.name} <span className="text-indigo-400 font-mono">({currentEmp.id})</span></p>
-              </div>
-              <button 
-                onClick={() => setLoginModalOpen(true)}
-                className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 p-2.5 rounded-xl flex items-center justify-center text-xs border border-slate-700/60 transition"
-              >
-                <Key className="w-4 h-4 text-indigo-400 mr-2" />
-                <span>Employee / Admin Login</span>
-              </button>
-            </div>
-          )}
-
+          <button 
+            onClick={handleLogout}
+            className="w-full bg-slate-800 hover:bg-slate-700 text-red-400 p-2.5 rounded-xl flex items-center justify-center text-xs border border-slate-700/60 transition font-semibold"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            <span>Logout Securely</span>
+          </button>
           <div className="text-[10px] text-center text-slate-500 pt-1">
             USR POWER INDUSTRIES PVT LTD © 2026
           </div>
@@ -403,16 +496,16 @@ export default function App() {
                 {activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}
               </h2>
               <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">
-                {role === 'admin' ? 'ADMIN VIEW' : `STAFF VIEW (${currentEmp.primaryVertical})`}
+                {authRole === 'admin' ? 'ADMIN VIEW' : `STAFF VIEW (${currentEmp.primaryVertical})`}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              {role === 'admin' ? 'Managing employee credentials, targets, and master attendance records.' : `Welcome ${currentEmp.name}. You can manage your attendance, DCRs and leads.`}
+              {authRole === 'admin' ? 'Managing employee credentials, targets, and master attendance records.' : `Welcome ${currentEmp.name}. You can manage your attendance, DCRs and leads.`}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {role === 'admin' && (
+            {authRole === 'admin' && (
               <div className="flex items-center bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 shadow-sm">
                 <Filter className="w-3.5 h-3.5 text-slate-400 mr-1.5" />
                 <select 
@@ -444,7 +537,7 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">{role === 'admin' ? 'Company Target' : 'Your Target'}</p>
+                  <p className="text-xs font-medium text-slate-500">{authRole === 'admin' ? 'Company Target' : 'Your Target'}</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">₹{(totalSalesAchieved).toLocaleString('en-IN')}</h3>
                   <span className="text-[11px] text-emerald-600 font-medium flex items-center mt-1">
                     <TrendingUp className="w-3 h-3 mr-1" /> {Math.round((totalSalesAchieved/totalSalesTarget)*100)}% Achieved
@@ -486,7 +579,7 @@ export default function App() {
             {/* RECENT DCR LOGS */}
             <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
               <h3 className="font-bold text-slate-900 text-sm flex items-center border-b border-slate-100 pb-3">
-                <Clock className="w-4 h-4 mr-2 text-indigo-600" /> {role === 'admin' ? 'Recent DCR Logs' : `Your DCR Logs (${currentEmp.primaryVertical})`}
+                <Clock className="w-4 h-4 mr-2 text-indigo-600" /> {authRole === 'admin' ? 'Recent DCR Logs' : `Your DCR Logs (${currentEmp.primaryVertical})`}
               </h3>
               <div className="space-y-3">
                 {visibleDcrs.slice(0, 4).map((dcr) => (
@@ -517,7 +610,7 @@ export default function App() {
                 <h3 className="font-bold text-slate-900 text-sm">Daily Field Attendance & Punch-In</h3>
                 <p className="text-xs text-slate-500 mt-1">Mark your attendance for today to notify Admin of your field availability.</p>
               </div>
-              {role !== 'admin' && (
+              {authRole !== 'admin' && (
                 <button 
                   onClick={markTodayAttendance}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2"
@@ -562,7 +655,7 @@ export default function App() {
         {activeTab === 'leads' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-slate-900 text-sm">Business Leads ({role === 'admin' ? 'All Leads' : 'Your Vertical'})</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Business Leads ({authRole === 'admin' ? 'All Leads' : 'Your Vertical'})</h3>
               <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">+ Add Lead</button>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
@@ -667,7 +760,7 @@ export default function App() {
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <h3 className="font-bold text-slate-900 text-sm">Staff Targets Leaderboard</h3>
             <div className="space-y-3">
-              {(role === 'admin' ? employees : [currentEmp]).map(emp => {
+              {(authRole === 'admin' ? employees : [currentEmp]).map(emp => {
                 const pct = Math.round((emp.achieved / emp.target) * 100);
                 return (
                   <div key={emp.id} className="p-3 border rounded-xl bg-slate-50 space-y-2">
@@ -686,7 +779,7 @@ export default function App() {
         )}
 
         {/* TAB: ADMIN CONTROL CENTER */}
-        {activeTab === 'admin-manage' && role === 'admin' && (
+        {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
@@ -714,30 +807,6 @@ export default function App() {
         )}
 
       </main>
-
-      {/* LOGIN MODAL */}
-      {loginModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Staff or Admin Login</h3>
-              <button onClick={() => setLoginModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleLoginSubmit} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Employee ID or 'admin'</label>
-                <input required type="text" value={loginIdInput} onChange={e => setLoginIdInput(e.target.value)} placeholder="USR-EMP-101 or admin" className="w-full p-2.5 border rounded-xl" autoFocus />
-              </div>
-              <div>
-                <label className="font-semibold text-slate-700 block mb-1">Password / Admin PIN</label>
-                <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter password..." className="w-full p-2.5 border rounded-xl" />
-              </div>
-              {loginError && <p className="text-red-600 font-semibold">{loginError}</p>}
-              <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold">Login Securely</button>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* ADD EMPLOYEE MODAL (ADMIN) */}
       {isAddEmpModalOpen && (
