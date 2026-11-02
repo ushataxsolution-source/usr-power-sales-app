@@ -25,10 +25,10 @@ const CLIENT_TYPES = [
 ];
 
 const INITIAL_EMPLOYEES = [
-  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', phone: '9820012345', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
-  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false },
-  { id: 'USR-EMP-103', pass: '1033', name: 'Priya Singh', phone: '9822234567', joiningDate: '2025-09-01', totalLeaves: 18, usedLeaves: 5, territory: 'Thane & Kalyan Belt', target: 900000, achieved: 870000, primaryVertical: 'TAX AND LEGAL', failedAttempts: 0, isBlocked: false },
-  { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', phone: '9823345678', joiningDate: '2026-01-10', totalLeaves: 18, usedLeaves: 1, territory: 'Nagpur Industrial Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING', failedAttempts: 0, isBlocked: false }
+  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', designation: 'Senior Sales Executive', phone: '9820012345', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
+  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', designation: 'Area Sales Manager', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false },
+  { id: 'USR-EMP-103', pass: '1033', name: 'Priya Singh', designation: 'Legal & Tax Consultant', phone: '9822234567', joiningDate: '2025-09-01', totalLeaves: 18, usedLeaves: 5, territory: 'Thane & Kalyan Belt', target: 900000, achieved: 870000, primaryVertical: 'TAX AND LEGAL', failedAttempts: 0, isBlocked: false },
+  { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', designation: 'Digital Marketing Lead', phone: '9823345678', joiningDate: '2026-01-10', totalLeaves: 18, usedLeaves: 1, territory: 'Nagpur Industrial Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING', failedAttempts: 0, isBlocked: false }
 ];
 
 const INITIAL_ATTENDANCE = [
@@ -117,7 +117,7 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // Agreement Form State (Manual Input without Auto-Fetch)
+  // Agreement Form State
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -155,13 +155,11 @@ export default function App() {
     (Number(newAgreement.investmentHeavyDuty) || 0) +
     (Number(newAgreement.investmentLcvHcv) || 0);
 
-  // Updated Lead Form State with Phone, Place, Investment, Follow-up & Remark
   const [newLead, setNewLead] = useState({
     clientName: '', clientType: 'Dealer', contactPerson: '', phone: '', place: '',
     status: 'Hot', stage: 'Contacted', investmentAmount: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: '', remark: ''
   });
 
-  // Updated DCR Form State with Phone, Place, Investment, Date & Remark
   const [newDcr, setNewDcr] = useState({
     empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', phone: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
     outcome: 'Follow Up Required', notes: '', investmentAmount: '', nextDate: '',
@@ -169,7 +167,6 @@ export default function App() {
     photoVerified: false, photoUrl: null, remark: ''
   });
 
-  // Daily Travel State for Travelling Section
   const [newDailyTravel, setNewDailyTravel] = useState({
     date: new Date().toISOString().split('T')[0],
     mode: 'Bike / Fuel',
@@ -179,8 +176,9 @@ export default function App() {
     weekCycle: 'Nov 01 - Nov 07, 2026'
   });
 
+  // Updated newEmp State with Designation and Joining Date
   const [newEmp, setNewEmp] = useState({
-    id: '', pass: '', name: '', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE'
+    id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE'
   });
 
   const [newLeave, setNewLeave] = useState({
@@ -372,6 +370,7 @@ export default function App() {
       id: newEmp.id || `USR-EMP-${Math.floor(Math.random() * 900 + 100)}`,
       pass: newEmp.pass || '1234',
       name: newEmp.name,
+      designation: newEmp.designation || 'Sales Executive',
       phone: newEmp.phone || '9820012345',
       joiningDate: newEmp.joiningDate,
       totalLeaves: Number(newEmp.totalLeaves) || 18,
@@ -385,7 +384,7 @@ export default function App() {
     };
     setEmployees([...employees, createdEmp]);
     setIsAddEmpModalOpen(false);
-    alert(`Employee ID (${createdEmp.id}) Created Successfully with Vertical: ${createdEmp.primaryVertical}!`);
+    alert(`Employee (${createdEmp.name} - ${createdEmp.designation}) Created Successfully with Joining Date: ${createdEmp.joiningDate}!`);
   };
 
   const captureRealGpsPhoto = (e) => {
@@ -544,7 +543,6 @@ export default function App() {
     ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter))
     : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
 
-  // STRICT PRIVACY: Agreement forms visible ONLY to Admin Master Panel or the specific Employee who filled it
   const visibleAgreements = authRole === 'admin'
     ? agreements
     : agreements.filter(a => a.submittedEmpId === currentEmp.id);
@@ -679,10 +677,17 @@ export default function App() {
             </div>
             
             <div className="mt-2 bg-slate-800/80 px-2.5 py-1.5 rounded-lg text-[11px] text-slate-300 flex items-center justify-between border border-slate-700/50">
-              <span className="text-slate-400">
-                {authRole === 'admin' ? '👑 Admin Master Mode' : `👤 Staff: ${currentEmp.name}`}
-              </span>
-              <span className={`w-2 h-2 rounded-full ${authRole === 'admin' ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
+              <div className="overflow-hidden">
+                <span className="text-slate-400 block truncate">
+                  {authRole === 'admin' ? '👑 Admin Master Mode' : `👤 ${currentEmp.name}`}
+                </span>
+                {authRole !== 'admin' && (
+                  <span className="text-[10px] text-indigo-300 block font-semibold">
+                    {currentEmp.designation} • Joined: {currentEmp.joiningDate}
+                  </span>
+                )}
+              </div>
+              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${authRole === 'admin' ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
             </div>
           </div>
 
@@ -755,7 +760,7 @@ export default function App() {
                 {activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}
               </h2>
               <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">
-                {authRole === 'admin' ? 'ADMIN VIEW' : `STAFF: ${currentEmp.name}`}
+                {authRole === 'admin' ? 'ADMIN VIEW' : `STAFF: ${currentEmp.name} (${currentEmp.designation})`}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">USR POWER INDUSTRIES PRIVATE LIMITED • OFFICIAL SALS PORTAL • MAHARASTRA</p>
@@ -916,7 +921,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: LEAVES MANAGEMENT WITH FULL FILL FORM */}
+        {/* TAB: LEAVES MANAGEMENT */}
         {activeTab === 'leaves' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -1021,7 +1026,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: LEADS MANAGEMENT WITH PHONE, PLACE, INVESTMENT, FOLLOWUP & REMARK */}
+        {/* TAB: LEADS MANAGEMENT */}
         {activeTab === 'leads' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
@@ -1060,7 +1065,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: DCR WITH PHONE, PLACE, INVESTMENT, DATE & REMARK */}
+        {/* TAB: DCR */}
         {activeTab === 'dcr' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
@@ -1159,36 +1164,38 @@ export default function App() {
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center (HQ)</h3>
-              <p className="text-xs text-amber-800">Create employee IDs with vertical assignments, edit passwords, and view all employee-submitted partnership agreements.</p>
+              <p className="text-xs text-amber-800">Create employee IDs with designation & joining dates, edit passwords, and view all employee-submitted partnership agreements.</p>
             </div>
 
             <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
-              <h4 className="font-bold text-slate-900 text-xs uppercase">Employee Management & Vertical Allocation</h4>
+              <h4 className="font-bold text-slate-900 text-xs uppercase">Employee Management & Designation Allocation</h4>
               <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">
-                + Create New Employee ID & Assign Vertical
+                + Create New Employee & Assign Designation
               </button>
             </div>
 
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-3">
-              <div className="p-5 border-b border-slate-100 font-bold text-xs">Registered Employees & Assigned Verticals</div>
+              <div className="p-5 border-b border-slate-100 font-bold text-xs">Registered Employees, Designation & Joining Dates</div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Employee Name & ID</th>
+                      <th className="p-3">Designation</th>
+                      <th className="p-3">Joining Date</th>
                       <th className="p-3">Primary Vertical</th>
                       <th className="p-3">WhatsApp Phone</th>
-                      <th className="p-3">Current Password</th>
                       <th className="p-3">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {employees.map(emp => (
-                      <tr key={emp.id}>
-                        <td className="p-3 font-bold">{emp.name} [{emp.id}]</td>
-                        <td className="p-3"><span className="bg-indigo-50 text-indigo-700 font-bold px-2 py-1 rounded">{emp.primaryVertical || 'USR POWER LUBE'}</span></td>
+                      <tr key={emp.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold">{emp.name} <span className="block text-[10px] text-indigo-600 font-mono">{emp.id}</span></td>
+                        <td className="p-3 font-semibold text-slate-900">{emp.designation || 'Sales Executive'}</td>
+                        <td className="p-3 font-mono text-slate-600">{emp.joiningDate || '2025-04-10'}</td>
+                        <td className="p-3"><span className="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded text-[10px]">{emp.primaryVertical || 'USR POWER LUBE'}</span></td>
                         <td className="p-3 font-mono">+91 {emp.phone}</td>
-                        <td className="p-3 font-mono text-amber-700 font-bold">{emp.pass}</td>
                         <td className="p-3">
                           <button onClick={() => { setEditingEmpModal(emp); setNewPasswordInput(emp.pass); }} className="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1">
                             <MessageSquare className="w-3.5 h-3.5" />
@@ -1206,7 +1213,7 @@ export default function App() {
 
       </main>
 
-      {/* MODAL: AGREEMENT FORM WITHOUT AUTO-FETCH */}
+      {/* MODAL: AGREEMENT FORM */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
           <div className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 my-8 border border-slate-200 max-h-[90vh] flex flex-col">
@@ -1219,8 +1226,6 @@ export default function App() {
             </div>
 
             <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs overflow-y-auto pr-2 flex-1">
-              
-              {/* SECTION I: BASIC INFORMATION (MANUAL GSTN ENTRY) */}
               <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                 <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> I. Basic Information & GST Details
@@ -1229,14 +1234,7 @@ export default function App() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="font-semibold text-slate-700 block mb-1">GSTN No *</label>
-                    <input 
-                      required 
-                      type="text" 
-                      value={newAgreement.gstn} 
-                      onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} 
-                      placeholder="e.g. 27AAAAA0000A1Z5" 
-                      className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-mono uppercase text-indigo-900 font-bold" 
-                    />
+                    <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} placeholder="e.g. 27AAAAA0000A1Z5" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-mono uppercase text-indigo-900 font-bold" />
                   </div>
                   <div>
                     <label className="font-semibold text-slate-700 block mb-1">Name of Distributor *</label>
@@ -1281,7 +1279,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* SECTION VII, VIII, IX: INFRASTRUCTURE, GOODS, TERRITORY */}
               <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                 <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> VII - IX. Infrastructure, Goods & Territory
@@ -1312,7 +1309,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* SECTION X: INVESTMENT BREAKDOWN (AUTO-CALCULATED) */}
               <div className="space-y-4 bg-indigo-50/70 p-5 rounded-2xl border border-indigo-200">
                 <h4 className="font-bold text-indigo-900 text-xs border-b border-indigo-200 pb-2 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> X. Initial Investment Plan (Auto-Calculated)
@@ -1349,11 +1345,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* DECLARATION */}
-              <div className="text-[11px] text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                <p><strong>XIII. Declaration:</strong> I/we state that all information as mentioned in this Application Form is true & correct. I/we bind ourselves into a legal contract with the company as per the Indian Contract Act, 1872.</p>
-              </div>
-
               <div className="pt-2 flex justify-end space-x-3">
                 <button type="button" onClick={() => setIsAgreementModalOpen(false)} className="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition">Cancel</button>
                 <button type="submit" className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg transition flex items-center space-x-2">
@@ -1366,7 +1357,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: APPLY LEAVE FILL FORM */}
+      {/* MODAL: APPLY LEAVE */}
       {isLeaveModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
@@ -1548,49 +1539,65 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD EMPLOYEE */}
+      {/* MODAL: ADD EMPLOYEE WITH DESIGNATION & JOINING DATE */}
       {isAddEmpModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID & Assign Vertical</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID, Designation & Joining Date</h3>
               <button onClick={() => setIsAddEmpModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold block mb-1">Employee Name</label>
-                <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="Santosh Shinde" className="w-full p-2 border rounded-xl" />
-              </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold block mb-1">Employee ID</label>
-                  <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} placeholder="USR-EMP-105" className="w-full p-2 border rounded-xl font-mono" />
+                  <label className="font-semibold block mb-1">Employee Name *</label>
+                  <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="Santosh Shinde" className="w-full p-2.5 border rounded-xl" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Password</label>
-                  <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} placeholder="1234" className="w-full p-2 border rounded-xl font-mono" />
+                  <label className="font-semibold block mb-1">Designation *</label>
+                  <input required type="text" value={newEmp.designation} onChange={e => setNewEmp({...newEmp, designation: e.target.value})} placeholder="Sales Executive" className="w-full p-2.5 border rounded-xl font-medium" />
                 </div>
               </div>
-              <div>
-                <label className="font-semibold block mb-1">Primary Vertical Assignment</label>
-                <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2 border rounded-xl bg-white font-medium">
-                  {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Employee ID *</label>
+                  <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} placeholder="USR-EMP-105" className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Password *</label>
+                  <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} placeholder="1234" className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
               </div>
-              <div>
-                <label className="font-semibold block mb-1">WhatsApp Phone</label>
-                <input required type="text" value={newEmp.phone} onChange={e => setNewEmp({...newEmp, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2 border rounded-xl font-mono" />
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Joining Date *</label>
+                  <input required type="date" value={newEmp.joiningDate} onChange={e => setNewEmp({...newEmp, joiningDate: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Primary Vertical *</label>
+                  <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
+                  </select>
+                </div>
               </div>
+
+              <div>
+                <label className="font-semibold block mb-1">WhatsApp Phone *</label>
+                <input required type="text" value={newEmp.phone} onChange={e => setNewEmp({...newEmp, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2.5 border rounded-xl font-mono" />
+              </div>
+
               <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold">Save Employee</button>
+                <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Employee</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* MODAL: ADD LEAD WITH PHONE, PLACE, INVESTMENT, FOLLOW-UP & REMARK */}
+      {/* MODAL: ADD LEAD */}
       {isLeadModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
@@ -1648,7 +1655,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: SUBMIT DCR WITH PHONE, PLACE, INVESTMENT, DATE & REMARK */}
+      {/* MODAL: SUBMIT DCR */}
       {isDcrModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
