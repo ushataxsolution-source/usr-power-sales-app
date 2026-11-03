@@ -125,7 +125,7 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // 100% PDF Exact Agreement Form State
+  // Agreement Form State
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -699,7 +699,7 @@ export default function App() {
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Official Partnership Agreement Forms</h3>
-                <p className="text-xs text-slate-500 mt-1">Review, print or export distributor agreements.</p>
+                <p className="text-xs text-slate-500 mt-1">Review, print or export partner agreements (C&FA, Super Distributor, Distributor, Dealer).</p>
               </div>
               <button onClick={() => setIsAgreementModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Fill New Agreement</button>
             </div>
@@ -708,7 +708,7 @@ export default function App() {
                 <thead>
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                     <th className="p-3">Agreement ID</th>
-                    <th className="p-3">Distributor Name</th>
+                    <th className="p-3">Partner / Firm Name</th>
                     <th className="p-3">Proprietor</th>
                     <th className="p-3">Territory</th>
                     <th className="p-3">Total Investment</th>
@@ -972,14 +972,14 @@ export default function App() {
         )}
       </main>
 
-      {/* MODAL: COMPLETE AGREEMENT FORM MATCHING PDF EXACTLY */}
+      {/* MODAL: OFFICIAL PARTNERSHIP AGREEMENT FORM */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-4xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">USR POWER - DISTRIBUTOR/DEALER AGREEMENT FORM</h3>
-                <p className="text-[11px] text-slate-500">Official PDF form fields matching USR Power Industries Private Limited.</p>
+                <h3 className="font-bold text-slate-900 text-sm">OFFICIAL PARTNERSHIP AGREEMENT FORM</h3>
+                <p className="text-[11px] text-slate-500">Applicable for C&FA, Super Distributor, Super Stockist, Distributor & Dealer.</p>
               </div>
               <button onClick={() => setIsAgreementModalOpen(false)}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
@@ -988,11 +988,11 @@ export default function App() {
               <div className="bg-slate-50 p-3 rounded-xl border font-bold text-slate-700">I. Basic Information</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold block mb-1">1. Name of Distributor (Mr. / Mrs. / Ms.) *</label>
+                  <label className="font-semibold block mb-1">1. Name of Partner / Distributor (Mr. / Mrs. / Ms.) *</label>
                   <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Sahyadri Auto Spares" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">4. Constitution of Distributor *</label>
+                  <label className="font-semibold block mb-1">4. Constitution of Partner / Distributor *</label>
                   <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
                     <option value="Proprietorship">Proprietorship</option>
                     <option value="Partnership">Partnership</option>
@@ -1182,7 +1182,7 @@ export default function App() {
         <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
           <div className="bg-white rounded-3xl p-8 w-full max-w-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto print:p-0 print:shadow-none">
             <div className="flex justify-between items-center border-b pb-4 no-print">
-              <h3 className="font-bold text-slate-900 text-base">Official Partnership Agreement ({viewAgreementDetail.id})</h3>
+              <h3 className="font-bold text-slate-900 text-base">OFFICIAL PARTNERSHIP AGREEMENT ({viewAgreementDetail.id})</h3>
               <div className="flex items-center space-x-2">
                 <button onClick={() => window.print()} className="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1"><Printer className="w-3.5 h-3.5" /><span>Print PDF</span></button>
                 <button onClick={() => setViewAgreementDetail(null)} className="p-1 rounded-full hover:bg-slate-100"><X className="w-5 h-5 text-slate-500" /></button>
@@ -1191,16 +1191,16 @@ export default function App() {
             <div className="space-y-6 text-xs text-slate-800 leading-relaxed font-sans">
               <div className="text-center space-y-1 border-b pb-4">
                 <h1 className="font-extrabold text-base tracking-wide text-slate-900">USR POWER INDUSTRIES PRIVATE LIMITED</h1>
-                <p className="text-[10px] uppercase font-semibold text-indigo-700">Authorised Distributor & C&FA Partnership Agreement</p>
+                <p className="text-[10px] uppercase font-semibold text-indigo-700">OFFICIAL PARTNERSHIP AGREEMENT FORM</p>
                 <p className="text-[10px] text-slate-500 font-mono">Agreement Ref: {viewAgreementDetail.id} | Date: {viewAgreementDetail.date}</p>
               </div>
               <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border">
                 <div>
-                  <strong className="text-slate-900 block mb-1">Distributor / Firm Details:</strong>
+                  <strong className="text-slate-900 block mb-1">Partner / Firm Details:</strong>
                   <p className="font-bold text-base text-indigo-900">{viewAgreementDetail.distributorName}</p>
                   <p>Constitution: {viewAgreementDetail.constitution}</p>
                   <p>Proprietor: {viewAgreementDetail.proprietorName} (+91 {viewAgreementDetail.phone})</p>
-                  <p>Address: {viewAgreementDetail.proprietorAddress}</p>
+                  <p>Address: {viewAgreementDetail.address}</p>
                 </div>
                 <div>
                   <strong className="text-slate-900 block mb-1">Business Credentials:</strong>
