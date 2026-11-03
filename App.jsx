@@ -7,8 +7,8 @@ import {
 } from 'lucide-react';
 
 const INITIAL_EMPLOYEES = [
-  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', designation: 'Senior Sales Executive', phone: '9820012345', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
-  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', designation: 'Area Sales Manager', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false }
+  { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', designation: 'Senior Sales Executive', phone: '9820012345', joiningDate: '2025-04-10', totalLeaves: 30, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
+  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', designation: 'Area Sales Manager', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 30, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false }
 ];
 
 const INITIAL_ATTENDANCE = [
@@ -16,7 +16,7 @@ const INITIAL_ATTENDANCE = [
 ];
 
 const INITIAL_LEAVES = [
-  { id: 'LEV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', fromDate: '2026-11-10', toDate: '2026-11-11', reason: 'Family Function in Mumbai', status: 'Approved' }
+  { id: 'LEV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', leaveType: 'Casual Leave (CL)', fromDate: '2026-11-10', toDate: '2026-11-11', reason: 'Family Function in Mumbai', status: 'Approved' }
 ];
 
 const INITIAL_DAILY_TRAVEL = [
@@ -125,7 +125,6 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // Agreement Form State
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -183,11 +182,14 @@ export default function App() {
   });
 
   const [newEmp, setNewEmp] = useState({
-    id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE'
+    id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 30, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE'
   });
 
   const [newLeave, setNewLeave] = useState({
-    fromDate: '', toDate: '', reason: ''
+    leaveType: 'Earned Leave (EL) / Privilege Leave (PL)',
+    fromDate: '', 
+    toDate: '', 
+    reason: ''
   });
 
   const [capturingGpsPhoto, setCapturingGpsPhoto] = useState(false);
@@ -333,7 +335,7 @@ export default function App() {
     };
     setLeaveList([createdLeave, ...leaveList]);
     setIsLeaveModalOpen(false);
-    setNewLeave({ fromDate: '', toDate: '', reason: '' });
+    setNewLeave({ leaveType: 'Earned Leave (EL) / Privilege Leave (PL)', fromDate: '', toDate: '', reason: '' });
     alert('Leave Application Submitted Successfully!');
   };
 
@@ -347,7 +349,7 @@ export default function App() {
       designation: newEmp.designation || 'Sales Executive',
       phone: newEmp.phone || '9820012345',
       joiningDate: newEmp.joiningDate,
-      totalLeaves: Number(newEmp.totalLeaves) || 18,
+      totalLeaves: Number(newEmp.totalLeaves) || 30,
       usedLeaves: 0,
       territory: newEmp.territory,
       target: Number(newEmp.target) || 500000,
@@ -358,7 +360,7 @@ export default function App() {
     };
     setEmployees(prev => [...prev, createdEmp]);
     setIsAddEmpModalOpen(false);
-    setNewEmp({ id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE' });
+    setNewEmp({ id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 30, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE' });
     alert(`Employee (${createdEmp.name} - ID: ${createdEmp.id}) Created Successfully!`);
   };
 
@@ -783,17 +785,50 @@ export default function App() {
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">Leave Management</h3>
-                <p className="text-xs text-slate-500 mt-1">Apply or track leave status.</p>
+                <h3 className="font-bold text-slate-900 text-sm">Leave Management & Company Policy Guidelines</h3>
+                <p className="text-xs text-slate-500 mt-1">Review leave types, quotas, carry forward rules, and application records.</p>
               </div>
               <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Apply Leave</button>
             </div>
+
+            {/* LEAVE POLICY CARDS */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white p-5 rounded-2xl border border-indigo-100 shadow-sm space-y-2">
+                <span className="bg-indigo-50 text-indigo-700 text-[10px] font-extrabold px-2 py-0.5 rounded">12 Days / Year</span>
+                <h4 className="font-bold text-slate-900 text-sm">Earned Leave (EL) / Privilege Leave (PL)</h4>
+                <ul className="text-[11px] text-slate-600 space-y-1 list-disc pl-4">
+                  <li>Can be carried forward to the next year up to a state-defined cap.</li>
+                  <li>Can be encashed upon resignation/termination or at year-end as per company policy.</li>
+                </ul>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm space-y-2">
+                <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded">10 Days / Year</span>
+                <h4 className="font-bold text-slate-900 text-sm">Casual Leave (CL)</h4>
+                <ul className="text-[11px] text-slate-600 space-y-1 list-disc pl-4">
+                  <li>Meant for short, unplanned personal urgent work.</li>
+                  <li>Lapses at the end of the calendar year (cannot be carried forward or encashed).</li>
+                </ul>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm space-y-2">
+                <span className="bg-amber-50 text-amber-700 text-[10px] font-extrabold px-2 py-0.5 rounded">As Required</span>
+                <h4 className="font-bold text-slate-900 text-sm">Sick Leave (SL) / Medical Leave</h4>
+                <ul className="text-[11px] text-slate-600 space-y-1 list-disc pl-4">
+                  <li>Granted for sudden illness, injury, or health issues.</li>
+                  <li>Usually requires a registered doctor's medical certificate if taken for more than 2–3 consecutive days.</li>
+                </ul>
+              </div>
+            </div>
+
             <div className="bg-white rounded-2xl border overflow-hidden">
+              <div className="p-4 border-b font-bold text-xs bg-slate-50 text-slate-700">Submitted Leave Records & Status</div>
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                     <th className="p-3">Employee</th>
-                    <th className="p-3">From - To</th>
+                    <th className="p-3">Leave Type</th>
+                    <th className="p-3">From - To Date</th>
                     <th className="p-3">Reason</th>
                     <th className="p-3">Status</th>
                   </tr>
@@ -802,6 +837,7 @@ export default function App() {
                   {visibleLeaves.map(l => (
                     <tr key={l.id} className="hover:bg-slate-50">
                       <td className="p-3 font-bold">{l.empName}</td>
+                      <td className="p-3 font-semibold text-indigo-700">{l.leaveType}</td>
                       <td className="p-3 font-mono">{l.fromDate} to {l.toDate}</td>
                       <td className="p-3">{l.reason}</td>
                       <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">{l.status}</span></td>
@@ -1306,15 +1342,28 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: APPLY LEAVE */}
+      {/* MODAL: APPLY LEAVE WITH ALL DETAILS */}
       {isLeaveModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Apply Leave Application</h3>
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Apply Leave Application</h3>
+                <p className="text-[11px] text-slate-500">Choose EL/PL, Casual Leave, or Sick / Medical Leave.</p>
+              </div>
               <button onClick={() => setIsLeaveModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
+            
             <form onSubmit={handleApplyLeave} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold block mb-1">Select Leave Type *</label>
+                <select value={newLeave.leaveType} onChange={e => setNewLeave({...newLeave, leaveType: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                  <option value="Earned Leave (EL) / Privilege Leave (PL)">Earned Leave (EL) / Privilege Leave (PL) — 12 Days/Year (Carry forward / Encashable)</option>
+                  <option value="Casual Leave (CL)">Casual Leave (CL) — 10 Days (Unplanned urgent work, lapses at year-end)</option>
+                  <option value="Sick Leave (SL) / Medical Leave">Sick Leave (SL) / Medical Leave — Health issues (Doctor certificate needed if &gt;2-3 days)</option>
+                </select>
+              </div>
+
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold block mb-1">From Date *</label>
@@ -1325,13 +1374,22 @@ export default function App() {
                   <input required type="date" value={newLeave.toDate} onChange={e => setNewLeave({...newLeave, toDate: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
                 </div>
               </div>
+
               <div>
-                <label className="font-semibold block mb-1">Reason for Leave *</label>
-                <textarea required rows="3" value={newLeave.reason} onChange={e => setNewLeave({...newLeave, reason: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Enter reason..." />
+                <label className="font-semibold block mb-1">Reason for Leave & Health/Medical Notes *</label>
+                <textarea required rows="3" value={newLeave.reason} onChange={e => setNewLeave({...newLeave, reason: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Provide detailed reason (Attach medical certificate if sick leave exceeds 2-3 days)..." />
               </div>
+
+              <div className="bg-slate-50 p-3 rounded-xl border text-[11px] text-slate-600 space-y-1">
+                <p className="font-bold text-slate-800">Leave Guidelines Summary:</p>
+                <p>• <b>EL/PL:</b> 12 Days/year, carry forward up to cap, encashable on resignation.</p>
+                <p>• <b>CL:</b> 10 Days, for unplanned personal work, lapses at year end.</p>
+                <p>• <b>Sick Leave:</b> Doctor certificate mandatory for consecutive absences &gt; 2-3 days.</p>
+              </div>
+
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsLeaveModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Submit Leave</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Submit Leave Application</button>
               </div>
             </form>
           </div>
