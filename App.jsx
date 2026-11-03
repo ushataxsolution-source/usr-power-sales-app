@@ -82,11 +82,19 @@ const INITIAL_AGREEMENTS = [
   }
 ];
 
-// Helper function to safely read from localStorage
+// Smart loader to automatically merge code defaults with localStorage data
 const loadSavedData = (key, defaultData) => {
   try {
     const saved = localStorage.getItem(key);
-    return saved ? JSON.parse(saved) : defaultData;
+    if (!saved) return defaultData;
+    const parsed = JSON.parse(saved);
+    
+    if (key === 'usr_employees') {
+      const existingIds = new Set(parsed.map(e => e.id));
+      const newDefaults = defaultData.filter(e => !existingIds.has(e.id));
+      return [...parsed, ...newDefaults];
+    }
+    return parsed;
   } catch (e) {
     return defaultData;
   }
@@ -106,7 +114,6 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  // Load state from localStorage so page refreshes retain new records
   const [employees, setEmployees] = useState(() => loadSavedData('usr_employees', INITIAL_EMPLOYEES));
   const [attendanceList, setAttendanceList] = useState(() => loadSavedData('usr_attendance', INITIAL_ATTENDANCE));
   const [leaveList, setLeaveList] = useState(() => loadSavedData('usr_leaves', INITIAL_LEAVES));
@@ -116,7 +123,6 @@ export default function App() {
   const [dcrs, setDcrs] = useState(() => loadSavedData('usr_dcrs', INITIAL_DCR));
   const [agreements, setAgreements] = useState(() => loadSavedData('usr_agreements', INITIAL_AGREEMENTS));
 
-  // Auto-save changes to localStorage whenever state updates
   useEffect(() => {
     localStorage.setItem('usr_employees', JSON.stringify(employees));
   }, [employees]);
@@ -430,7 +436,7 @@ export default function App() {
     setEmployees(prev => [...prev, createdEmp]);
     setIsAddEmpModalOpen(false);
     setNewEmp({ id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE' });
-    alert(`Employee (${createdEmp.name} - ID: ${createdEmp.id}) Created Successfully! Data is permanently saved.`);
+    alert(`Employee (${createdEmp.name} - ID: ${createdEmp.id}) Created Successfully!`);
   };
 
   const captureRealGpsPhoto = (e) => {
@@ -560,11 +566,6 @@ export default function App() {
     setTravelClaims([newClaim, ...travelClaims]);
     setDailyTravelList(dailyTravelList.map(d => (d.empId === currentEmp.id && d.weekCycle === weekCycleName) ? { ...d, status: 'Submitted Weekly' } : d));
     alert(`Weekly Travelling Claim submitted successfully! Amount: ₹${totalAmtSum}`);
-  };
-
-  const handleApproveTravelClaim = (claimId) => {
-    setTravelClaims(travelClaims.map(t => t.id === claimId ? { ...t, status: 'Approved' } : t));
-    alert('Weekly Travelling Claim Approved Successfully!');
   };
 
   const visibleLeads = authRole === 'admin'
