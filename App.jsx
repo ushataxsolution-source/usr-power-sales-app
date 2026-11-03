@@ -117,7 +117,6 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // Agreement Form State
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -176,7 +175,6 @@ export default function App() {
     weekCycle: 'Nov 01 - Nov 07, 2026'
   });
 
-  // Updated newEmp State with Designation and Joining Date
   const [newEmp, setNewEmp] = useState({
     id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE'
   });
@@ -566,7 +564,7 @@ export default function App() {
               <Briefcase className="w-6 h-6 text-white" />
             </div>
             <h1 className="font-extrabold text-base tracking-wide">USR POWER INDUSTRIES</h1>
-            <p className="text-[10px] text-indigo-300 uppercase tracking-widest font-semibold">OFFICIAL SALS PORTAL • MAHARASTRA</p>
+            <p className="text-[10px] text-indigo-300 uppercase tracking-widest font-semibold">OFFICIAL SALES PORTAL • MAHARASHTRA</p>
           </div>
 
           <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2">
@@ -672,7 +670,7 @@ export default function App() {
                 <h1 className="font-extrabold text-sm tracking-wide text-white leading-tight">
                   USR POWER INDUSTRIES
                 </h1>
-                <p className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider">OFFICIAL SALS PORTAL • MAHARASTRA</p>
+                <p className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider">OFFICIAL SALES PORTAL • MAHARASHTRA</p>
               </div>
             </div>
             
@@ -700,7 +698,7 @@ export default function App() {
               { id: 'travel', label: 'Travelling Claims', icon: Bus, badge: visibleTravelClaims.length },
               { id: 'leads', label: 'Lead Management', icon: Users, badge: visibleLeads.length },
               { id: 'dcr', label: 'Daily Call Reports (DCR)', icon: FileText, badge: visibleDcrs.length },
-              { id: 'gps', label: 'GPS Photo Verification', icon: Camera },
+              { id: 'gps', label: 'GPS Photo Verification', icon: Camera }
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -740,19 +738,15 @@ export default function App() {
         </div>
 
         <div className="p-4 border-t border-slate-800 space-y-2">
-          <button 
-            onClick={handleLogout}
-            className="w-full bg-slate-800 hover:bg-slate-700 text-red-400 p-2.5 rounded-xl flex items-center justify-center text-xs border border-slate-700/60 transition font-semibold"
-          >
+          <button onClick={handleLogout} className="w-full bg-slate-800 hover:bg-slate-700 text-red-400 p-2.5 rounded-xl flex items-center justify-center text-xs border border-slate-700/60 transition font-semibold">
             <LogOut className="w-4 h-4 mr-2" />
             <span>Logout Securely</span>
           </button>
         </div>
       </aside>
 
+      {/* MAIN CONTENT AREA */}
       <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
-        
-        {/* HEADER */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 no-print">
           <div>
             <div className="flex items-center space-x-2">
@@ -760,10 +754,10 @@ export default function App() {
                 {activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}
               </h2>
               <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">
-                {authRole === 'admin' ? 'ADMIN VIEW' : `STAFF: ${currentEmp.name} (${currentEmp.designation})`}
+                {authRole === 'admin' ? 'ADMIN VIEW' : `${currentEmp.name} (${currentEmp.designation})`}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">USR POWER INDUSTRIES PRIVATE LIMITED • OFFICIAL SALS PORTAL • MAHARASTRA</p>
+            <p className="text-xs text-slate-500 mt-0.5">USR POWER INDUSTRIES PRIVATE LIMITED • MAHARASHTRA OPERATIONS</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -774,24 +768,16 @@ export default function App() {
           </div>
         </header>
 
+        {/* DASHBOARD VIEW */}
         {activeTab === 'dashboard' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">Partnership Agreements</p>
-                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{visibleAgreements.length} Forms</h3>
-                  <button onClick={() => setActiveTab('agreements')} className="text-[11px] text-indigo-600 font-bold hover:underline mt-1 block">View Agreements &rarr;</button>
-                </div>
-                <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><FileText className="w-6 h-6" /></div>
-              </div>
-
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
                   <p className="text-xs font-medium text-slate-500">Sales Achievement</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">₹{(totalSalesAchieved).toLocaleString('en-IN')}</h3>
                   <span className="text-[11px] text-emerald-600 font-medium flex items-center mt-1">
-                    <TrendingUp className="w-3 h-3 mr-1" /> {Math.round((totalSalesAchieved/totalSalesTarget)*100)}% Target
+                    <TrendingUp className="w-3 h-3 mr-1" /> {Math.round((totalSalesAchieved/totalSalesTarget)*100)}% of Target (₹{(totalSalesTarget).toLocaleString('en-IN')})
                   </span>
                 </div>
                 <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl"><DollarSign className="w-6 h-6" /></div>
@@ -799,362 +785,116 @@ export default function App() {
 
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">Active Leads</p>
+                  <p className="text-xs font-medium text-slate-500">Active Leads Pipeline</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">{visibleLeads.length} Leads</h3>
-                  <span className="text-[11px] text-indigo-600 font-medium mt-1 inline-block">Pipeline: ₹{(totalLeadsValue).toLocaleString('en-IN')}</span>
+                  <span className="text-[11px] text-indigo-600 font-medium mt-1 block">Value: ₹{(totalLeadsValue).toLocaleString('en-IN')}</span>
                 </div>
-                <div className="p-3 bg-amber-50 text-amber-600 rounded-xl"><Users className="w-6 h-6" /></div>
+                <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><Users className="w-6 h-6" /></div>
               </div>
 
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-slate-500">Leave Balance</p>
-                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">
-                    {authRole === 'admin' ? `${leaveList.length} Requests` : `${currentEmp.totalLeaves - currentEmp.usedLeaves} Days`}
-                  </h3>
-                  <button onClick={() => setActiveTab('leaves')} className="text-[11px] text-indigo-600 font-bold hover:underline mt-1 block">View Leaves &rarr;</button>
+                  <p className="text-xs font-medium text-slate-500">Field DCR Reports</p>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{visibleDcrs.length} Visits</h3>
+                  <span className="text-[11px] text-amber-600 font-medium mt-1 block">GPS Verified Audits</span>
                 </div>
-                <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><CalendarDays className="w-6 h-6" /></div>
+                <div className="p-3 bg-amber-50 text-amber-600 rounded-xl"><MapPin className="w-6 h-6" /></div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-slate-500">Partnership Agreements</p>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{visibleAgreements.length} Forms</h3>
+                  <button onClick={() => setActiveTab('agreements')} className="text-[11px] text-indigo-600 font-bold hover:underline mt-1 block">View Agreements &rarr;</button>
+                </div>
+                <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><FileText className="w-6 h-6" /></div>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                  <FileText className="w-4 h-4 mr-2 text-emerald-600" /> Recent Official Partnership Agreement Forms (Private View)
-                </h3>
-                <button onClick={() => setActiveTab('agreements')} className="text-xs font-bold text-indigo-600 hover:underline">View All &rarr;</button>
-              </div>
-              <div className="space-y-3">
-                {visibleAgreements.slice(0, 3).map((agr) => (
-                  <div key={agr.id} className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs">
-                    <div>
-                      <span className="font-bold text-slate-900 text-sm">{agr.distributorName}</span>
-                      <span className="ml-2 text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">{agr.constitution}</span>
-                      <p className="text-slate-600 mt-1">Proprietor/Partner: <strong>{agr.proprietorName}</strong> ({agr.phone}) | GSTN: {agr.gstn}</p>
-                      <p className="text-[10px] text-slate-400 mt-1">Territory: {agr.territory} • Investment: ₹{(agr.totalInvestment).toLocaleString('en-IN')}</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold ${agr.status === 'Approved & Signed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                        {agr.status}
-                      </span>
-                      <button onClick={() => setViewAgreementDetail(agr)} className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">
-                        View Form
-                      </button>
-                    </div>
+            {authRole === 'employee' && (
+              <div className="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-3xl shadow-xl space-y-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-indigo-800 pb-4 gap-2">
+                  <div>
+                    <span className="bg-indigo-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">{currentEmp.designation}</span>
+                    <h3 className="text-xl font-extrabold mt-1 text-white">{currentEmp.name} ({currentEmp.id})</h3>
+                    <p className="text-xs text-indigo-300">Territory: {currentEmp.territory} • Joined: {currentEmp.joiningDate}</p>
                   </div>
-                ))}
+                  <div className="flex items-center space-x-2">
+                    <button onClick={markTodayAttendance} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5 transition">
+                      <CheckSquare className="w-4 h-4" />
+                      <span>Mark Today's Attendance</span>
+                    </button>
+                    <button onClick={() => setIsLeaveModalOpen(true)} className="bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-700/50 px-4 py-2.5 rounded-xl text-xs font-bold shadow">
+                      + Apply Leave
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                  <div className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <p className="text-[11px] text-slate-400">Primary Vertical</p>
+                    <p className="text-xs font-bold text-white mt-1">{currentEmp.primaryVertical}</p>
+                  </div>
+                  <div className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <p className="text-[11px] text-slate-400">Leave Balance</p>
+                    <p className="text-xs font-bold text-emerald-400 mt-1">{currentEmp.totalLeaves - currentEmp.usedLeaves} Leaves Remaining (Used: {currentEmp.usedLeaves})</p>
+                  </div>
+                  <div className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <p className="text-[11px] text-slate-400">Monthly Sales Target</p>
+                    <p className="text-xs font-bold text-indigo-400 mt-1">₹{(currentEmp.target).toLocaleString('en-IN')} (Achieved: ₹{(currentEmp.achieved).toLocaleString('en-IN')})</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
-        {/* TAB: AGREEMENTS */}
+        {/* AGREEMENTS VIEW */}
         {activeTab === 'agreements' && (
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Official Partnership Agreement Forms (Distributor / Dealer)</h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  {authRole === 'admin' ? 'Review all distributor partnership forms submitted across Maharashtra.' : 'Forms submitted by you are securely listed here (Confidential & Private).'}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <button onClick={() => setIsAgreementModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5">
-                  <Plus className="w-4 h-4" />
-                  <span>+ Fill New Agreement Form</span>
-                </button>
-                {authRole === 'admin' && (
-                  <button onClick={() => exportToCSV(agreements, 'USR_Agreements')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5">
-                    <FileSpreadsheet className="w-4 h-4" />
-                    <span>Export CSV</span>
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                      <th className="p-3">Agreement ID & Date</th>
-                      <th className="p-3">Distributor Name & Constitution</th>
-                      <th className="p-3">Contact Person & Phone</th>
-                      <th className="p-3">GSTN No</th>
-                      <th className="p-3">Investment (₹)</th>
-                      <th className="p-3">Submitted By Staff</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {visibleAgreements.map(agr => (
-                      <tr key={agr.id} className="hover:bg-slate-50">
-                        <td className="p-3 font-mono font-bold text-indigo-600">{agr.id} <span className="text-[10px] text-slate-400 block font-normal">{agr.date}</span></td>
-                        <td className="p-3 font-bold text-slate-900">{agr.distributorName} <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-indigo-700 font-semibold block mt-0.5">{agr.constitution}</span></td>
-                        <td className="p-3 text-slate-700">{agr.proprietorName} <span className="font-mono text-slate-500 block">+{agr.phone}</span></td>
-                        <td className="p-3 font-mono text-slate-600">{agr.gstn || 'N/A'}</td>
-                        <td className="p-3 font-bold text-emerald-700">₹{(agr.totalInvestment || 1500000).toLocaleString('en-IN')}</td>
-                        <td className="p-3 font-semibold text-slate-600">{agr.submittedBy}</td>
-                        <td className="p-3">
-                          <span className={`px-2.5 py-1 rounded text-[10px] font-bold ${agr.status === 'Approved & Signed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                            {agr.status}
-                          </span>
-                        </td>
-                        <td className="p-3 space-x-2">
-                          <button onClick={() => setViewAgreementDetail(agr)} className="bg-slate-800 hover:bg-slate-900 text-white px-3 py-1.5 rounded-lg font-semibold">
-                            View Form
-                          </button>
-                          {authRole === 'admin' && agr.status === 'Pending Verification' && (
-                            <button onClick={() => handleApproveAgreement(agr.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-semibold">
-                              Approve
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB: LEAVES MANAGEMENT */}
-        {activeTab === 'leaves' && (
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Leave Management & Application Portal</h3>
-                <p className="text-xs text-slate-500 mt-1">Apply for official leave and track approval status.</p>
-              </div>
-              {authRole !== 'admin' && (
-                <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1.5">
-                  <Plus className="w-4 h-4" />
-                  <span>+ Apply New Leave</span>
-                </button>
-              )}
-            </div>
-
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Employee Name</th>
-                    <th className="p-3">From Date - To Date</th>
-                    <th className="p-3">Reason</th>
-                    <th className="p-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleLeaves.map(lev => (
-                    <tr key={lev.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold text-slate-900">{lev.empName}</td>
-                      <td className="p-3 font-mono">{lev.fromDate} to {lev.toDate}</td>
-                      <td className="p-3 text-slate-700">{lev.reason}</td>
-                      <td className="p-3">
-                        <span className={`px-2.5 py-1 rounded text-[10px] font-bold ${lev.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                          {lev.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* TAB: TRAVELLING CLAIMS */}
-        {activeTab === 'travel' && (
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Travelling Allowance & Expense Claims</h3>
-                <p className="text-xs text-slate-500 mt-1">Log daily field travel routes & submit weekly expense claim settlements.</p>
-              </div>
-              {authRole !== 'admin' && (
-                <div className="flex gap-2">
-                  <button onClick={() => setIsDailyTravelModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">
-                    + Log Daily Travel
-                  </button>
-                  <button onClick={() => submitWeeklyTravelClaim('Nov 01 - Nov 07, 2026')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">
-                    Submit Weekly Claim
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="p-4 border-b font-bold text-xs bg-slate-50 text-slate-700">Submitted Weekly Travel Claims</div>
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Staff Name</th>
-                    <th className="p-3">Week Range</th>
-                    <th className="p-3">Total Distance</th>
-                    <th className="p-3">Total Amount</th>
-                    <th className="p-3">Purpose / Routes</th>
-                    <th className="p-3">Status</th>
-                    {authRole === 'admin' && <th className="p-3">Action</th>}
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleTravelClaims.map(trv => (
-                    <tr key={trv.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold">{trv.empName}</td>
-                      <td className="p-3 font-mono">{trv.weekRange}</td>
-                      <td className="p-3">{trv.totalKm} KM</td>
-                      <td className="p-3 font-bold text-emerald-700">₹{(trv.totalAmount).toLocaleString('en-IN')}</td>
-                      <td className="p-3 text-slate-600">{trv.purpose}</td>
-                      <td className="p-3">
-                        <span className={`px-2.5 py-1 rounded text-[10px] font-bold ${trv.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                          {trv.status}
-                        </span>
-                      </td>
-                      {authRole === 'admin' && trv.status === 'Pending' && (
-                        <td className="p-3">
-                          <button onClick={() => handleApproveTravelClaim(trv.id)} className="bg-emerald-600 text-white px-3 py-1 rounded font-bold">Approve</button>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* TAB: LEADS MANAGEMENT */}
-        {activeTab === 'leads' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Business Leads Pipeline</h3>
-                <p className="text-xs text-slate-500 mt-1">Track prospective distributor and dealer leads with investment & remarks.</p>
-              </div>
-              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">+ Add New Lead</button>
-            </div>
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Client Name & Type</th>
-                    <th className="p-3">Phone & Place</th>
-                    <th className="p-3">Investment (₹)</th>
-                    <th className="p-3">Next Follow-up</th>
-                    <th className="p-3">Assigned Staff</th>
-                    <th className="p-3">Remark / Notes</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleLeads.map(lead => (
-                    <tr key={lead.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold text-slate-900">{lead.clientName} <span className="block font-normal text-[10px] text-indigo-600">{lead.clientType}</span></td>
-                      <td className="p-3"><strong className="font-mono">+{lead.phone}</strong><span className="block text-slate-500 text-[10px]">{lead.place}</span></td>
-                      <td className="p-3 font-bold text-emerald-700">₹{(lead.investmentAmount || 0).toLocaleString('en-IN')}</td>
-                      <td className="p-3 font-mono text-indigo-700 font-bold">{lead.nextFollowup || 'N/A'}</td>
-                      <td className="p-3 font-semibold">{lead.assignedToName}</td>
-                      <td className="p-3 text-slate-600 italic">{lead.remark || lead.stage}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* TAB: DCR */}
-        {activeTab === 'dcr' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR)</h3>
-                <p className="text-xs text-slate-500 mt-1">Field visit logs with customer details, investment & remarks.</p>
-              </div>
-              <button onClick={() => setIsDcrModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">+ Submit DCR</button>
-            </div>
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Staff Name</th>
-                    <th className="p-3">Client Name & Phone</th>
-                    <th className="p-3">Place</th>
-                    <th className="p-3">Investment (₹)</th>
-                    <th className="p-3">Next Date</th>
-                    <th className="p-3">Remark / Notes</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleDcrs.map(dcr => (
-                    <tr key={dcr.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold">{dcr.empName}</td>
-                      <td className="p-3 font-bold text-slate-900">{dcr.clientName} <span className="block font-mono text-[10px] text-slate-500">+{dcr.phone || '9820012345'}</span></td>
-                      <td className="p-3 text-slate-700">{dcr.place || dcr.address}</td>
-                      <td className="p-3 font-bold text-emerald-700">₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</td>
-                      <td className="p-3 font-mono text-indigo-700">{dcr.nextDate || 'N/A'}</td>
-                      <td className="p-3 text-slate-600 italic">{dcr.remark || dcr.notes}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'attendance' && (
-          <div className="space-y-4">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">Daily Field Attendance & Punch-In</h3>
+                <h3 className="font-bold text-slate-900 text-sm">Official Partnership Agreement Forms</h3>
+                <p className="text-xs text-slate-500 mt-1">Review, print or export distributor agreements.</p>
               </div>
-              {authRole !== 'admin' && (
-                <button onClick={markTodayAttendance} className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow">
-                  Punch In Today
-                </button>
-              )}
+              <button onClick={() => setIsAgreementModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Fill New Agreement</button>
             </div>
+
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Employee Name</th>
-                    <th className="p-3">Date</th>
-                    <th className="p-3">Check-In Time</th>
+                    <th className="p-3">Agreement ID</th>
+                    <th className="p-3">Distributor Name</th>
+                    <th className="p-3">Proprietor</th>
+                    <th className="p-3">Territory</th>
+                    <th className="p-3">Total Investment</th>
                     <th className="p-3">Status</th>
+                    <th className="p-3">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
-                  {visibleAttendance.map(att => (
-                    <tr key={att.id}>
-                      <td className="p-3 font-bold">{att.empName}</td>
-                      <td className="p-3">{att.date}</td>
-                      <td className="p-3 text-emerald-700 font-bold">{att.checkInTime}</td>
-                      <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">{att.status}</span></td>
+                  {visibleAgreements.map(agr => (
+                    <tr key={agr.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-indigo-600">{agr.id}</td>
+                      <td className="p-3 font-bold">{agr.distributorName}</td>
+                      <td className="p-3">{agr.proprietorName} (+91 {agr.phone})</td>
+                      <td className="p-3">{agr.territory}</td>
+                      <td className="p-3 font-bold text-emerald-700">₹{(agr.totalInvestment).toLocaleString('en-IN')}</td>
+                      <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">{agr.status}</span></td>
+                      <td className="p-3 flex items-center space-x-2">
+                        <button onClick={() => setViewAgreementDetail(agr)} className="bg-slate-800 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1">
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>View PDF</span>
+                        </button>
+                        {authRole === 'admin' && agr.status !== 'Approved & Signed' && (
+                          <button onClick={() => handleApproveAgreement(agr.id)} className="bg-emerald-600 text-white px-3 py-1.5 rounded font-semibold">Approve</button>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'gps' && (
-          <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-900 text-sm">GPS & Camera Photo Audits</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {visibleDcrs.filter(d => d.photoVerified).map(dcr => (
-                <div key={dcr.id} className="border p-4 rounded-xl flex items-center space-x-3 bg-slate-50">
-                  <img src={dcr.photoUrl} alt="proof" className="w-20 h-20 object-cover rounded-lg border" />
-                  <div className="text-xs space-y-1">
-                    <p className="font-bold text-slate-900">{dcr.clientName}</p>
-                    <p className="text-slate-500">{dcr.notes}</p>
-                    <p className="text-[10px] font-mono text-indigo-600">{dcr.place || dcr.address}</p>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         )}
@@ -1163,489 +903,523 @@ export default function App() {
         {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
-              <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center (HQ)</h3>
-              <p className="text-xs text-amber-800">Create employee IDs with designation & joining dates, edit passwords, and view all employee-submitted partnership agreements.</p>
+              <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
+              <p className="text-xs text-amber-800">Manage employee accounts, reset blocked passwords, verify field team attendance, and approve travelling claims or agreements.</p>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border shadow-sm space-y-3">
-              <h4 className="font-bold text-slate-900 text-xs uppercase">Employee Management & Designation Allocation</h4>
-              <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow">
-                + Create New Employee & Assign Designation
-              </button>
+            <div className="bg-white p-5 rounded-2xl border shadow-sm flex items-center justify-between">
+              <h3 className="font-bold text-xs text-slate-800">Employee Master Accounts & Security Status</h3>
+              <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow">+ Create Employee ID & Designation</button>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-3">
-              <div className="p-5 border-b border-slate-100 font-bold text-xs">Registered Employees, Designation & Joining Dates</div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                      <th className="p-3">Employee Name & ID</th>
-                      <th className="p-3">Designation</th>
-                      <th className="p-3">Joining Date</th>
-                      <th className="p-3">Primary Vertical</th>
-                      <th className="p-3">WhatsApp Phone</th>
-                      <th className="p-3">Action</th>
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Employee ID</th>
+                    <th className="p-3">Name & Designation</th>
+                    <th className="p-3">Joining Date</th>
+                    <th className="p-3">Primary Vertical</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {employees.map(emp => (
+                    <tr key={emp.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-indigo-600">{emp.id}</td>
+                      <td className="p-3 font-bold">{emp.name} <span className="text-[10px] text-slate-500 block font-normal">{emp.designation}</span></td>
+                      <td className="p-3 font-mono">{emp.joiningDate}</td>
+                      <td className="p-3 font-semibold text-slate-700">{emp.primaryVertical}</td>
+                      <td className="p-3">
+                        {emp.isBlocked ? (
+                          <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-[10px]">BLOCKED</span>
+                        ) : (
+                          <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active</span>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <button onClick={() => setEditingEmpModal(emp)} className="bg-amber-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1">
+                          <Key className="w-3 h-3" />
+                          <span>Reset Password</span>
+                        </button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {employees.map(emp => (
-                      <tr key={emp.id} className="hover:bg-slate-50">
-                        <td className="p-3 font-bold">{emp.name} <span className="block text-[10px] text-indigo-600 font-mono">{emp.id}</span></td>
-                        <td className="p-3 font-semibold text-slate-900">{emp.designation || 'Sales Executive'}</td>
-                        <td className="p-3 font-mono text-slate-600">{emp.joiningDate || '2025-04-10'}</td>
-                        <td className="p-3"><span className="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded text-[10px]">{emp.primaryVertical || 'USR POWER LUBE'}</span></td>
-                        <td className="p-3 font-mono">+91 {emp.phone}</td>
-                        <td className="p-3">
-                          <button onClick={() => { setEditingEmpModal(emp); setNewPasswordInput(emp.pass); }} className="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1">
-                            <MessageSquare className="w-3.5 h-3.5" />
-                            <span>Edit & Send WhatsApp</span>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
 
+        {/* LEAVES TAB */}
+        {activeTab === 'leaves' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Leave Management</h3>
+                <p className="text-xs text-slate-500 mt-1">Apply or track leave status.</p>
+              </div>
+              <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Apply Leave</button>
+            </div>
+            <div className="bg-white rounded-2xl border overflow-hidden">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Employee</th>
+                    <th className="p-3">From - To</th>
+                    <th className="p-3">Reason</th>
+                    <th className="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleLeaves.map(l => (
+                    <tr key={l.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold">{l.empName}</td>
+                      <td className="p-3 font-mono">{l.fromDate} to {l.toDate}</td>
+                      <td className="p-3">{l.reason}</td>
+                      <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">{l.status}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ATTENDANCE TAB */}
+        {activeTab === 'attendance' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Attendance Logs</h3>
+                <p className="text-xs text-slate-500 mt-1">Daily check-in records.</p>
+              </div>
+              <button onClick={markTodayAttendance} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">Mark Today's Attendance</button>
+            </div>
+            <div className="bg-white rounded-2xl border overflow-hidden">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Employee Name</th>
+                    <th className="p-3">Date</th>
+                    <th className="p-3">Check-In Time</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3">Location</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleAttendance.map(att => (
+                    <tr key={att.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold">{att.empName}</td>
+                      <td className="p-3 font-mono">{att.date}</td>
+                      <td className="p-3 font-mono text-emerald-700 font-bold">{att.checkInTime}</td>
+                      <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">{att.status}</span></td>
+                      <td className="p-3">{att.location}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* LEADS TAB */}
+        {activeTab === 'leads' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Lead Management Pipeline</h3>
+                <p className="text-xs text-slate-500 mt-1">Track dealer and distributor leads.</p>
+              </div>
+              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Add New Lead</button>
+            </div>
+            <div className="bg-white rounded-2xl border overflow-hidden">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Client Name</th>
+                    <th className="p-3">Contact Person & Phone</th>
+                    <th className="p-3">Stage</th>
+                    <th className="p-3">Investment (₹)</th>
+                    <th className="p-3">Assigned To</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleLeads.map(lead => (
+                    <tr key={lead.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold">{lead.clientName} <span className="text-[10px] text-slate-500 block font-normal">{lead.place}</span></td>
+                      <td className="p-3">{lead.contactPerson} (+91 {lead.phone})</td>
+                      <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">{lead.stage}</span></td>
+                      <td className="p-3 font-bold text-emerald-700">₹{(lead.investmentAmount || lead.estimatedValue).toLocaleString('en-IN')}</td>
+                      <td className="p-3">{lead.assignedToName}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* DCR TAB */}
+        {activeTab === 'dcr' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR) & GPS Audits</h3>
+                <p className="text-xs text-slate-500 mt-1">Field visit logs with photo geotags.</p>
+              </div>
+              <button onClick={() => setIsDcrModalOpen(true)} className="bg-amber-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Submit DCR Visit</button>
+            </div>
+            <div className="bg-white rounded-2xl border overflow-hidden">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Employee</th>
+                    <th className="p-3">Client Name & Place</th>
+                    <th className="p-3">Outcome</th>
+                    <th className="p-3">GPS Location</th>
+                    <th className="p-3">Audit Photo</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleDcrs.map(dcr => (
+                    <tr key={dcr.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-bold">{dcr.empName}</td>
+                      <td className="p-3 font-bold">{dcr.clientName} <span className="text-[10px] text-slate-500 block font-normal">{dcr.place}</span></td>
+                      <td className="p-3"><span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-bold">{dcr.outcome}</span></td>
+                      <td className="p-3 font-mono text-[11px]">{dcr.lat}, {dcr.lng}</td>
+                      <td className="p-3">
+                        {dcr.photoUrl ? (
+                          <a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline">View Photo</a>
+                        ) : 'No Photo'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* GPS TAB */}
+        {activeTab === 'gps' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
+              <h3 className="font-bold text-slate-900 text-sm flex items-center"><Camera className="w-5 h-5 mr-2 text-indigo-600" /> Live GPS Camera Audit & Geotagging</h3>
+              <p className="text-xs text-slate-500">Capture direct camera snapshots with embedded latitude/longitude coordinates for verification.</p>
+              <button onClick={() => setIsDcrModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">Open GPS Camera DCR Form</button>
+            </div>
+          </div>
+        )}
+
+        {/* TRAVEL TAB */}
+        {activeTab === 'travel' && (
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Travelling & Fuel Allowance Claims</h3>
+                <p className="text-xs text-slate-500 mt-1">Submit and track weekly travel expense logs.</p>
+              </div>
+              <button onClick={() => setIsDailyTravelModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Add Daily Travel Log</button>
+            </div>
+
+            <div className="bg-white rounded-2xl border overflow-hidden">
+              <div className="p-4 border-b font-bold text-xs">Pending Daily Logs Ready for Weekly Claim</div>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                    <th className="p-3">Date</th>
+                    <th className="p-3">Route / Purpose</th>
+                    <th className="p-3">Distance (KM)</th>
+                    <th className="p-3">Amount (₹)</th>
+                    <th className="p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {visibleDailyTravel.map(log => (
+                    <tr key={log.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-mono">{log.date}</td>
+                      <td className="p-3 font-bold">{log.route}</td>
+                      <td className="p-3 font-mono">{log.km} KM</td>
+                      <td className="p-3 font-mono font-bold text-emerald-700">₹{log.amount}</td>
+                      <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">{log.status}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="p-4 bg-slate-50 border-t flex justify-end">
+                <button onClick={() => submitWeeklyTravelClaim('Nov 01 - Nov 07, 2026')} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">Submit Weekly Claim (Nov 01 - Nov 07)</button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
-      {/* MODAL: AGREEMENT FORM */}
+      {/* MODAL: ADD AGREEMENT FORM */}
       {isAgreementModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-4xl shadow-2xl space-y-6 my-8 border border-slate-200 max-h-[90vh] flex flex-col">
-            <div className="flex justify-between items-center border-b pb-4 flex-shrink-0">
-              <div>
-                <h3 className="font-extrabold text-base text-slate-900">USR POWER INDUSTRIES PRIVATE LIMITED</h3>
-                <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider mt-0.5">OFFICIAL DISTRIBUTOR / DEALER PARTNERSHIP AGREEMENT FORM</p>
-              </div>
-              <button onClick={() => setIsAgreementModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition"><X className="w-5 h-5 text-slate-500" /></button>
-            </div>
-
-            <form onSubmit={handleAgreementSubmit} className="space-y-6 text-xs overflow-y-auto pr-2 flex-1">
-              <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> I. Basic Information & GST Details
-                </h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">GSTN No *</label>
-                    <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} placeholder="e.g. 27AAAAA0000A1Z5" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-mono uppercase text-indigo-900 font-bold" />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Name of Distributor *</label>
-                    <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} placeholder="e.g. Sahyadri Auto" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Constitution *</label>
-                    <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
-                      <option value="Proprietorship">Proprietorship</option>
-                      <option value="Partnership">Partnership</option>
-                      <option value="Private Limited Co">Private Limited Co</option>
-                      <option value="Public Limited Co">Public Limited Co</option>
-                      <option value="Others">Others</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Proprietor / Partner Name *</label>
-                    <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} placeholder="Suresh Patil" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Mobile No *</label>
-                    <input required type="text" value={newAgreement.phone} onChange={e => setNewAgreement({...newAgreement, phone: e.target.value})} placeholder="9820012345" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-mono" />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Qualification</label>
-                    <input type="text" value={newAgreement.qualification} onChange={e => setNewAgreement({...newAgreement, qualification: e.target.value})} placeholder="Graduate / MBA" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Permanent & Showroom Address *</label>
-                    <textarea required rows="2" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} placeholder="Full address with town and PIN code..." className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm"></textarea>
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Details of Immovable Properties (Owned)</label>
-                    <textarea rows="2" value={newAgreement.immovableProperties} onChange={e => setNewAgreement({...newAgreement, immovableProperties: e.target.value})} placeholder="Details of godown/office properties..." className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm"></textarea>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                <h4 className="font-bold text-slate-900 text-xs border-b border-slate-200 pb-2 text-indigo-900 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> VII - IX. Infrastructure, Goods & Territory
-                </h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Transport Company Name *</label>
-                    <input required type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} placeholder="VRL Logistics / Bank Approved" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Nearest Railway Station / Agency *</label>
-                    <input required type="text" value={newAgreement.railwayStation} onChange={e => setNewAgreement({...newAgreement, railwayStation: e.target.value})} placeholder="e.g. Vashi Railway Station" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Interested for Product Line *</label>
-                    <select value={newAgreement.verticalInterested} onChange={e => setNewAgreement({...newAgreement, verticalInterested: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-medium">
-                      {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Territory (State / Region / Districts) *</label>
-                    <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} placeholder="e.g. Pune & PCMC Cluster" className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4 bg-indigo-50/70 p-5 rounded-2xl border border-indigo-200">
-                <h4 className="font-bold text-indigo-900 text-xs border-b border-indigo-200 pb-2 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> X. Initial Investment Plan (Auto-Calculated)
-                </h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Automotive Oil (₹)</label>
-                    <input type="number" value={newAgreement.investmentAutomotive} onChange={e => setNewAgreement({...newAgreement, investmentAutomotive: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">4-Stroke Oil (₹)</label>
-                    <input type="number" value={newAgreement.investmentFourStroke} onChange={e => setNewAgreement({...newAgreement, investmentFourStroke: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Passenger Car (₹)</label>
-                    <input type="number" value={newAgreement.investmentPassenger} onChange={e => setNewAgreement({...newAgreement, investmentPassenger: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Heavy Duty (₹)</label>
-                    <input type="number" value={newAgreement.investmentHeavyDuty} onChange={e => setNewAgreement({...newAgreement, investmentHeavyDuty: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">LCV-HCV Oils (₹)</label>
-                    <input type="number" value={newAgreement.investmentLcvHcv} onChange={e => setNewAgreement({...newAgreement, investmentLcvHcv: e.target.value})} className="w-full p-3 border border-slate-300 rounded-xl bg-white shadow-sm font-bold text-slate-900" />
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row justify-between items-center pt-3 border-t border-indigo-200 gap-2">
-                  <span className="font-bold text-indigo-950 text-sm">Total Initial Minimum Investment for Stock:</span>
-                  <div className="bg-white px-5 py-2.5 rounded-xl border border-indigo-300 shadow-inner text-emerald-700 font-extrabold text-base font-mono">
-                    ₹ {calculatedTotalInvestment.toLocaleString('en-IN')}
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 flex justify-end space-x-3">
-                <button type="button" onClick={() => setIsAgreementModalOpen(false)} className="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition">Cancel</button>
-                <button type="submit" className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg transition flex items-center space-x-2">
-                  <Check className="w-4 h-4" />
-                  <span>Submit Official Agreement Form</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: APPLY LEAVE */}
-      {isLeaveModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Apply Official Leave</h3>
-              <button onClick={() => setIsLeaveModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+              <h3 className="font-bold text-slate-900 text-sm">Official Partnership Agreement Form</h3>
+              <button onClick={() => setIsAgreementModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
-            <form onSubmit={handleApplyLeave} className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2">
+            <form onSubmit={handleAgreementSubmit} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold block mb-1">From Date *</label>
-                  <input required type="date" value={newLeave.fromDate} onChange={e => setNewLeave({...newLeave, fromDate: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Distributor / Firm Name *</label>
+                  <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Sahyadri Auto Spares" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">To Date *</label>
-                  <input required type="date" value={newLeave.toDate} onChange={e => setNewLeave({...newLeave, toDate: e.target.value})} className="w-full p-2.5 border rounded-xl" />
-                </div>
-              </div>
-              <div>
-                <label className="font-semibold block mb-1">Reason for Leave *</label>
-                <textarea required rows="3" value={newLeave.reason} onChange={e => setNewLeave({...newLeave, reason: e.target.value})} placeholder="Specify reason for leave..." className="w-full p-2.5 border rounded-xl"></textarea>
-              </div>
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsLeaveModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Submit Leave Application</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: LOG DAILY TRAVEL */}
-      {isDailyTravelModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Log Daily Field Travel</h3>
-              <button onClick={() => setIsDailyTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleAddDailyTravel} className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold block mb-1">Travel Date</label>
-                  <input required type="date" value={newDailyTravel.date} onChange={e => setNewDailyTravel({...newDailyTravel, date: e.target.value})} className="w-full p-2.5 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold block mb-1">Mode</label>
-                  <select value={newDailyTravel.mode} onChange={e => setNewDailyTravel({...newDailyTravel, mode: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
-                    <option value="Bike / Fuel">Bike / Fuel</option>
-                    <option value="Car / Cab">Car / Cab</option>
-                    <option value="Train / Bus">Train / Bus</option>
+                  <label className="font-semibold block mb-1">Constitution Type *</label>
+                  <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="Proprietorship">Proprietorship</option>
+                    <option value="Partnership">Partnership</option>
+                    <option value="Private Limited">Private Limited</option>
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+
+              <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="font-semibold block mb-1">Distance (KM)</label>
-                  <input required type="number" value={newDailyTravel.km} onChange={e => setNewDailyTravel({...newDailyTravel, km: e.target.value})} placeholder="45" className="w-full p-2.5 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Proprietor Name *</label>
+                  <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} className="w-full p-2.5 border rounded-xl" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Claim Amount (₹)</label>
-                  <input required type="number" value={newDailyTravel.amount} onChange={e => setNewDailyTravel({...newDailyTravel, amount: e.target.value})} placeholder="350" className="w-full p-2.5 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Phone Number *</label>
+                  <input required type="text" value={newAgreement.phone} onChange={e => setNewAgreement({...newAgreement, phone: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="9820012345" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">GSTN Number *</label>
+                  <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono uppercase" placeholder="27AAAAA..." />
                 </div>
               </div>
+
               <div>
-                <label className="font-semibold block mb-1">Route Description</label>
-                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} placeholder="Andheri to Thane Dealer Route" className="w-full p-2.5 border rounded-xl" />
+                <label className="font-semibold block mb-1">Business Complete Address *</label>
+                <input required type="text" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} className="w-full p-2.5 border rounded-xl" />
               </div>
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setIsDailyTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Save Travel Log</button>
+
+              <div className="bg-slate-50 p-4 rounded-xl border space-y-2">
+                <p className="font-bold text-slate-800">Initial Investment Breakdown (Product Verticals)</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  <div>
+                    <label className="text-[11px] block mb-1">Automotive Engine Oil (₹)</label>
+                    <input type="number" value={newAgreement.investmentAutomotive} onChange={e => setNewAgreement({...newAgreement, investmentAutomotive: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] block mb-1">4-Stroke Engine Oil (₹)</label>
+                    <input type="number" value={newAgreement.investmentFourStroke} onChange={e => setNewAgreement({...newAgreement, investmentFourStroke: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] block mb-1">Passenger Car Oil (₹)</label>
+                    <input type="number" value={newAgreement.investmentPassenger} onChange={e => setNewAgreement({...newAgreement, investmentPassenger: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] block mb-1">Heavy Duty Diesel (₹)</label>
+                    <input type="number" value={newAgreement.investmentHeavyDuty} onChange={e => setNewAgreement({...newAgreement, investmentHeavyDuty: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] block mb-1">LCV / HCV Oils (₹)</label>
+                    <input type="number" value={newAgreement.investmentLcvHcv} onChange={e => setNewAgreement({...newAgreement, investmentLcvHcv: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
+                  </div>
+                </div>
+                <div className="pt-2 border-t flex justify-between items-center text-xs font-bold text-indigo-900">
+                  <span>Calculated Total Investment Deposit:</span>
+                  <span className="text-sm font-extrabold text-emerald-700">₹{calculatedTotalInvestment.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-semibold block mb-1">Allotted Territory *</label>
+                  <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Navi Mumbai & Thane" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Preferred Transport Company</label>
+                  <input type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. VRL Logistics" />
+                </div>
+              </div>
+
+              <div className="pt-3 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsAgreementModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Submit Agreement Form</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* MODAL: VIEW & PRINT CLEAN AGREEMENT FORM */}
-      {viewAgreementDetail && (
-        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-3xl w-full max-w-3xl shadow-2xl space-y-6 my-8 overflow-hidden">
-            
-            <div className="bg-slate-900 text-white p-4 flex justify-between items-center no-print">
-              <h3 className="font-bold text-xs uppercase tracking-widest">Official Agreement Preview & Print</h3>
-              <div className="space-x-2">
-                <button onClick={() => window.print()} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 inline-flex">
-                  <Printer className="w-3.5 h-3.5" />
-                  <span>Print Agreement Form</span>
-                </button>
-                <button onClick={() => setViewAgreementDetail(null)} className="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold">Close</button>
-              </div>
-            </div>
-
-            <div id="printable-agreement" className="p-8 space-y-6 text-slate-900 bg-white">
-              <div className="text-center space-y-1 border-b-2 border-slate-900 pb-4">
-                <h2 className="text-lg font-extrabold tracking-wide">USR POWER INDUSTRIES PRIVATE LIMITED</h2>
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">OFFICIAL DISTRIBUTOR / DEALER PARTNERSHIP AGREEMENT FORM</p>
-                <p className="text-[10px] text-slate-500">Agreement ID: <strong className="text-indigo-600 font-mono">{viewAgreementDetail.id}</strong> | Date: {viewAgreementDetail.date}</p>
-              </div>
-
-              <div className="space-y-4 text-xs">
-                <div className="border border-slate-300 p-4 rounded-xl space-y-2">
-                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">I. Basic Information</h4>
-                  <div className="grid grid-cols-2 gap-2">
-                    <p><strong>Distributor Name:</strong> {viewAgreementDetail.distributorName}</p>
-                    <p><strong>Constitution:</strong> {viewAgreementDetail.constitution}</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <p><strong>Proprietor/Partner:</strong> {viewAgreementDetail.proprietorName}</p>
-                    <p><strong>Phone No:</strong> +91 {viewAgreementDetail.phone}</p>
-                  </div>
-                  <p><strong>Permanent Address:</strong> {viewAgreementDetail.address}</p>
-                  <p><strong>Immovable Properties:</strong> {viewAgreementDetail.immovableProperties || 'N/A'}</p>
-                </div>
-
-                <div className="border border-slate-300 p-4 rounded-xl space-y-2">
-                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">Infrastructure, Territory & Investment</h4>
-                  <div className="grid grid-cols-2 gap-2">
-                    <p><strong>GSTN No:</strong> {viewAgreementDetail.gstn}</p>
-                    <p><strong>Transport Company:</strong> {viewAgreementDetail.transportCompany}</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <p><strong>Nearest Railway Station:</strong> {viewAgreementDetail.railwayStation}</p>
-                    <p><strong>Interested for Product Line:</strong> {viewAgreementDetail.verticalInterested}</p>
-                  </div>
-                  <p><strong>Allotted Territory:</strong> {viewAgreementDetail.territory}</p>
-                  <div className="bg-slate-100 p-3 rounded-lg font-bold text-emerald-800 mt-2">
-                    Total Initial Minimum Investment: ₹{(viewAgreementDetail.totalInvestment || 1500000).toLocaleString('en-IN')}
-                  </div>
-                </div>
-
-                <div className="border border-slate-300 p-4 rounded-xl space-y-2">
-                  <h4 className="font-bold border-b pb-1 text-slate-900 uppercase text-[11px]">Declaration & Signatures</h4>
-                  <p className="text-[10px] text-slate-600 leading-relaxed">
-                    I/we, the undersigned, have gone through the terms & conditions for my/our appointment as distributor of the company. I/we fully understand the implications and bind ourselves into a legal contract as per the Indian Contract Act, 1872.
-                  </p>
-                  <div className="grid grid-cols-2 gap-6 pt-6">
-                    <div className="border-t border-slate-400 pt-1 text-center">
-                      <p className="font-bold">{viewAgreementDetail.proprietorName}</p>
-                      <p className="text-[10px] text-slate-500">Distributor Signature with Date</p>
-                    </div>
-                    <div className="border-t border-slate-400 pt-1 text-center">
-                      <p className="font-bold">For USR POWER INDUSTRIES</p>
-                      <p className="text-[10px] text-slate-500">Authorized Manager Signature</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      )}
-
-      {/* EDIT PASSWORD MODAL */}
-      {editingEmpModal && (
+      {/* MODAL: ADD EMPLOYEE */}
+      {isAddEmpModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center">
-                <MessageSquare className="w-4 h-4 mr-2 text-emerald-600" /> Reset Password & Send WhatsApp
-              </h3>
-              <button onClick={() => setEditingEmpModal(null)}><X className="w-4 h-4 text-slate-400" /></button>
-            </div>
-            <form onSubmit={handleSaveEmployeeCredentials} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold block mb-1">New Password / PIN</label>
-                <input required type="text" value={newPasswordInput} onChange={e => setNewPasswordInput(e.target.value)} className="w-full p-2.5 border rounded-xl font-mono" autoFocus />
-              </div>
-              <div className="pt-2 flex justify-end space-x-2">
-                <button type="button" onClick={() => setEditingEmpModal(null)} className="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold flex items-center space-x-1">
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Update & Open WhatsApp</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: ADD EMPLOYEE WITH DESIGNATION & JOINING DATE */}
-      {isAddEmpModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID, Designation & Joining Date</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Create Employee ID & Designation</h3>
               <button onClick={() => setIsAddEmpModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddEmployee} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold block mb-1">Employee Name *</label>
+                <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Rahul Verma" />
+              </div>
+
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold block mb-1">Employee Name *</label>
-                  <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} placeholder="Santosh Shinde" className="w-full p-2.5 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Designation *</label>
+                  <input required type="text" value={newEmp.designation} onChange={e => setNewEmp({...newEmp, designation: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Area Sales Manager" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Designation *</label>
-                  <input required type="text" value={newEmp.designation} onChange={e => setNewEmp({...newEmp, designation: e.target.value})} placeholder="Sales Executive" className="w-full p-2.5 border rounded-xl font-medium" />
+                  <label className="font-semibold block mb-1">Joining Date *</label>
+                  <input required type="date" value={newEmp.joiningDate} onChange={e => setNewEmp({...newEmp, joiningDate: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold block mb-1">Employee ID *</label>
-                  <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} placeholder="USR-EMP-105" className="w-full p-2.5 border rounded-xl font-mono" />
+                  <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" placeholder="USR-EMP-105" />
                 </div>
                 <div>
                   <label className="font-semibold block mb-1">Password *</label>
-                  <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} placeholder="1234" className="w-full p-2.5 border rounded-xl font-mono" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold block mb-1">Joining Date *</label>
-                  <input required type="date" value={newEmp.joiningDate} onChange={e => setNewEmp({...newEmp, joiningDate: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
-                </div>
-                <div>
-                  <label className="font-semibold block mb-1">Primary Vertical *</label>
-                  <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
-                    {BUSINESS_VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
-                  </select>
+                  <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" placeholder="1055" />
                 </div>
               </div>
 
               <div>
-                <label className="font-semibold block mb-1">WhatsApp Phone *</label>
-                <input required type="text" value={newEmp.phone} onChange={e => setNewEmp({...newEmp, phone: e.target.value})} placeholder="98200XXXXX" className="w-full p-2.5 border rounded-xl font-mono" />
+                <label className="font-semibold block mb-1">Assigned Territory *</label>
+                <input required type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Pune & PCMC" />
               </div>
 
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Employee</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Employee ID</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* MODAL: RESET PASSWORD */}
+      {editingEmpModal && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">Reset Password & Unblock: {editingEmpModal.name}</h3>
+              <button onClick={() => setEditingEmpModal(null)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleSaveEmployeeCredentials} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold block mb-1">New Password *</label>
+                <input required type="text" value={newPasswordInput} onChange={e => setNewPasswordInput(e.target.value)} className="w-full p-2.5 border rounded-xl font-mono" placeholder="Enter new password..." autoFocus />
+              </div>
+              <p className="text-[11px] text-slate-500">Submitting will unblock the account and instantly open WhatsApp to share login credentials with {editingEmpModal.name}.</p>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setEditingEmpModal(null)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Update & Open WhatsApp</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* VIEW AGREEMENT PDF MODAL */}
+      {viewAgreementDetail && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto print:p-0 print:shadow-none">
+            <div className="flex justify-between items-center border-b pb-4 no-print">
+              <h3 className="font-bold text-slate-900 text-base">Official Partnership Agreement ({viewAgreementDetail.id})</h3>
+              <div className="flex items-center space-x-2">
+                <button onClick={() => window.print()} className="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1">
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Print PDF</span>
+                </button>
+                <button onClick={() => setViewAgreementDetail(null)} className="p-1 rounded-full hover:bg-slate-100"><X className="w-5 h-5 text-slate-500" /></button>
+              </div>
+            </div>
+
+            <div className="space-y-6 text-xs text-slate-800 leading-relaxed font-sans">
+              <div className="text-center space-y-1 border-b pb-4">
+                <h1 className="font-extrabold text-base tracking-wide text-slate-900">USR POWER INDUSTRIES PRIVATE LIMITED</h1>
+                <p className="text-[10px] uppercase font-semibold text-indigo-700">Authorised Distributor & C&FA Partnership Agreement</p>
+                <p className="text-[10px] text-slate-500 font-mono">Agreement Ref: {viewAgreementDetail.id} | Date: {viewAgreementDetail.date}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border">
+                <div>
+                  <strong className="text-slate-900 block mb-1">Distributor / Firm Details:</strong>
+                  <p className="font-bold text-base text-indigo-900">{viewAgreementDetail.distributorName}</p>
+                  <p>Constitution: {viewAgreementDetail.constitution}</p>
+                  <p>Proprietor: {viewAgreementDetail.proprietorName} (+91 {viewAgreementDetail.phone})</p>
+                  <p>Address: {viewAgreementDetail.address}</p>
+                </div>
+                <div>
+                  <strong className="text-slate-900 block mb-1">Business Credentials:</strong>
+                  <p className="font-mono">GSTN: {viewAgreementDetail.gstn}</p>
+                  <p>Allotted Territory: {viewAgreementDetail.territory}</p>
+                  <p>Transport Partner: {viewAgreementDetail.transportCompany}</p>
+                  <p className="font-bold text-emerald-700 mt-1">Total Investment Deposit: ₹{(viewAgreementDetail.totalInvestment).toLocaleString('en-IN')}</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <strong className="text-slate-900 block">Terms & Conditions Summary:</strong>
+                <p className="text-[11px] text-slate-600">
+                  1. The Distributor shall maintain dedicated stock and active distribution across the allotted territory ({viewAgreementDetail.territory}).<br />
+                  2. All supplies and billing shall be processed directly through USR Power Industries Maharashtra logistics hub.<br />
+                  3. This agreement is valid upon successful verification of initial investment deposit and compliance with company sales targets.
+                </p>
+              </div>
+
+              <div className="pt-6 border-t flex justify-between items-end text-xs">
+                <div>
+                  <p className="font-bold text-slate-700">Submitted By:</p>
+                  <p className="font-mono text-indigo-600">{viewAgreementDetail.submittedBy}</p>
+                </div>
+                <div className="text-right">
+                  <div className="w-32 h-12 border-b border-dashed border-slate-400 mb-1"></div>
+                  <p className="font-bold text-slate-800">Authorised Signatory</p>
+                  <p className="text-[10px] text-slate-500">USR Power Industries Maharashtra</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* MODAL: ADD LEAD */}
       {isLeadModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Add New Business Lead</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Add New Sales Lead</h3>
               <button onClick={() => setIsLeadModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddLead} className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold block mb-1">Client / Business Name *</label>
-                  <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} placeholder="Sahyadri Auto Spares" className="w-full p-2.5 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold block mb-1">Client Type *</label>
-                  <select value={newLead.clientType} onChange={e => setNewLead({...newLead, clientType: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
-                    {CLIENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
+              <div>
+                <label className="font-semibold block mb-1">Client / Firm Name *</label>
+                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Sai Motors" />
               </div>
-
               <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Contact Person *</label>
+                  <input required type="text" value={newLead.contactPerson} onChange={e => setNewLead({...newLead, contactPerson: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                </div>
                 <div>
                   <label className="font-semibold block mb-1">Phone Number *</label>
-                  <input required type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} placeholder="9820012345" className="w-full p-2.5 border rounded-xl font-mono" />
-                </div>
-                <div>
-                  <label className="font-semibold block mb-1">Place / City *</label>
-                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} placeholder="Navi Mumbai" className="w-full p-2.5 border rounded-xl" />
+                  <input required type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} className="w-full p-2.5 border rounded-xl" />
                 </div>
               </div>
-
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold block mb-1">Investment Amount (₹) *</label>
-                  <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} placeholder="250000" className="w-full p-2.5 border rounded-xl font-bold text-emerald-700" />
+                  <label className="font-semibold block mb-1">Place / City *</label>
+                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} className="w-full p-2.5 border rounded-xl" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Next Follow-up Date *</label>
-                  <input required type="date" value={newLead.nextFollowup} onChange={e => setNewLead({...newLead, nextFollowup: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Estimated Investment (₹) *</label>
+                  <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} className="w-full p-2.5 border rounded-xl font-bold text-emerald-700" />
                 </div>
               </div>
-
-              <div>
-                <label className="font-semibold block mb-1">Remark / Notes *</label>
-                <textarea required rows="2" value={newLead.remark} onChange={e => setNewLead({...newLead, remark: e.target.value})} placeholder="Enter detailed remark about client discussion..." className="w-full p-2.5 border rounded-xl"></textarea>
-              </div>
-
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
                 <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Lead</button>
@@ -1657,99 +1431,120 @@ export default function App() {
 
       {/* MODAL: SUBMIT DCR */}
       {isDcrModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit DCR (Field Visit Report)</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Submit DCR Visit & GPS Audit Photo</h3>
               <button onClick={() => setIsDcrModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold block mb-1">Client Name *</label>
-                  <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} placeholder="Pune Logistics Corp" className="w-full p-2.5 border rounded-xl" />
+                  <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} className="w-full p-2.5 border rounded-xl" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Phone Number *</label>
-                  <input required type="text" value={newDcr.phone} onChange={e => setNewDcr({...newDcr, phone: e.target.value})} placeholder="9821123456" className="w-full p-2.5 border rounded-xl font-mono" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="font-semibold block mb-1">Place / Location *</label>
-                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} placeholder="Hinjewadi, Pune" className="w-full p-2.5 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold block mb-1">Investment (₹) *</label>
-                  <input required type="number" value={newDcr.investmentAmount} onChange={e => setNewDcr({...newDcr, investmentAmount: e.target.value})} placeholder="300000" className="w-full p-2.5 border rounded-xl font-bold text-emerald-700" />
+                  <label className="font-semibold block mb-1">Place / Area *</label>
+                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} className="w-full p-2.5 border rounded-xl" />
                 </div>
               </div>
-
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold block mb-1">Next Follow-up Date *</label>
-                  <input required type="date" value={newDcr.nextDate} onChange={e => setNewDcr({...newDcr, nextDate: e.target.value})} className="w-full p-2.5 border rounded-xl" />
-                </div>
-                <div>
-                  <label className="font-semibold block mb-1">Call Type</label>
-                  <select value={newDcr.callType} onChange={e => setNewDcr({...newDcr, callType: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
-                    <option value="Field Visit">Field Visit</option>
-                    <option value="Dealer Meet">Dealer Meet</option>
-                    <option value="Distributor Pitch">Distributor Pitch</option>
+                  <label className="font-semibold block mb-1">Visit Outcome *</label>
+                  <select value={newDcr.outcome} onChange={e => setNewDcr({...newDcr, outcome: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
+                    <option value="Order Confirmed">Order Confirmed</option>
+                    <option value="Follow Up Required">Follow Up Required</option>
+                    <option value="Catalog Shared">Catalog Shared</option>
+                    <option value="Not Available">Not Available</option>
                   </select>
                 </div>
-              </div>
-
-              <div>
-                <label className="font-semibold block mb-1">Remark / Notes *</label>
-                <textarea required rows="2" value={newDcr.remark} onChange={e => setNewDcr({...newDcr, remark: e.target.value})} placeholder="Enter visit outcome and discussion remark..." className="w-full p-2.5 border rounded-xl"></textarea>
-              </div>
-
-              <div className="p-3 bg-slate-50 border rounded-xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-700">Live GPS Photo Capture</span>
-                  <input type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={captureRealGpsPhoto} className="hidden" />
-                  <button type="button" onClick={() => fileInputRef.current.click()} disabled={capturingGpsPhoto} className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-[11px] font-semibold">
-                    {capturingGpsPhoto ? 'Getting GPS...' : 'Open Camera'}
-                  </button>
+                <div>
+                  <label className="font-semibold block mb-1">Order / Potential Value (₹)</label>
+                  <input type="number" value={newDcr.investmentAmount} onChange={e => setNewDcr({...newDcr, investmentAmount: e.target.value})} className="w-full p-2.5 border rounded-xl font-bold text-emerald-700" />
                 </div>
-                {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 font-bold">✓ Photo & GPS Tagged!</p>}
               </div>
-
+              <div>
+                <label className="font-semibold block mb-1">Capture Live GPS Photo Audit *</label>
+                <input type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={captureRealGpsPhoto} className="w-full p-2 border rounded-xl bg-slate-50 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700" />
+                {capturingGpsPhoto && <p className="text-[11px] text-indigo-600 mt-1 font-semibold">Capturing Live GPS Coordinates & Photo...</p>}
+                {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 mt-1 font-semibold">✓ GPS Tagged: {newDcr.lat}, {newDcr.lng}</p>}
+              </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Submit DCR Report</button>
+                <button type="submit" className="px-5 py-2 bg-amber-600 text-white rounded-xl font-bold shadow">Submit DCR</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* PRINT STYLES */}
-      <style>{`
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          #printable-agreement, #printable-agreement * {
-            visibility: visible;
-          }
-          #printable-agreement {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            margin: 0;
-            padding: 20px;
-            background: white !important;
-          }
-          .no-print {
-            display: none !important;
-          }
-        }
-      `}</style>
+      {/* MODAL: APPLY LEAVE */}
+      {isLeaveModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">Apply Leave Application</h3>
+              <button onClick={() => setIsLeaveModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleApplyLeave} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">From Date *</label>
+                  <input required type="date" value={newLeave.fromDate} onChange={e => setNewLeave({...newLeave, fromDate: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">To Date *</label>
+                  <input required type="date" value={newLeave.toDate} onChange={e => setNewLeave({...newLeave, toDate: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Reason for Leave *</label>
+                <textarea required rows="3" value={newLeave.reason} onChange={e => setNewLeave({...newLeave, reason: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Enter reason..." />
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsLeaveModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Submit Leave</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
+      {/* MODAL: ADD DAILY TRAVEL */}
+      {isDailyTravelModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h3 className="font-bold text-slate-900 text-sm">Add Daily Travel & Fuel Log</h3>
+              <button onClick={() => setIsDailyTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleAddDailyTravel} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold block mb-1">Date *</label>
+                <input required type="date" value={newDailyTravel.date} onChange={e => setNewDailyTravel({...newDailyTravel, date: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Route Covered *</label>
+                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Andheri to Thane Dealer Visit" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Distance (KM) *</label>
+                  <input required type="number" value={newDailyTravel.km} onChange={e => setNewDailyTravel({...newDailyTravel, km: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" placeholder="45" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Claim Amount (₹) *</label>
+                  <input required type="number" value={newDailyTravel.amount} onChange={e => setNewDailyTravel({...newDailyTravel, amount: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono font-bold text-emerald-700" placeholder="350" />
+                </div>
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setIsDailyTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Travel Log</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
