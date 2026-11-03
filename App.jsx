@@ -16,14 +16,6 @@ const BUSINESS_VERTICALS = [
   'DIGITAL MARKETING'
 ];
 
-const CLIENT_TYPES = [
-  'Distributor',
-  'Dealer',
-  'Retailer',
-  'Fleet Owner',
-  'Corporate / Direct'
-];
-
 const INITIAL_EMPLOYEES = [
   { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', designation: 'Senior Sales Executive', phone: '9820012345', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
   { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', designation: 'Area Sales Manager', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false },
@@ -82,13 +74,11 @@ const INITIAL_AGREEMENTS = [
   }
 ];
 
-// Smart loader to automatically merge code defaults with localStorage data
 const loadSavedData = (key, defaultData) => {
   try {
     const saved = localStorage.getItem(key);
     if (!saved) return defaultData;
     const parsed = JSON.parse(saved);
-    
     if (key === 'usr_employees') {
       const existingIds = new Set(parsed.map(e => e.id));
       const newDefaults = defaultData.filter(e => !existingIds.has(e.id));
@@ -123,39 +113,14 @@ export default function App() {
   const [dcrs, setDcrs] = useState(() => loadSavedData('usr_dcrs', INITIAL_DCR));
   const [agreements, setAgreements] = useState(() => loadSavedData('usr_agreements', INITIAL_AGREEMENTS));
 
-  useEffect(() => {
-    localStorage.setItem('usr_employees', JSON.stringify(employees));
-  }, [employees]);
-
-  useEffect(() => {
-    localStorage.setItem('usr_attendance', JSON.stringify(attendanceList));
-  }, [attendanceList]);
-
-  useEffect(() => {
-    localStorage.setItem('usr_leaves', JSON.stringify(leaveList));
-  }, [leaveList]);
-
-  useEffect(() => {
-    localStorage.setItem('usr_daily_travel', JSON.stringify(dailyTravelList));
-  }, [dailyTravelList]);
-
-  useEffect(() => {
-    localStorage.setItem('usr_travel_claims', JSON.stringify(travelClaims));
-  }, [travelClaims]);
-
-  useEffect(() => {
-    localStorage.setItem('usr_leads', JSON.stringify(leads));
-  }, [leads]);
-
-  useEffect(() => {
-    localStorage.setItem('usr_dcrs', JSON.stringify(dcrs));
-  }, [dcrs]);
-
-  useEffect(() => {
-    localStorage.setItem('usr_agreements', JSON.stringify(agreements));
-  }, [agreements]);
-
-  const [selectedEmpFilter, setSelectedEmpFilter] = useState('All');
+  useEffect(() => { localStorage.setItem('usr_employees', JSON.stringify(employees)); }, [employees]);
+  useEffect(() => { localStorage.setItem('usr_attendance', JSON.stringify(attendanceList)); }, [attendanceList]);
+  useEffect(() => { localStorage.setItem('usr_leaves', JSON.stringify(leaveList)); }, [leaveList]);
+  useEffect(() => { localStorage.setItem('usr_daily_travel', JSON.stringify(dailyTravelList)); }, [dailyTravelList]);
+  useEffect(() => { localStorage.setItem('usr_travel_claims', JSON.stringify(travelClaims)); }, [travelClaims]);
+  useEffect(() => { localStorage.setItem('usr_leads', JSON.stringify(leads)); }, [leads]);
+  useEffect(() => { localStorage.setItem('usr_dcrs', JSON.stringify(dcrs)); }, [dcrs]);
+  useEffect(() => { localStorage.setItem('usr_agreements', JSON.stringify(agreements)); }, [agreements]);
 
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isDcrModalOpen, setIsDcrModalOpen] = useState(false);
@@ -168,13 +133,12 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
+  // Detailed Agreement Form State matching PDF
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
     proprietorName: '',
     proprietorAddress: '',
-    residenceAddress: '',
-    qualification: '',
     phone: '',
     immovableProperties: '',
     sisterConcernName: '',
@@ -184,8 +148,6 @@ export default function App() {
     adminStaffCount: '2',
     salesStaffCount: '4',
     techStaffCount: '1',
-    isRelatedToEmployee: 'No',
-    relationDetails: '',
     gstn: '',
     transportCompany: '',
     railwayStation: '',
@@ -248,25 +210,21 @@ export default function App() {
   const handleEmployeeLogin = (e) => {
     e.preventDefault();
     setLoginError('');
-
     if (captchaInput.trim() !== captchaCode) {
       setLoginError('Invalid CAPTCHA code! Please re-enter.');
       refreshCaptcha();
       return;
     }
-
     const foundEmp = employees.find(emp => emp.id.trim().toUpperCase() === loginIdInput.trim().toUpperCase());
     if (!foundEmp) {
       setLoginError('Employee ID not found!');
       refreshCaptcha();
       return;
     }
-
     if (foundEmp.isBlocked) {
       setLoginError('Account is BLOCKED due to failed password attempts! Contact Admin.');
       return;
     }
-
     if (foundEmp.pass === loginPassInput.trim()) {
       setEmployees(employees.map(emp => emp.id === foundEmp.id ? { ...emp, failedAttempts: 0 } : emp));
       setAuthRole('employee');
@@ -278,13 +236,7 @@ export default function App() {
     } else {
       const updatedAttempts = (foundEmp.failedAttempts || 0) + 1;
       const isNowBlocked = updatedAttempts >= 6;
-
-      setEmployees(employees.map(emp => emp.id === foundEmp.id ? { 
-        ...emp, 
-        failedAttempts: updatedAttempts, 
-        isBlocked: isNowBlocked 
-      } : emp));
-
+      setEmployees(employees.map(emp => emp.id === foundEmp.id ? { ...emp, failedAttempts: updatedAttempts, isBlocked: isNowBlocked } : emp));
       if (isNowBlocked) {
         setLoginError('Account BLOCKED! You exceeded 6 incorrect password attempts.');
       } else {
@@ -297,13 +249,11 @@ export default function App() {
   const handleAdminLogin = (e) => {
     e.preventDefault();
     setLoginError('');
-
     if (captchaInput.trim() !== captchaCode) {
       setLoginError('Invalid CAPTCHA code! Please re-enter.');
       refreshCaptcha();
       return;
     }
-
     if (loginPassInput === '70212@Usrpowermhadmin') {
       setAuthRole('admin');
       setLoginPassInput('');
@@ -321,22 +271,18 @@ export default function App() {
     refreshCaptcha();
   };
 
+  const handleDeleteEmployee = (empId) => {
+    if (window.confirm(`Are you sure you want to delete employee ID: ${empId}?`)) {
+      setEmployees(employees.filter(e => e.id !== empId));
+      alert('Employee deleted successfully.');
+    }
+  };
+
   const handleSaveEmployeeCredentials = (e) => {
     e.preventDefault();
     if (!editingEmpModal) return;
-
-    setEmployees(employees.map(emp => emp.id === editingEmpModal.id ? {
-      ...emp,
-      pass: newPasswordInput,
-      isBlocked: false,
-      failedAttempts: 0
-    } : emp));
-
-    const message = `Hello ${editingEmpModal.name},\n\nYour USR Power Portal password has been reset by Admin.\n\n🆔 Employee ID: ${editingEmpModal.id}\n🔑 New Password: ${newPasswordInput}\n\n- USR Power Industries Maharashtra`;
-    const whatsappUrl = `https://wa.me/91${editingEmpModal.phone}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-
-    alert(`Password updated & account unblocked for ${editingEmpModal.name}! WhatsApp window opened.`);
+    setEmployees(employees.map(emp => emp.id === editingEmpModal.id ? { ...emp, pass: newPasswordInput, isBlocked: false, failedAttempts: 0 } : emp));
+    alert(`Password updated & account unblocked for ${editingEmpModal.name}!`);
     setEditingEmpModal(null);
     setNewPasswordInput('');
   };
@@ -345,29 +291,13 @@ export default function App() {
     e.preventDefault();
     const createdAgreement = {
       id: `AGR-2026-${Math.floor(Math.random() * 900 + 100)}`,
-      distributorName: newAgreement.distributorName,
-      constitution: newAgreement.constitution,
-      proprietorName: newAgreement.proprietorName,
-      phone: newAgreement.phone,
-      address: newAgreement.proprietorAddress,
-      immovableProperties: newAgreement.immovableProperties,
-      gstn: newAgreement.gstn,
-      transportCompany: newAgreement.transportCompany,
-      railwayStation: newAgreement.railwayStation,
-      verticalInterested: newAgreement.verticalInterested,
-      territory: newAgreement.territory,
-      investmentAutomotive: Number(newAgreement.investmentAutomotive) || 0,
-      investmentFourStroke: Number(newAgreement.investmentFourStroke) || 0,
-      investmentPassenger: Number(newAgreement.investmentPassenger) || 0,
-      investmentHeavyDuty: Number(newAgreement.investmentHeavyDuty) || 0,
-      investmentLcvHcv: Number(newAgreement.investmentLcvHcv) || 0,
+      ...newAgreement,
       totalInvestment: calculatedTotalInvestment,
       submittedBy: `${currentEmp.name} [${currentEmp.id}]`,
       submittedEmpId: currentEmp.id,
       date: new Date().toISOString().split('T')[0],
       status: 'Pending Verification'
     };
-
     setAgreements([createdAgreement, ...agreements]);
     setIsAgreementModalOpen(false);
     alert('Official Partnership Agreement Form submitted successfully! Total Investment: ₹' + calculatedTotalInvestment.toLocaleString('en-IN'));
@@ -432,7 +362,6 @@ export default function App() {
       failedAttempts: 0,
       isBlocked: false
     };
-
     setEmployees(prev => [...prev, createdEmp]);
     setIsAddEmpModalOpen(false);
     setNewEmp({ id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE' });
@@ -443,7 +372,6 @@ export default function App() {
     const file = e.target.files[0];
     if (!file) return;
     setCapturingGpsPhoto(true);
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -451,14 +379,7 @@ export default function App() {
           const lng = position.coords.longitude.toFixed(4) + ' E';
           const reader = new FileReader();
           reader.onloadend = () => {
-            setNewDcr(prev => ({
-              ...prev,
-              lat: lat,
-              lng: lng,
-              address: 'Live Location (Lat: ' + lat + ')',
-              photoVerified: true,
-              photoUrl: reader.result
-            }));
+            setNewDcr(prev => ({ ...prev, lat: lat, lng: lng, address: 'Live Location (Lat: ' + lat + ')', photoVerified: true, photoUrl: reader.result }));
             setCapturingGpsPhoto(false);
           };
           reader.readAsDataURL(file);
@@ -466,14 +387,7 @@ export default function App() {
         () => {
           const reader = new FileReader();
           reader.onloadend = () => {
-            setNewDcr(prev => ({
-              ...prev,
-              lat: '19.0760 N',
-              lng: '72.8777 E',
-              address: 'Mumbai HQ Hub',
-              photoVerified: true,
-              photoUrl: reader.result
-            }));
+            setNewDcr(prev => ({ ...prev, lat: '19.0760 N', lng: '72.8777 E', address: 'Mumbai HQ Hub', photoVerified: true, photoUrl: reader.result }));
             setCapturingGpsPhoto(false);
           };
           reader.readAsDataURL(file);
@@ -547,11 +461,9 @@ export default function App() {
       alert('No pending daily travel logs found for this week!');
       return;
     }
-
     const totalKmSum = empDailyLogs.reduce((acc, curr) => acc + curr.km, 0);
     const totalAmtSum = empDailyLogs.reduce((acc, curr) => acc + curr.amount, 0);
     const routesCombined = empDailyLogs.map(l => l.route).join(' | ');
-
     const newClaim = {
       id: `TRV-${Date.now()}`,
       empId: currentEmp.id,
@@ -562,24 +474,14 @@ export default function App() {
       purpose: routesCombined,
       status: 'Pending'
     };
-
     setTravelClaims([newClaim, ...travelClaims]);
     setDailyTravelList(dailyTravelList.map(d => (d.empId === currentEmp.id && d.weekCycle === weekCycleName) ? { ...d, status: 'Submitted Weekly' } : d));
     alert(`Weekly Travelling Claim submitted successfully! Amount: ₹${totalAmtSum}`);
   };
 
-  const visibleLeads = authRole === 'admin'
-    ? leads.filter(l => (selectedEmpFilter === 'All' || l.assignedToId === selectedEmpFilter))
-    : leads.filter(l => l.assignedToId === currentEmp.id || l.vertical === currentEmp.primaryVertical);
-
-  const visibleDcrs = authRole === 'admin'
-    ? dcrs.filter(d => (selectedEmpFilter === 'All' || d.empId === selectedEmpFilter))
-    : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
-
-  const visibleAgreements = authRole === 'admin'
-    ? agreements
-    : agreements.filter(a => a.submittedEmpId === currentEmp.id);
-
+  const visibleLeads = authRole === 'admin' ? leads : leads.filter(l => l.assignedToId === currentEmp.id || l.vertical === currentEmp.primaryVertical);
+  const visibleDcrs = authRole === 'admin' ? dcrs : dcrs.filter(d => d.empId === currentEmp.id || d.vertical === currentEmp.primaryVertical);
+  const visibleAgreements = authRole === 'admin' ? agreements : agreements.filter(a => a.submittedEmpId === currentEmp.id);
   const visibleAttendance = authRole === 'admin' ? attendanceList : attendanceList.filter(a => a.empId === currentEmp.id);
   const visibleLeaves = authRole === 'admin' ? leaveList : leaveList.filter(l => l.empId === currentEmp.id);
   const visibleDailyTravel = authRole === 'admin' ? dailyTravelList : dailyTravelList.filter(d => d.empId === currentEmp.id);
@@ -589,7 +491,6 @@ export default function App() {
   const totalSalesAchieved = authRole === 'admin' ? employees.reduce((acc, curr) => acc + curr.achieved, 0) : currentEmp.achieved;
   const totalLeadsValue = visibleLeads.reduce((acc, curr) => acc + (curr.investmentAmount || curr.estimatedValue), 0);
 
-  // LOGIN SCREEN
   if (!authRole) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
@@ -603,21 +504,11 @@ export default function App() {
           </div>
 
           <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2">
-            <button 
-              onClick={() => { setLoginType('employee'); setLoginError(''); refreshCaptcha(); }}
-              className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${
-                loginType === 'employee' ? 'bg-indigo-600 text-white shadow' : 'text-slate-600 hover:bg-slate-200'
-              }`}
-            >
+            <button onClick={() => { setLoginType('employee'); setLoginError(''); refreshCaptcha(); }} className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${loginType === 'employee' ? 'bg-indigo-600 text-white shadow' : 'text-slate-600 hover:bg-slate-200'}`}>
               <User className="w-4 h-4" />
               <span>Employee Portal</span>
             </button>
-            <button 
-              onClick={() => { setLoginType('admin'); setLoginError(''); refreshCaptcha(); }}
-              className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${
-                loginType === 'admin' ? 'bg-amber-600 text-white shadow' : 'text-slate-600 hover:bg-slate-200'
-              }`}
-            >
+            <button onClick={() => { setLoginType('admin'); setLoginError(''); refreshCaptcha(); }} className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${loginType === 'admin' ? 'bg-amber-600 text-white shadow' : 'text-slate-600 hover:bg-slate-200'}`}>
               <ShieldCheck className="w-4 h-4" />
               <span>Admin Master Login</span>
             </button>
@@ -634,22 +525,15 @@ export default function App() {
                   <label className="font-semibold text-slate-700 block mb-1">Password</label>
                   <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter password..." className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none" />
                 </div>
-
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Security CAPTCHA Verification</label>
                   <div className="flex items-center space-x-3">
-                    <div className="bg-slate-900 text-amber-400 font-mono font-extrabold tracking-widest px-4 py-3 rounded-xl select-none text-base shadow-inner border border-slate-700 flex-1 text-center">
-                      {captchaCode}
-                    </div>
-                    <button type="button" onClick={refreshCaptcha} className="p-3 bg-slate-100 hover:bg-slate-200 border rounded-xl text-slate-600 transition">
-                      <RefreshCw className="w-4 h-4" />
-                    </button>
+                    <div className="bg-slate-900 text-amber-400 font-mono font-extrabold tracking-widest px-4 py-3 rounded-xl select-none text-base shadow-inner border border-slate-700 flex-1 text-center">{captchaCode}</div>
+                    <button type="button" onClick={refreshCaptcha} className="p-3 bg-slate-100 hover:bg-slate-200 border rounded-xl text-slate-600 transition"><RefreshCw className="w-4 h-4" /></button>
                   </div>
                   <input required type="text" value={captchaInput} onChange={e => setCaptchaInput(e.target.value)} placeholder="Enter CAPTCHA code above..." className="w-full mt-2 p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono outline-none" />
                 </div>
-
                 {loginError && <p className="text-red-600 font-semibold text-[11px] bg-red-50 p-2.5 rounded-lg border border-red-200">{loginError}</p>}
-                
                 <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition shadow-md flex items-center justify-center space-x-2">
                   <span>Login to Employee Portal</span>
                   <ArrowRight className="w-4 h-4" />
@@ -661,22 +545,15 @@ export default function App() {
                   <label className="font-semibold text-slate-700 block mb-1">Admin Security Password / PIN</label>
                   <input required type="password" value={loginPassInput} onChange={e => setLoginPassInput(e.target.value)} placeholder="Enter admin password..." className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl outline-none" autoFocus />
                 </div>
-
                 <div>
                   <label className="font-semibold text-slate-700 block mb-1">Security CAPTCHA Verification</label>
                   <div className="flex items-center space-x-3">
-                    <div className="bg-slate-900 text-amber-400 font-mono font-extrabold tracking-widest px-4 py-3 rounded-xl select-none text-base shadow-inner border border-slate-700 flex-1 text-center">
-                      {captchaCode}
-                    </div>
-                    <button type="button" onClick={refreshCaptcha} className="p-3 bg-slate-100 hover:bg-slate-200 border rounded-xl text-slate-600 transition">
-                      <RefreshCw className="w-4 h-4" />
-                    </button>
+                    <div className="bg-slate-900 text-amber-400 font-mono font-extrabold tracking-widest px-4 py-3 rounded-xl select-none text-base shadow-inner border border-slate-700 flex-1 text-center">{captchaCode}</div>
+                    <button type="button" onClick={refreshCaptcha} className="p-3 bg-slate-100 hover:bg-slate-200 border rounded-xl text-slate-600 transition"><RefreshCw className="w-4 h-4" /></button>
                   </div>
                   <input required type="text" value={captchaInput} onChange={e => setCaptchaInput(e.target.value)} placeholder="Enter CAPTCHA code above..." className="w-full mt-2 p-3 bg-slate-50 border border-slate-300 rounded-xl font-mono outline-none" />
                 </div>
-
                 {loginError && <p className="text-red-600 font-semibold text-[11px] bg-red-50 p-2.5 rounded-lg border border-red-200">{loginError}</p>}
-
                 <button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl font-bold transition shadow-md flex items-center justify-center space-x-2">
                   <span>Unlock Admin Control Center</span>
                   <ShieldCheck className="w-4 h-4" />
@@ -689,36 +566,22 @@ export default function App() {
     );
   }
 
-  // MAIN APP
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col md:flex-row">
-      
-      {/* SIDEBAR */}
       <aside className="w-full md:w-72 bg-slate-900 text-slate-100 flex-shrink-0 flex flex-col justify-between shadow-xl no-print">
         <div>
           <div className="p-5 border-b border-slate-800">
             <div className="flex items-center space-x-3 mb-2">
-              <div className="p-2 bg-gradient-to-tr from-indigo-600 to-blue-500 rounded-xl text-white shadow-lg">
-                <Briefcase className="w-6 h-6" />
-              </div>
+              <div className="p-2 bg-gradient-to-tr from-indigo-600 to-blue-500 rounded-xl text-white shadow-lg"><Briefcase className="w-6 h-6" /></div>
               <div>
-                <h1 className="font-extrabold text-sm tracking-wide text-white leading-tight">
-                  USR POWER INDUSTRIES
-                </h1>
+                <h1 className="font-extrabold text-sm tracking-wide text-white leading-tight">USR POWER INDUSTRIES</h1>
                 <p className="text-[10px] text-indigo-400 font-semibold uppercase tracking-wider">OFFICIAL SALES PORTAL • MAHARASHTRA</p>
               </div>
             </div>
-            
             <div className="mt-2 bg-slate-800/80 px-2.5 py-1.5 rounded-lg text-[11px] text-slate-300 flex items-center justify-between border border-slate-700/50">
               <div className="overflow-hidden">
-                <span className="text-slate-400 block truncate">
-                  {authRole === 'admin' ? '👑 Admin Master Mode' : `👤 ${currentEmp.name}`}
-                </span>
-                {authRole !== 'admin' && (
-                  <span className="text-[10px] text-indigo-300 block font-semibold">
-                    {currentEmp.designation} • Joined: {currentEmp.joiningDate}
-                  </span>
-                )}
+                <span className="text-slate-400 block truncate">{authRole === 'admin' ? '👑 Admin Master Mode' : `👤 ${currentEmp.name}`}</span>
+                {authRole !== 'admin' && (<span className="text-[10px] text-indigo-300 block font-semibold">{currentEmp.designation} • Joined: {currentEmp.joiningDate}</span>)}
               </div>
               <span className={`w-2 h-2 rounded-full flex-shrink-0 ${authRole === 'admin' ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
             </div>
@@ -738,33 +601,15 @@ export default function App() {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
-                    isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/40' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <Icon className="w-5 h-5" />
-                    <span className="text-xs">{item.label}</span>
-                  </div>
-                  {item.badge !== undefined && (
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${isActive ? 'bg-white text-indigo-800' : 'bg-slate-800 text-slate-300'}`}>
-                      {item.badge}
-                    </span>
-                  )}
+                <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/40' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
+                  <div className="flex items-center space-x-3"><Icon className="w-5 h-5" /><span className="text-xs">{item.label}</span></div>
+                  {item.badge !== undefined && (<span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${isActive ? 'bg-white text-indigo-800' : 'bg-slate-800 text-slate-300'}`}>{item.badge}</span>)}
                 </button>
               );
             })}
 
             {authRole === 'admin' && (
-              <button
-                onClick={() => setActiveTab('admin-manage')}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-xs mt-3 transition-all ${
-                  activeTab === 'admin-manage' ? 'bg-amber-600 text-white' : 'bg-amber-950/40 text-amber-300 border border-amber-800/50 hover:bg-amber-900/50'
-                }`}
-              >
+              <button onClick={() => setActiveTab('admin-manage')} className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-xs mt-3 transition-all ${activeTab === 'admin-manage' ? 'bg-amber-600 text-white' : 'bg-amber-950/40 text-amber-300 border border-amber-800/50 hover:bg-amber-900/50'}`}>
                 <ShieldCheck className="w-5 h-5" />
                 <span>Admin Control Center</span>
               </button>
@@ -780,21 +625,15 @@ export default function App() {
         </div>
       </aside>
 
-      {/* MAIN CONTENT AREA */}
       <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 no-print">
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="text-xl font-bold text-slate-900 capitalize">
-                {activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}
-              </h2>
-              <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">
-                {authRole === 'admin' ? 'ADMIN VIEW' : `${currentEmp.name} (${currentEmp.designation})`}
-              </span>
+              <h2 className="text-xl font-bold text-slate-900 capitalize">{activeTab === 'admin-manage' ? 'Admin Master Control Panel' : activeTab.replace('-', ' ')}</h2>
+              <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-100">{authRole === 'admin' ? 'ADMIN VIEW' : `${currentEmp.name} (${currentEmp.designation})`}</span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">USR POWER INDUSTRIES PRIVATE LIMITED • MAHARASHTRA OPERATIONS</p>
           </div>
-
           <div className="flex flex-wrap items-center gap-2">
             <button onClick={() => setIsAgreementModalOpen(true)} className="flex items-center space-x-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow transition">
               <FileText className="w-3.5 h-3.5" />
@@ -803,7 +642,6 @@ export default function App() {
           </div>
         </header>
 
-        {/* DASHBOARD VIEW */}
         {activeTab === 'dashboard' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -811,13 +649,10 @@ export default function App() {
                 <div>
                   <p className="text-xs font-medium text-slate-500">Sales Achievement</p>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">₹{(totalSalesAchieved).toLocaleString('en-IN')}</h3>
-                  <span className="text-[11px] text-emerald-600 font-medium flex items-center mt-1">
-                    <TrendingUp className="w-3 h-3 mr-1" /> {Math.round((totalSalesAchieved/totalSalesTarget)*100)}% of Target (₹{(totalSalesTarget).toLocaleString('en-IN')})
-                  </span>
+                  <span className="text-[11px] text-emerald-600 font-medium flex items-center mt-1"><TrendingUp className="w-3 h-3 mr-1" /> {Math.round((totalSalesAchieved/totalSalesTarget)*100)}% of Target (₹{(totalSalesTarget).toLocaleString('en-IN')})</span>
                 </div>
                 <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl"><DollarSign className="w-6 h-6" /></div>
               </div>
-
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-slate-500">Active Leads Pipeline</p>
@@ -826,7 +661,6 @@ export default function App() {
                 </div>
                 <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><Users className="w-6 h-6" /></div>
               </div>
-
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-slate-500">Field DCR Reports</p>
@@ -835,7 +669,6 @@ export default function App() {
                 </div>
                 <div className="p-3 bg-amber-50 text-amber-600 rounded-xl"><MapPin className="w-6 h-6" /></div>
               </div>
-
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-slate-500">Partnership Agreements</p>
@@ -859,24 +692,7 @@ export default function App() {
                       <CheckSquare className="w-4 h-4" />
                       <span>Mark Today's Attendance</span>
                     </button>
-                    <button onClick={() => setIsLeaveModalOpen(true)} className="bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-700/50 px-4 py-2.5 rounded-xl text-xs font-bold shadow">
-                      + Apply Leave
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                  <div className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
-                    <p className="text-[11px] text-slate-400">Primary Vertical</p>
-                    <p className="text-xs font-bold text-white mt-1">{currentEmp.primaryVertical}</p>
-                  </div>
-                  <div className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
-                    <p className="text-[11px] text-slate-400">Leave Balance</p>
-                    <p className="text-xs font-bold text-emerald-400 mt-1">{currentEmp.totalLeaves - currentEmp.usedLeaves} Leaves Remaining (Used: {currentEmp.usedLeaves})</p>
-                  </div>
-                  <div className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
-                    <p className="text-[11px] text-slate-400">Monthly Sales Target</p>
-                    <p className="text-xs font-bold text-indigo-400 mt-1">₹{(currentEmp.target).toLocaleString('en-IN')} (Achieved: ₹{(currentEmp.achieved).toLocaleString('en-IN')})</p>
+                    <button onClick={() => setIsLeaveModalOpen(true)} className="bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-700/50 px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Apply Leave</button>
                   </div>
                 </div>
               </div>
@@ -884,7 +700,6 @@ export default function App() {
           </div>
         )}
 
-        {/* AGREEMENTS VIEW */}
         {activeTab === 'agreements' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
@@ -894,7 +709,6 @@ export default function App() {
               </div>
               <button onClick={() => setIsAgreementModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Fill New Agreement</button>
             </div>
-
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
@@ -918,13 +732,8 @@ export default function App() {
                       <td className="p-3 font-bold text-emerald-700">₹{(agr.totalInvestment).toLocaleString('en-IN')}</td>
                       <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">{agr.status}</span></td>
                       <td className="p-3 flex items-center space-x-2">
-                        <button onClick={() => setViewAgreementDetail(agr)} className="bg-slate-800 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1">
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>View PDF</span>
-                        </button>
-                        {authRole === 'admin' && agr.status !== 'Approved & Signed' && (
-                          <button onClick={() => handleApproveAgreement(agr.id)} className="bg-emerald-600 text-white px-3 py-1.5 rounded font-semibold">Approve</button>
-                        )}
+                        <button onClick={() => setViewAgreementDetail(agr)} className="bg-slate-800 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Eye className="w-3.5 h-3.5" /><span>View PDF</span></button>
+                        {authRole === 'admin' && agr.status !== 'Approved & Signed' && (<button onClick={() => handleApproveAgreement(agr.id)} className="bg-emerald-600 text-white px-3 py-1.5 rounded font-semibold">Approve</button>)}
                       </td>
                     </tr>
                   ))}
@@ -934,19 +743,16 @@ export default function App() {
           </div>
         )}
 
-        {/* ADMIN CONTROL CENTER */}
         {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
-              <p className="text-xs text-amber-800">Manage employee accounts, reset blocked passwords, verify field team attendance, and approve travelling claims or agreements.</p>
+              <p className="text-xs text-amber-800">Manage employee accounts, delete obsolete accounts, reset passwords, and approve agreements.</p>
             </div>
-
             <div className="bg-white p-5 rounded-2xl border shadow-sm flex items-center justify-between">
               <h3 className="font-bold text-xs text-slate-800">Employee Master Accounts & Security Status</h3>
               <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow">+ Create Employee ID & Designation</button>
             </div>
-
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
@@ -955,9 +761,8 @@ export default function App() {
                     <th className="p-3">Name & Designation</th>
                     <th className="p-3">Password</th>
                     <th className="p-3">Joining Date</th>
-                    <th className="p-3">Primary Vertical</th>
                     <th className="p-3">Status</th>
-                    <th className="p-3">Action</th>
+                    <th className="p-3">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
@@ -967,19 +772,10 @@ export default function App() {
                       <td className="p-3 font-bold">{emp.name} <span className="text-[10px] text-slate-500 block font-normal">{emp.designation}</span></td>
                       <td className="p-3 font-mono font-bold text-slate-700">{emp.pass}</td>
                       <td className="p-3 font-mono">{emp.joiningDate}</td>
-                      <td className="p-3 font-semibold text-slate-700">{emp.primaryVertical}</td>
-                      <td className="p-3">
-                        {emp.isBlocked ? (
-                          <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-[10px]">BLOCKED</span>
-                        ) : (
-                          <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active</span>
-                        )}
-                      </td>
-                      <td className="p-3">
-                        <button onClick={() => setEditingEmpModal(emp)} className="bg-amber-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1">
-                          <Key className="w-3 h-3" />
-                          <span>Reset Password</span>
-                        </button>
+                      <td className="p-3">{emp.isBlocked ? (<span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-[10px]">BLOCKED</span>) : (<span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active</span>)}</td>
+                      <td className="p-3 flex items-center space-x-2">
+                        <button onClick={() => setEditingEmpModal(emp)} className="bg-amber-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Key className="w-3 h-3" /><span>Reset</span></button>
+                        <button onClick={() => handleDeleteEmployee(emp.id)} className="bg-red-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Trash2 className="w-3 h-3" /><span>Delete</span></button>
                       </td>
                     </tr>
                   ))}
@@ -989,7 +785,6 @@ export default function App() {
           </div>
         )}
 
-        {/* LEAVES TAB */}
         {activeTab === 'leaves' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
@@ -1024,7 +819,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ATTENDANCE TAB */}
         {activeTab === 'attendance' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
@@ -1061,7 +855,6 @@ export default function App() {
           </div>
         )}
 
-        {/* LEADS TAB */}
         {activeTab === 'leads' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
@@ -1098,7 +891,6 @@ export default function App() {
           </div>
         )}
 
-        {/* DCR TAB */}
         {activeTab === 'dcr' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
@@ -1126,11 +918,7 @@ export default function App() {
                       <td className="p-3 font-bold">{dcr.clientName} <span className="text-[10px] text-slate-500 block font-normal">{dcr.place}</span></td>
                       <td className="p-3"><span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-bold">{dcr.outcome}</span></td>
                       <td className="p-3 font-mono text-[11px]">{dcr.lat}, {dcr.lng}</td>
-                      <td className="p-3">
-                        {dcr.photoUrl ? (
-                          <a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline">View Photo</a>
-                        ) : 'No Photo'}
-                      </td>
+                      <td className="p-3">{dcr.photoUrl ? (<a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline">View Photo</a>) : 'No Photo'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1139,7 +927,6 @@ export default function App() {
           </div>
         )}
 
-        {/* GPS TAB */}
         {activeTab === 'gps' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
@@ -1150,7 +937,6 @@ export default function App() {
           </div>
         )}
 
-        {/* TRAVEL TAB */}
         {activeTab === 'travel' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
@@ -1160,7 +946,6 @@ export default function App() {
               </div>
               <button onClick={() => setIsDailyTravelModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Add Daily Travel Log</button>
             </div>
-
             <div className="bg-white rounded-2xl border overflow-hidden">
               <div className="p-4 border-b font-bold text-xs">Pending Daily Logs Ready for Weekly Claim</div>
               <table className="w-full text-left text-xs border-collapse">
@@ -1193,88 +978,100 @@ export default function App() {
         )}
       </main>
 
-      {/* MODAL: ADD AGREEMENT FORM */}
+      {/* MODAL: COMPLETE AGREEMENT FORM MATCHING PDF */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-3xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Official Partnership Agreement Form</h3>
+              <h3 className="font-bold text-slate-900 text-sm">Official Distributor/Dealer Partnership Agreement Form</h3>
               <button onClick={() => setIsAgreementModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
-            <form onSubmit={handleAgreementSubmit} className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleAgreementSubmit} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold block mb-1">Distributor / Firm Name *</label>
+                  <label className="font-semibold block mb-1">1. Distributor / Firm Name *</label>
                   <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Sahyadri Auto Spares" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Constitution Type *</label>
+                  <label className="font-semibold block mb-1">4. Constitution Type *</label>
                   <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
                     <option value="Proprietorship">Proprietorship</option>
                     <option value="Partnership">Partnership</option>
-                    <option value="Private Limited">Private Limited</option>
+                    <option value="Private Limited Co">Private Limited Co</option>
+                    <option value="Public Limited Co">Public Limited Co</option>
                   </select>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="font-semibold block mb-1">Proprietor Name *</label>
+                  <label className="font-semibold block mb-1">Proprietor / Director Name *</label>
                   <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} className="w-full p-2.5 border rounded-xl" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Phone Number *</label>
+                  <label className="font-semibold block mb-1">Phone / Mobile No *</label>
                   <input required type="text" value={newAgreement.phone} onChange={e => setNewAgreement({...newAgreement, phone: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="9820012345" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">GSTN Number *</label>
+                  <label className="font-semibold block mb-1">21. GSTN Number *</label>
                   <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono uppercase" placeholder="27AAAAA..." />
                 </div>
               </div>
 
               <div>
-                <label className="font-semibold block mb-1">Business Complete Address *</label>
+                <label className="font-semibold block mb-1">2. Permanent Complete Business Address *</label>
                 <input required type="text" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} className="w-full p-2.5 border rounded-xl" />
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="font-semibold block mb-1">3. Details of Immovable Properties (Owned)</label>
+                  <input type="text" value={newAgreement.immovableProperties} onChange={e => setNewAgreement({...newAgreement, immovableProperties: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Commercial Shop / Godown" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">6. Sister Concern / Allied Concern Details</label>
+                  <input type="text" value={newAgreement.sisterConcernName} onChange={e => setNewAgreement({...newAgreement, sisterConcernName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Name & Annual Turnover (Lakhs)" />
+                </div>
+              </div>
+
               <div className="bg-slate-50 p-4 rounded-xl border space-y-2">
-                <p className="font-bold text-slate-800">Initial Investment Breakdown (Product Verticals)</p>
+                <p className="font-bold text-slate-800">27. Initial Investment Breakdown for Stock (₹)</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   <div>
-                    <label className="text-[11px] block mb-1">Automotive Engine Oil (₹)</label>
+                    <label className="text-[11px] block mb-1">Automotive Engine Oil</label>
                     <input type="number" value={newAgreement.investmentAutomotive} onChange={e => setNewAgreement({...newAgreement, investmentAutomotive: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
                   </div>
                   <div>
-                    <label className="text-[11px] block mb-1">4-Stroke Engine Oil (₹)</label>
+                    <label className="text-[11px] block mb-1">4-Stroke Engine Oils</label>
                     <input type="number" value={newAgreement.investmentFourStroke} onChange={e => setNewAgreement({...newAgreement, investmentFourStroke: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
                   </div>
                   <div>
-                    <label className="text-[11px] block mb-1">Passenger Car Oil (₹)</label>
+                    <label className="text-[11px] block mb-1">Passenger Car Oils</label>
                     <input type="number" value={newAgreement.investmentPassenger} onChange={e => setNewAgreement({...newAgreement, investmentPassenger: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
                   </div>
                   <div>
-                    <label className="text-[11px] block mb-1">Heavy Duty Diesel (₹)</label>
+                    <label className="text-[11px] block mb-1">Heavy Duty Oils</label>
                     <input type="number" value={newAgreement.investmentHeavyDuty} onChange={e => setNewAgreement({...newAgreement, investmentHeavyDuty: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
                   </div>
                   <div>
-                    <label className="text-[11px] block mb-1">LCV / HCV Oils (₹)</label>
+                    <label className="text-[11px] block mb-1">LCV - HCV Oils</label>
                     <input type="number" value={newAgreement.investmentLcvHcv} onChange={e => setNewAgreement({...newAgreement, investmentLcvHcv: e.target.value})} className="w-full p-2 border rounded-lg bg-white" />
                   </div>
                 </div>
                 <div className="pt-2 border-t flex justify-between items-center text-xs font-bold text-indigo-900">
-                  <span>Calculated Total Investment Deposit:</span>
+                  <span>Calculated Total Minimum Investment:</span>
                   <span className="text-sm font-extrabold text-emerald-700">₹{calculatedTotalInvestment.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold block mb-1">Allotted Territory *</label>
-                  <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Navi Mumbai & Thane" />
+                  <label className="font-semibold block mb-1">26. Allotted Territory (State / Region / Districts) *</label>
+                  <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Navi Mumbai & Thane Region" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Preferred Transport Company</label>
-                  <input type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. VRL Logistics" />
+                  <label className="font-semibold block mb-1">22. Transport Company Name</label>
+                  <input type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. VRL Logistics Ltd" />
                 </div>
               </div>
 
@@ -1300,7 +1097,6 @@ export default function App() {
                 <label className="font-semibold block mb-1">Employee Name *</label>
                 <input required type="text" value={newEmp.name} onChange={e => setNewEmp({...newEmp, name: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Rahul Verma" />
               </div>
-
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold block mb-1">Designation *</label>
@@ -1311,7 +1107,6 @@ export default function App() {
                   <input required type="date" value={newEmp.joiningDate} onChange={e => setNewEmp({...newEmp, joiningDate: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
                 </div>
               </div>
-
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold block mb-1">Employee ID *</label>
@@ -1322,12 +1117,10 @@ export default function App() {
                   <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" placeholder="1055" />
                 </div>
               </div>
-
               <div>
                 <label className="font-semibold block mb-1">Assigned Territory *</label>
                 <input required type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Pune & PCMC" />
               </div>
-
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
                 <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Employee ID</button>
@@ -1350,10 +1143,9 @@ export default function App() {
                 <label className="font-semibold block mb-1">New Password *</label>
                 <input required type="text" value={newPasswordInput} onChange={e => setNewPasswordInput(e.target.value)} className="w-full p-2.5 border rounded-xl font-mono" placeholder="Enter new password..." autoFocus />
               </div>
-              <p className="text-[11px] text-slate-500">Submitting will unblock the account and instantly open WhatsApp to share login credentials with {editingEmpModal.name}.</p>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setEditingEmpModal(null)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Update & Open WhatsApp</button>
+                <button type="submit" className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow">Update Password</button>
               </div>
             </form>
           </div>
@@ -1367,28 +1159,23 @@ export default function App() {
             <div className="flex justify-between items-center border-b pb-4 no-print">
               <h3 className="font-bold text-slate-900 text-base">Official Partnership Agreement ({viewAgreementDetail.id})</h3>
               <div className="flex items-center space-x-2">
-                <button onClick={() => window.print()} className="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1">
-                  <Printer className="w-3.5 h-3.5" />
-                  <span>Print PDF</span>
-                </button>
+                <button onClick={() => window.print()} className="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1"><Printer className="w-3.5 h-3.5" /><span>Print PDF</span></button>
                 <button onClick={() => setViewAgreementDetail(null)} className="p-1 rounded-full hover:bg-slate-100"><X className="w-5 h-5 text-slate-500" /></button>
               </div>
             </div>
-
             <div className="space-y-6 text-xs text-slate-800 leading-relaxed font-sans">
               <div className="text-center space-y-1 border-b pb-4">
                 <h1 className="font-extrabold text-base tracking-wide text-slate-900">USR POWER INDUSTRIES PRIVATE LIMITED</h1>
                 <p className="text-[10px] uppercase font-semibold text-indigo-700">Authorised Distributor & C&FA Partnership Agreement</p>
                 <p className="text-[10px] text-slate-500 font-mono">Agreement Ref: {viewAgreementDetail.id} | Date: {viewAgreementDetail.date}</p>
               </div>
-
               <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border">
                 <div>
                   <strong className="text-slate-900 block mb-1">Distributor / Firm Details:</strong>
                   <p className="font-bold text-base text-indigo-900">{viewAgreementDetail.distributorName}</p>
                   <p>Constitution: {viewAgreementDetail.constitution}</p>
                   <p>Proprietor: {viewAgreementDetail.proprietorName} (+91 {viewAgreementDetail.phone})</p>
-                  <p>Address: {viewAgreementDetail.address}</p>
+                  <p>Address: {viewAgreementDetail.proprietorAddress}</p>
                 </div>
                 <div>
                   <strong className="text-slate-900 block mb-1">Business Credentials:</strong>
@@ -1396,27 +1183,6 @@ export default function App() {
                   <p>Allotted Territory: {viewAgreementDetail.territory}</p>
                   <p>Transport Partner: {viewAgreementDetail.transportCompany}</p>
                   <p className="font-bold text-emerald-700 mt-1">Total Investment Deposit: ₹{(viewAgreementDetail.totalInvestment).toLocaleString('en-IN')}</p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <strong className="text-slate-900 block">Terms & Conditions Summary:</strong>
-                <p className="text-[11px] text-slate-600">
-                  1. The Distributor shall maintain dedicated stock and active distribution across the allotted territory ({viewAgreementDetail.territory}).<br />
-                  2. All supplies and billing shall be processed directly through USR Power Industries Maharashtra logistics hub.<br />
-                  3. This agreement is valid upon successful verification of initial investment deposit and compliance with company sales targets.
-                </p>
-              </div>
-
-              <div className="pt-6 border-t flex justify-between items-end text-xs">
-                <div>
-                  <p className="font-bold text-slate-700">Submitted By:</p>
-                  <p className="font-mono text-indigo-600">{viewAgreementDetail.submittedBy}</p>
-                </div>
-                <div className="text-right">
-                  <div className="w-32 h-12 border-b border-dashed border-slate-400 mb-1"></div>
-                  <p className="font-bold text-slate-800">Authorised Signatory</p>
-                  <p className="text-[10px] text-slate-500">USR Power Industries Maharashtra</p>
                 </div>
               </div>
             </div>
