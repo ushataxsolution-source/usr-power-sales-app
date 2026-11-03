@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Users, MapPin, PhoneCall, TrendingUp, Camera, Calendar, Plus, 
   Search, Filter, CheckCircle, Clock, Award, 
@@ -82,6 +82,16 @@ const INITIAL_AGREEMENTS = [
   }
 ];
 
+// Helper function to safely read from localStorage
+const loadSavedData = (key, defaultData) => {
+  try {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : defaultData;
+  } catch (e) {
+    return defaultData;
+  }
+};
+
 export default function App() {
   const [authRole, setAuthRole] = useState(null); 
   const [loggedEmpId, setLoggedEmpId] = useState('');
@@ -95,14 +105,49 @@ export default function App() {
   const [loginError, setLoginError] = useState('');
 
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
-  const [attendanceList, setAttendanceList] = useState(INITIAL_ATTENDANCE);
-  const [leaveList, setLeaveList] = useState(INITIAL_LEAVES);
-  const [dailyTravelList, setDailyTravelList] = useState(INITIAL_DAILY_TRAVEL);
-  const [travelClaims, setTravelClaims] = useState(INITIAL_TRAVEL_CLAIMS);
-  const [leads, setLeads] = useState(INITIAL_LEADS);
-  const [dcrs, setDcrs] = useState(INITIAL_DCR);
-  const [agreements, setAgreements] = useState(INITIAL_AGREEMENTS);
+
+  // Load state from localStorage so page refreshes retain new records
+  const [employees, setEmployees] = useState(() => loadSavedData('usr_employees', INITIAL_EMPLOYEES));
+  const [attendanceList, setAttendanceList] = useState(() => loadSavedData('usr_attendance', INITIAL_ATTENDANCE));
+  const [leaveList, setLeaveList] = useState(() => loadSavedData('usr_leaves', INITIAL_LEAVES));
+  const [dailyTravelList, setDailyTravelList] = useState(() => loadSavedData('usr_daily_travel', INITIAL_DAILY_TRAVEL));
+  const [travelClaims, setTravelClaims] = useState(() => loadSavedData('usr_travel_claims', INITIAL_TRAVEL_CLAIMS));
+  const [leads, setLeads] = useState(() => loadSavedData('usr_leads', INITIAL_LEADS));
+  const [dcrs, setDcrs] = useState(() => loadSavedData('usr_dcrs', INITIAL_DCR));
+  const [agreements, setAgreements] = useState(() => loadSavedData('usr_agreements', INITIAL_AGREEMENTS));
+
+  // Auto-save changes to localStorage whenever state updates
+  useEffect(() => {
+    localStorage.setItem('usr_employees', JSON.stringify(employees));
+  }, [employees]);
+
+  useEffect(() => {
+    localStorage.setItem('usr_attendance', JSON.stringify(attendanceList));
+  }, [attendanceList]);
+
+  useEffect(() => {
+    localStorage.setItem('usr_leaves', JSON.stringify(leaveList));
+  }, [leaveList]);
+
+  useEffect(() => {
+    localStorage.setItem('usr_daily_travel', JSON.stringify(dailyTravelList));
+  }, [dailyTravelList]);
+
+  useEffect(() => {
+    localStorage.setItem('usr_travel_claims', JSON.stringify(travelClaims));
+  }, [travelClaims]);
+
+  useEffect(() => {
+    localStorage.setItem('usr_leads', JSON.stringify(leads));
+  }, [leads]);
+
+  useEffect(() => {
+    localStorage.setItem('usr_dcrs', JSON.stringify(dcrs));
+  }, [dcrs]);
+
+  useEffect(() => {
+    localStorage.setItem('usr_agreements', JSON.stringify(agreements));
+  }, [agreements]);
 
   const [selectedEmpFilter, setSelectedEmpFilter] = useState('All');
 
@@ -204,7 +249,7 @@ export default function App() {
       return;
     }
 
-    const foundEmp = employees.find(emp => emp.id === loginIdInput.trim());
+    const foundEmp = employees.find(emp => emp.id.trim().toUpperCase() === loginIdInput.trim().toUpperCase());
     if (!foundEmp) {
       setLoginError('Employee ID not found!');
       refreshCaptcha();
@@ -364,10 +409,11 @@ export default function App() {
 
   const handleAddEmployee = (e) => {
     e.preventDefault();
+    const empIdFormatted = (newEmp.id || `USR-EMP-${Math.floor(Math.random() * 900 + 100)}`).trim().toUpperCase();
     const createdEmp = {
-      id: newEmp.id || `USR-EMP-${Math.floor(Math.random() * 900 + 100)}`,
-      pass: newEmp.pass || '1234',
-      name: newEmp.name,
+      id: empIdFormatted,
+      pass: newEmp.pass.trim() || '1234',
+      name: newEmp.name.trim(),
       designation: newEmp.designation || 'Sales Executive',
       phone: newEmp.phone || '9820012345',
       joiningDate: newEmp.joiningDate,
@@ -380,9 +426,11 @@ export default function App() {
       failedAttempts: 0,
       isBlocked: false
     };
-    setEmployees([...employees, createdEmp]);
+
+    setEmployees(prev => [...prev, createdEmp]);
     setIsAddEmpModalOpen(false);
-    alert(`Employee (${createdEmp.name} - ${createdEmp.designation}) Created Successfully with Joining Date: ${createdEmp.joiningDate}!`);
+    setNewEmp({ id: '', pass: '', name: '', designation: 'Sales Executive', phone: '', joiningDate: new Date().toISOString().split('T')[0], totalLeaves: 18, territory: 'Mumbai Suburban Division', target: '500000', primaryVertical: 'USR POWER LUBE' });
+    alert(`Employee (${createdEmp.name} - ID: ${createdEmp.id}) Created Successfully! Data is permanently saved.`);
   };
 
   const captureRealGpsPhoto = (e) => {
@@ -517,20 +565,6 @@ export default function App() {
   const handleApproveTravelClaim = (claimId) => {
     setTravelClaims(travelClaims.map(t => t.id === claimId ? { ...t, status: 'Approved' } : t));
     alert('Weekly Travelling Claim Approved Successfully!');
-  };
-
-  const exportToCSV = (data, filename) => {
-    if (!data || !data.length) return;
-    const headers = Object.keys(data[0]).join(',');
-    const rows = data.map(obj => Object.values(obj).map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
-    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${filename}_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   const visibleLeads = authRole === 'admin'
@@ -918,6 +952,7 @@ export default function App() {
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                     <th className="p-3">Employee ID</th>
                     <th className="p-3">Name & Designation</th>
+                    <th className="p-3">Password</th>
                     <th className="p-3">Joining Date</th>
                     <th className="p-3">Primary Vertical</th>
                     <th className="p-3">Status</th>
@@ -929,6 +964,7 @@ export default function App() {
                     <tr key={emp.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-indigo-600">{emp.id}</td>
                       <td className="p-3 font-bold">{emp.name} <span className="text-[10px] text-slate-500 block font-normal">{emp.designation}</span></td>
+                      <td className="p-3 font-mono font-bold text-slate-700">{emp.pass}</td>
                       <td className="p-3 font-mono">{emp.joiningDate}</td>
                       <td className="p-3 font-semibold text-slate-700">{emp.primaryVertical}</td>
                       <td className="p-3">
@@ -1278,7 +1314,7 @@ export default function App() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold block mb-1">Employee ID *</label>
-                  <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" placeholder="USR-EMP-105" />
+                  <input required type="text" value={newEmp.id} onChange={e => setNewEmp({...newEmp, id: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono uppercase" placeholder="USR-EMP-105" />
                 </div>
                 <div>
                   <label className="font-semibold block mb-1">Password *</label>
