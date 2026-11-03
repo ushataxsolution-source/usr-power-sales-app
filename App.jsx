@@ -20,7 +20,7 @@ const INITIAL_LEAVES = [
 ];
 
 const INITIAL_DAILY_TRAVEL = [
-  { id: 'DTRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-01', mode: 'Bike / Fuel', km: 45, amount: 350, route: 'Andheri to Thane Dealer Route', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' }
+  { id: 'DTRV-1', empId: 'USR-EMP-101', empName: 'Rohan Sharma', date: '2026-11-01', mode: 'Company Two-Wheeler', km: 45, amount: 350, route: 'Andheri to Thane Dealer Route', purpose: 'Primary dealer network expansion & stock inspection', remarks: 'Visited 4 major retail points successfully.', weekCycle: 'Nov 01 - Nov 07, 2026', status: 'Submitted Weekly' }
 ];
 
 const INITIAL_TRAVEL_CLAIMS = [
@@ -28,11 +28,48 @@ const INITIAL_TRAVEL_CLAIMS = [
 ];
 
 const INITIAL_LEADS = [
-  { id: 'LD-101', clientName: 'Sahyadri Auto Spares & Lubricants', clientType: 'Distributor', contactPerson: 'Suresh Patil', phone: '9820012345', place: 'Vashi Turbhe Road, Navi Mumbai', status: 'Hot', stage: 'Negotiation', estimatedValue: 180000, investmentAmount: 250000, assignedToId: 'USR-EMP-102', assignedToName: 'Amit Kumar', vertical: 'USR POWER LUBE', lastFollowup: '2026-11-01', nextFollowup: '2026-11-05', remark: 'High interest in bulk lubricant dealership.' }
+  { 
+    id: 'LD-101', 
+    clientName: 'Sahyadri Auto Spares & Lubricants', 
+    clientType: 'Super Distributor / Super Stockist', 
+    contactPerson: 'Suresh Patil', 
+    phone: '9820012345', 
+    place: 'Vashi Turbhe Road, Navi Mumbai', 
+    status: 'Hot', 
+    stage: 'Negotiation', 
+    estimatedValue: 180000, 
+    investmentAmount: 1500000, 
+    assignedToId: 'USR-EMP-102', 
+    assignedToName: 'Amit Kumar', 
+    vertical: 'USR POWER LUBE', 
+    nextFollowup: '2026-11-05', 
+    remark: 'High interest in bulk synthetic engine oil dealership setup.' 
+  }
 ];
 
 const INITIAL_DCR = [
-  { id: 'DCR-501', empId: 'USR-EMP-102', empName: 'Amit Kumar', vertical: 'TURBO OIL', clientName: 'Pune Logistics & Fleet Services', clientType: 'Corporate / Direct', place: 'Hinjewadi', phone: '9821123456', visitTime: '10:30 AM', callType: 'Field Visit', outcome: 'Order Confirmed', notes: 'Finalized annual supply contract.', investmentAmount: 300000, nextDate: '2026-11-10', lat: '18.5204 N', lng: '73.8567 E', address: 'Hinjewadi Phase 1, Pune', photoVerified: true, photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80', remark: 'Client agreed to advance payment terms.' }
+  { 
+    id: 'DCR-501', 
+    empId: 'USR-EMP-102', 
+    empName: 'Amit Kumar', 
+    vertical: 'TURBO OIL', 
+    clientName: 'Pune Logistics & Fleet Services', 
+    clientType: 'C&FA / Fleet Institutional', 
+    place: 'Hinjewadi', 
+    phone: '9821123456', 
+    visitTime: '10:30 AM', 
+    callType: 'Field Visit', 
+    outcome: 'Order Confirmed', 
+    notes: 'Finalized annual supply contract for heavy-duty commercial fleet.', 
+    investmentAmount: 300000, 
+    nextDate: '2026-11-10', 
+    lat: '18.5204 N', 
+    lng: '73.8567 E', 
+    address: 'Hinjewadi Phase 1, Pune', 
+    photoVerified: true, 
+    photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80', 
+    remark: 'Client agreed to advance payment terms & signed initial paperwork.' 
+  }
 ];
 
 const INITIAL_AGREEMENTS = [
@@ -160,24 +197,52 @@ export default function App() {
     (Number(newAgreement.investmentHeavyDuty) || 0) +
     (Number(newAgreement.investmentLcvHcv) || 0);
 
+  // Expanded Add New Lead State
   const [newLead, setNewLead] = useState({
-    clientName: '', clientType: 'Dealer', contactPerson: '', phone: '', place: '',
-    status: 'Hot', stage: 'Contacted', investmentAmount: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: '', remark: ''
+    clientName: '', 
+    clientType: 'Distributor', 
+    contactPerson: '', 
+    phone: '', 
+    place: '',
+    status: 'Hot', 
+    stage: 'Contacted', 
+    investmentAmount: '', 
+    assignedToId: 'USR-EMP-101', 
+    vertical: 'USR POWER LUBE', 
+    nextFollowup: new Date().toISOString().split('T')[0], 
+    remark: ''
   });
 
+  // Expanded DCR State
   const [newDcr, setNewDcr] = useState({
-    empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', phone: '', vertical: 'USR POWER LUBE', callType: 'Field Visit',
-    outcome: 'Follow Up Required', notes: '', investmentAmount: '', nextDate: '',
-    lat: '19.0760 N', lng: '72.8777 E', address: 'Andheri West, Mumbai',
-    photoVerified: false, photoUrl: null, remark: ''
+    empId: 'USR-EMP-101', 
+    clientName: '', 
+    clientType: 'Dealer', 
+    place: '', 
+    phone: '', 
+    vertical: 'USR POWER LUBE', 
+    callType: 'Field Visit',
+    outcome: 'Order Confirmed', 
+    notes: '', 
+    investmentAmount: '', 
+    nextDate: new Date().toISOString().split('T')[0],
+    lat: '19.0760 N', 
+    lng: '72.8777 E', 
+    address: 'Andheri West, Mumbai',
+    photoVerified: false, 
+    photoUrl: null, 
+    remark: ''
   });
 
+  // Expanded Daily Travel & Fuel Log State
   const [newDailyTravel, setNewDailyTravel] = useState({
     date: new Date().toISOString().split('T')[0],
-    mode: 'Bike / Fuel',
+    mode: 'Company Two-Wheeler',
     km: '',
     amount: '',
     route: '',
+    purpose: '',
+    remarks: '',
     weekCycle: 'Nov 01 - Nov 07, 2026'
   });
 
@@ -411,7 +476,7 @@ export default function App() {
     };
     setLeads([createdLead, ...leads]);
     setIsLeadModalOpen(false);
-    setNewLead({ clientName: '', clientType: 'Dealer', contactPerson: '', phone: '', place: '', status: 'Hot', stage: 'Contacted', investmentAmount: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: '', remark: '' });
+    setNewLead({ clientName: '', clientType: 'Distributor', contactPerson: '', phone: '', place: '', status: 'Hot', stage: 'Contacted', investmentAmount: '', assignedToId: 'USR-EMP-101', vertical: 'USR POWER LUBE', nextFollowup: new Date().toISOString().split('T')[0], remark: '' });
     alert('Lead Added Successfully!');
   };
 
@@ -430,7 +495,7 @@ export default function App() {
     };
     setDcrs([createdDcr, ...dcrs]);
     setIsDcrModalOpen(false);
-    setNewDcr({ empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', phone: '', vertical: 'USR POWER LUBE', callType: 'Field Visit', outcome: 'Follow Up Required', notes: '', investmentAmount: '', nextDate: '', lat: '19.0760 N', lng: '72.8777 E', address: 'Andheri West, Mumbai', photoVerified: false, photoUrl: null, remark: '' });
+    setNewDcr({ empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', phone: '', vertical: 'USR POWER LUBE', callType: 'Field Visit', outcome: 'Order Confirmed', notes: '', investmentAmount: '', nextDate: new Date().toISOString().split('T')[0], lat: '19.0760 N', lng: '72.8777 E', address: 'Andheri West, Mumbai', photoVerified: false, photoUrl: null, remark: '' });
     alert('DCR Submitted Successfully!');
   };
 
@@ -447,7 +512,7 @@ export default function App() {
     };
     setDailyTravelList([createdLog, ...dailyTravelList]);
     setIsDailyTravelModalOpen(false);
-    setNewDailyTravel({ date: new Date().toISOString().split('T')[0], mode: 'Bike / Fuel', km: '', amount: '', route: '', weekCycle: 'Nov 01 - Nov 07, 2026' });
+    setNewDailyTravel({ date: new Date().toISOString().split('T')[0], mode: 'Company Two-Wheeler', km: '', amount: '', route: '', purpose: '', remarks: '', weekCycle: 'Nov 01 - Nov 07, 2026' });
     alert('Daily Travel Log Saved Successfully!');
   };
 
@@ -459,7 +524,7 @@ export default function App() {
     }
     const totalKmSum = empDailyLogs.reduce((acc, curr) => acc + curr.km, 0);
     const totalAmtSum = empDailyLogs.reduce((acc, curr) => acc + curr.amount, 0);
-    const routesCombined = empDailyLogs.map(l => l.route).join(' | ');
+    const routesCombined = empDailyLogs.map(l => `${l.route} (${l.purpose})`).join(' | ');
     const newClaim = {
       id: `TRV-${Date.now()}`,
       empId: currentEmp.id,
@@ -791,7 +856,6 @@ export default function App() {
               <button onClick={() => setIsLeaveModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Apply Leave</button>
             </div>
 
-            {/* LEAVE POLICY CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white p-5 rounded-2xl border border-indigo-100 shadow-sm space-y-2">
                 <span className="bg-indigo-50 text-indigo-700 text-[10px] font-extrabold px-2 py-0.5 rounded">12 Days / Year</span>
@@ -885,34 +949,50 @@ export default function App() {
           </div>
         )}
 
+        {/* LEADS TAB WITH ENRICHED COLUMNS */}
         {activeTab === 'leads' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Lead Management Pipeline</h3>
-                <p className="text-xs text-slate-500 mt-1">Track dealer and distributor leads.</p>
+                <p className="text-xs text-slate-500 mt-1">Track dealer, distributor, C&FA, and super stockist leads.</p>
               </div>
-              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Add New Lead</button>
+              <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Add New Sales Lead</button>
             </div>
             <div className="bg-white rounded-2xl border overflow-hidden">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Client Name</th>
-                    <th className="p-3">Contact Person & Phone</th>
-                    <th className="p-3">Stage</th>
+                    <th className="p-3">Client & Customer Type</th>
+                    <th className="p-3">Contact Person</th>
+                    <th className="p-3">Stage & Status</th>
                     <th className="p-3">Investment (₹)</th>
+                    <th className="p-3">Next Follow-Up & Remarks</th>
                     <th className="p-3">Assigned To</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {visibleLeads.map(lead => (
                     <tr key={lead.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold">{lead.clientName} <span className="text-[10px] text-slate-500 block font-normal">{lead.place}</span></td>
-                      <td className="p-3">{lead.contactPerson} (+91 {lead.phone})</td>
-                      <td className="p-3"><span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">{lead.stage}</span></td>
-                      <td className="p-3 font-bold text-emerald-700">₹{(lead.investmentAmount || lead.estimatedValue).toLocaleString('en-IN')}</td>
-                      <td className="p-3">{lead.assignedToName}</td>
+                      <td className="p-3">
+                        <span className="font-bold block text-slate-900">{lead.clientName}</span>
+                        <span className="text-[10px] text-indigo-700 font-semibold bg-indigo-50 px-1.5 py-0.5 rounded mt-0.5 inline-block">{lead.clientType}</span>
+                        <span className="text-[10px] text-slate-500 block">{lead.place}</span>
+                      </td>
+                      <td className="p-3">
+                        <span className="font-medium">{lead.contactPerson}</span>
+                        <span className="font-mono text-slate-600 block">+91 {lead.phone}</span>
+                      </td>
+                      <td className="p-3">
+                        <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold block w-max">{lead.stage}</span>
+                        <span className="text-[10px] text-amber-700 font-semibold mt-1 block">Status: {lead.status}</span>
+                      </td>
+                      <td className="p-3 font-bold text-emerald-700 font-mono text-sm">₹{(lead.investmentAmount || lead.estimatedValue).toLocaleString('en-IN')}</td>
+                      <td className="p-3">
+                        <span className="font-mono text-slate-700 block">📅 {lead.nextFollowup}</span>
+                        <span className="text-[11px] text-slate-600 italic block mt-0.5">"{lead.remark}"</span>
+                      </td>
+                      <td className="p-3 font-medium">{lead.assignedToName}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -921,12 +1001,13 @@ export default function App() {
           </div>
         )}
 
+        {/* DCR TAB WITH ENRICHED COLUMNS */}
         {activeTab === 'dcr' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR) & GPS Audits</h3>
-                <p className="text-xs text-slate-500 mt-1">Field visit logs with photo geotags.</p>
+                <p className="text-xs text-slate-500 mt-1">Field visit logs with customer type, remarks, investment, and geotags.</p>
               </div>
               <button onClick={() => setIsDcrModalOpen(true)} className="bg-amber-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Submit DCR Visit</button>
             </div>
@@ -935,20 +1016,34 @@ export default function App() {
                 <thead>
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                     <th className="p-3">Employee</th>
-                    <th className="p-3">Client Name & Place</th>
-                    <th className="p-3">Outcome</th>
-                    <th className="p-3">GPS Location</th>
-                    <th className="p-3">Audit Photo</th>
+                    <th className="p-3">Client & Customer Type</th>
+                    <th className="p-3">Outcome & Investment</th>
+                    <th className="p-3">Notes & Remarks</th>
+                    <th className="p-3">GPS Location & Photo</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {visibleDcrs.map(dcr => (
                     <tr key={dcr.id} className="hover:bg-slate-50">
                       <td className="p-3 font-bold">{dcr.empName}</td>
-                      <td className="p-3 font-bold">{dcr.clientName} <span className="text-[10px] text-slate-500 block font-normal">{dcr.place}</span></td>
-                      <td className="p-3"><span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-bold">{dcr.outcome}</span></td>
-                      <td className="p-3 font-mono text-[11px]">{dcr.lat}, {dcr.lng}</td>
-                      <td className="p-3">{dcr.photoUrl ? (<a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline">View Photo</a>) : 'No Photo'}</td>
+                      <td className="p-3">
+                        <span className="font-bold block text-slate-900">{dcr.clientName}</span>
+                        <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded mt-0.5 inline-block">{dcr.clientType}</span>
+                        <span className="text-[10px] text-slate-500 block">{dcr.place} (+91 {dcr.phone})</span>
+                      </td>
+                      <td className="p-3">
+                        <span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-bold inline-block mb-1">{dcr.outcome}</span>
+                        <span className="font-mono font-bold text-emerald-700 block">₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</span>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-slate-800">{dcr.notes}</p>
+                        <p className="text-slate-500 italic text-[11px] mt-0.5">Remark: {dcr.remark || 'N/A'}</p>
+                        <span className="font-mono text-[10px] text-indigo-600 block mt-1">Next Follow-up: {dcr.nextDate}</span>
+                      </td>
+                      <td className="p-3">
+                        <span className="font-mono text-[11px] block">{dcr.lat}, {dcr.lng}</span>
+                        {dcr.photoUrl ? (<a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline text-[11px] mt-1 block">View Audit Photo</a>) : <span className="text-slate-400">No Photo</span>}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -967,24 +1062,25 @@ export default function App() {
           </div>
         )}
 
+        {/* TRAVEL TAB WITH ENRICHED COLUMNS */}
         {activeTab === 'travel' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Travelling & Fuel Allowance Claims</h3>
-                <p className="text-xs text-slate-500 mt-1">Submit and track weekly travel expense logs.</p>
+                <p className="text-xs text-slate-500 mt-1">Submit and track weekly travel expense logs with mode of transport, purpose, and remarks.</p>
               </div>
               <button onClick={() => setIsDailyTravelModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Add Daily Travel Log</button>
             </div>
             <div className="bg-white rounded-2xl border overflow-hidden">
-              <div className="p-4 border-b font-bold text-xs">Pending Daily Logs Ready for Weekly Claim</div>
+              <div className="p-4 border-b font-bold text-xs bg-slate-50 text-slate-700">Daily Travel & Fuel Expense Logs</div>
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                     <th className="p-3">Date</th>
-                    <th className="p-3">Route / Purpose</th>
-                    <th className="p-3">Distance (KM)</th>
-                    <th className="p-3">Amount (₹)</th>
+                    <th className="p-3">Mode of Transport & Route</th>
+                    <th className="p-3">Purpose & Remarks</th>
+                    <th className="p-3">Distance & Amount</th>
                     <th className="p-3">Status</th>
                   </tr>
                 </thead>
@@ -992,9 +1088,18 @@ export default function App() {
                   {visibleDailyTravel.map(log => (
                     <tr key={log.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono">{log.date}</td>
-                      <td className="p-3 font-bold">{log.route}</td>
-                      <td className="p-3 font-mono">{log.km} KM</td>
-                      <td className="p-3 font-mono font-bold text-emerald-700">₹{log.amount}</td>
+                      <td className="p-3">
+                        <span className="font-bold text-indigo-900 block">{log.mode}</span>
+                        <span className="text-slate-700 block mt-0.5">Route: {log.route}</span>
+                      </td>
+                      <td className="p-3">
+                        <span className="font-medium text-slate-800 block">Purpose: {log.purpose || 'Client Visit'}</span>
+                        <span className="text-slate-500 italic text-[11px] block mt-0.5">Remarks: {log.remarks || 'None'}</span>
+                      </td>
+                      <td className="p-3">
+                        <span className="font-mono block">{log.km} KM</span>
+                        <span className="font-mono font-bold text-emerald-700 block mt-0.5">₹{log.amount}</span>
+                      </td>
                       <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">{log.status}</span></td>
                     </tr>
                   ))}
@@ -1251,71 +1356,133 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD LEAD */}
+      {/* MODAL: ADD NEW SALES LEAD WITH ENRICHED FIELDS */}
       {isLeadModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Add New Sales Lead</h3>
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Add New Sales Lead</h3>
+                <p className="text-[11px] text-slate-500">Configure customer type, investment potential, remarks & follow-up date.</p>
+              </div>
               <button onClick={() => setIsLeadModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddLead} className="space-y-3 text-xs">
               <div>
                 <label className="font-semibold block mb-1">Client / Firm Name *</label>
-                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Sai Motors" />
+                <input required type="text" value={newLead.clientName} onChange={e => setNewLead({...newLead, clientName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Sai Motors & Spares" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold block mb-1">Contact Person *</label>
-                  <input required type="text" value={newLead.contactPerson} onChange={e => setNewLead({...newLead, contactPerson: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Type of Customer *</label>
+                  <select value={newLead.clientType} onChange={e => setNewLead({...newLead, clientType: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="C&FA">C&FA (Carrying & Forwarding)</option>
+                    <option value="Super Distributor / Super Stockist">Super Distributor / Super Stockist</option>
+                    <option value="Distributor">Distributor</option>
+                    <option value="Dealer">Dealer</option>
+                    <option value="Institutional Fleet">Institutional / Fleet</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Pipeline Stage *</label>
+                  <select value={newLead.stage} onChange={e => setNewLead({...newLead, stage: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="Contacted">Contacted</option>
+                    <option value="Meeting Scheduled">Meeting Scheduled</option>
+                    <option value="Negotiation">Negotiation</option>
+                    <option value="Agreement Signed">Agreement Signed</option>
+                    <option value="Dropped">Dropped</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Contact Person Name *</label>
+                  <input required type="text" value={newLead.contactPerson} onChange={e => setNewLead({...newLead, contactPerson: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Mr. Rajesh" />
                 </div>
                 <div>
                   <label className="font-semibold block mb-1">Phone Number *</label>
-                  <input required type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                  <input required type="text" value={newLead.phone} onChange={e => setNewLead({...newLead, phone: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" placeholder="9820012345" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold block mb-1">Place / City *</label>
-                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Place / City / Territory *</label>
+                  <input required type="text" value={newLead.place} onChange={e => setNewLead({...newLead, place: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Pune City" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Estimated Investment (₹) *</label>
-                  <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} className="w-full p-2.5 border rounded-xl font-bold text-emerald-700" />
+                  <label className="font-semibold block mb-1">Potential Investment (₹) *</label>
+                  <input required type="number" value={newLead.investmentAmount} onChange={e => setNewLead({...newLead, investmentAmount: e.target.value})} className="w-full p-2.5 border rounded-xl font-bold text-emerald-700 font-mono" placeholder="500000" />
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Lead Status *</label>
+                  <select value={newLead.status} onChange={e => setNewLead({...newLead, status: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="Hot">🔥 Hot Lead</option>
+                    <option value="Warm">⚡ Warm Lead</option>
+                    <option value="Cold">❄️ Cold Lead</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Next Follow-up Date *</label>
+                  <input required type="date" value={newLead.nextFollowup} onChange={e => setNewLead({...newLead, nextFollowup: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Detailed Remarks & Discussion Notes *</label>
+                <textarea required rows="2" value={newLead.remark} onChange={e => setNewLead({...newLead, remark: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Enter specific customer requirements or feedback..." />
               </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsLeadModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Lead</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Sales Lead</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* MODAL: SUBMIT DCR */}
+      {/* MODAL: SUBMIT DCR WITH ENRICHED FIELDS */}
       {isDcrModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Submit DCR Visit & GPS Audit Photo</h3>
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Submit DCR Visit & GPS Audit Photo</h3>
+                <p className="text-[11px] text-slate-500">Log customer type, meeting outcome, investment order, remarks & live geotag.</p>
+              </div>
               <button onClick={() => setIsDcrModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddDcr} className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold block mb-1">Client Name *</label>
-                  <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                  <input required type="text" value={newDcr.clientName} onChange={e => setNewDcr({...newDcr, clientName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Dealer / Distributor Name" />
                 </div>
                 <div>
+                  <label className="font-semibold block mb-1">Type of Customer *</label>
+                  <select value={newDcr.clientType} onChange={e => setNewDcr({...newDcr, clientType: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="C&FA">C&FA</option>
+                    <option value="Super Distributor">Super Distributor</option>
+                    <option value="Distributor">Distributor</option>
+                    <option value="Dealer">Dealer</option>
+                    <option value="Institutional Fleet">Institutional / Fleet</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
                   <label className="font-semibold block mb-1">Place / Area *</label>
-                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                  <input required type="text" value={newDcr.place} onChange={e => setNewDcr({...newDcr, place: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Location / Town" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Phone Number *</label>
+                  <input required type="text" value={newDcr.phone} onChange={e => setNewDcr({...newDcr, phone: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" placeholder="9821123456" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-semibold block mb-1">Visit Outcome *</label>
-                  <select value={newDcr.outcome} onChange={e => setNewDcr({...newDcr, outcome: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white">
+                  <select value={newDcr.outcome} onChange={e => setNewDcr({...newDcr, outcome: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
                     <option value="Order Confirmed">Order Confirmed</option>
                     <option value="Follow Up Required">Follow Up Required</option>
                     <option value="Catalog Shared">Catalog Shared</option>
@@ -1323,9 +1490,28 @@ export default function App() {
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Order / Potential Value (₹)</label>
-                  <input type="number" value={newDcr.investmentAmount} onChange={e => setNewDcr({...newDcr, investmentAmount: e.target.value})} className="w-full p-2.5 border rounded-xl font-bold text-emerald-700" />
+                  <label className="font-semibold block mb-1">Order / Potential Investment (₹)</label>
+                  <input type="number" value={newDcr.investmentAmount} onChange={e => setNewDcr({...newDcr, investmentAmount: e.target.value})} className="w-full p-2.5 border rounded-xl font-bold text-emerald-700 font-mono" placeholder="100000" />
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Next Follow-up Date *</label>
+                  <input required type="date" value={newDcr.nextDate} onChange={e => setNewDcr({...newDcr, nextDate: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Call Type *</label>
+                  <select value={newDcr.callType} onChange={e => setNewDcr({...newDcr, callType: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="Field Visit">Field Visit</option>
+                    <option value="Dealer Onboarding">Dealer Onboarding</option>
+                    <option value="Stock Audit">Stock Audit</option>
+                    <option value="Payment Collection">Payment Collection</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Detailed Visit Notes & Remarks *</label>
+                <textarea required rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Summarize discussion outcome and key remarks..." />
               </div>
               <div>
                 <label className="font-semibold block mb-1">Capture Live GPS Photo Audit *</label>
@@ -1342,7 +1528,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: APPLY LEAVE WITH ALL DETAILS */}
+      {/* MODAL: APPLY LEAVE */}
       {isLeaveModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
@@ -1396,22 +1582,41 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD DAILY TRAVEL */}
+      {/* MODAL: ADD DAILY TRAVEL WITH MODE, PURPOSE & REMARKS */}
       {isDailyTravelModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Add Daily Travel & Fuel Log</h3>
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Add Daily Travel & Fuel Log</h3>
+                <p className="text-[11px] text-slate-500">Record transport mode, route, purpose, distance, and remarks.</p>
+              </div>
               <button onClick={() => setIsDailyTravelModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
             <form onSubmit={handleAddDailyTravel} className="space-y-3 text-xs">
-              <div>
-                <label className="font-semibold block mb-1">Date *</label>
-                <input required type="date" value={newDailyTravel.date} onChange={e => setNewDailyTravel({...newDailyTravel, date: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Date *</label>
+                  <input required type="date" value={newDailyTravel.date} onChange={e => setNewDailyTravel({...newDailyTravel, date: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Mode of Transport *</label>
+                  <select value={newDailyTravel.mode} onChange={e => setNewDailyTravel({...newDailyTravel, mode: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="Company Two-Wheeler">Company Two-Wheeler</option>
+                    <option value="Personal Bike / Fuel">Personal Bike / Fuel</option>
+                    <option value="Public Transport / Bus / Auto">Public Transport / Bus / Auto</option>
+                    <option value="Train / AC Local">Train / AC Local</option>
+                    <option value="Cab / Taxi">Cab / Taxi</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label className="font-semibold block mb-1">Route Covered *</label>
-                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Andheri to Thane Dealer Visit" />
+                <input required type="text" value={newDailyTravel.route} onChange={e => setNewDailyTravel({...newDailyTravel, route: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Andheri West to Thane Dealer Route" />
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Purpose of Travel *</label>
+                <input required type="text" value={newDailyTravel.purpose} onChange={e => setNewDailyTravel({...newDailyTravel, purpose: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Primary dealer network expansion & stock inspection" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -1422,6 +1627,10 @@ export default function App() {
                   <label className="font-semibold block mb-1">Claim Amount (₹) *</label>
                   <input required type="number" value={newDailyTravel.amount} onChange={e => setNewDailyTravel({...newDailyTravel, amount: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono font-bold text-emerald-700" placeholder="350" />
                 </div>
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Additional Remarks & Visit Summary</label>
+                <textarea rows="2" value={newDailyTravel.remarks} onChange={e => setNewDailyTravel({...newDailyTravel, remarks: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Enter any extra travel remarks or toll/parking expenses..." />
               </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsDailyTravelModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
