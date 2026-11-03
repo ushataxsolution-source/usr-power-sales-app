@@ -6,21 +6,9 @@ import {
   Lock, Unlock, Download, ShieldCheck, Trash2, Edit3, LogOut, Key, User, CheckSquare, ArrowRight, CalendarDays, Bus, ShieldAlert, MessageSquare, FileSpreadsheet, Printer
 } from 'lucide-react';
 
-const BUSINESS_VERTICALS = [
-  'USR POWER LUBE',
-  'TURBO OIL',
-  'NUTRI TRIBE',
-  'TAX AND LEGAL',
-  'PUNCHKUTEER',
-  'CUSTOMIZED PACKAGING',
-  'DIGITAL MARKETING'
-];
-
 const INITIAL_EMPLOYEES = [
   { id: 'USR-EMP-101', pass: '1011', name: 'Rohan Sharma', designation: 'Senior Sales Executive', phone: '9820012345', joiningDate: '2025-04-10', totalLeaves: 18, usedLeaves: 4, territory: 'Mumbai Metropolitan Region', target: 800000, achieved: 640000, primaryVertical: 'USR POWER LUBE', failedAttempts: 0, isBlocked: false },
-  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', designation: 'Area Sales Manager', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false },
-  { id: 'USR-EMP-103', pass: '1033', name: 'Priya Singh', designation: 'Legal & Tax Consultant', phone: '9822234567', joiningDate: '2025-09-01', totalLeaves: 18, usedLeaves: 5, territory: 'Thane & Kalyan Belt', target: 900000, achieved: 870000, primaryVertical: 'TAX AND LEGAL', failedAttempts: 0, isBlocked: false },
-  { id: 'USR-EMP-104', pass: '1044', name: 'Vikram Verma', designation: 'Digital Marketing Lead', phone: '9823345678', joiningDate: '2026-01-10', totalLeaves: 18, usedLeaves: 1, territory: 'Nagpur Industrial Region', target: 500000, achieved: 320000, primaryVertical: 'DIGITAL MARKETING', failedAttempts: 0, isBlocked: false }
+  { id: 'USR-EMP-102', pass: '1022', name: 'Amit Kumar', designation: 'Area Sales Manager', phone: '9821123456', joiningDate: '2025-06-15', totalLeaves: 18, usedLeaves: 2, territory: 'Pune & PCMC Cluster', target: 650000, achieved: 580000, primaryVertical: 'TURBO OIL', failedAttempts: 0, isBlocked: false }
 ];
 
 const INITIAL_ATTENDANCE = [
@@ -56,10 +44,14 @@ const INITIAL_AGREEMENTS = [
     phone: '9820012345',
     address: 'Vashi Turbhe Road, Navi Mumbai, Maharashtra - 400703',
     immovableProperties: 'Commercial Shop No 12, Vashi Market',
+    sisterConcernName: 'Patil Enterprises',
+    sisterTurnover: '50 Lakhs',
+    adminStaffCount: '2',
+    salesStaffCount: '4',
+    techStaffCount: '1',
     gstn: '27AAAAA0000A1Z5',
     transportCompany: 'VRL Logistics Ltd, Mumbai',
     railwayStation: 'Vashi Railway Station',
-    verticalInterested: 'Automotive Engine Oil',
     territory: 'Navi Mumbai & Thane Region',
     investmentAutomotive: 1000000,
     investmentFourStroke: 200000,
@@ -133,7 +125,7 @@ export default function App() {
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // Detailed Agreement Form State matching PDF
+  // 100% PDF Exact Agreement Form State
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
     constitution: 'Proprietorship',
@@ -151,7 +143,9 @@ export default function App() {
     gstn: '',
     transportCompany: '',
     railwayStation: '',
-    verticalInterested: 'Automotive Engine Oil',
+    officeSpaceSqFt: '500',
+    godownSpaceSqFt: '1000',
+    showroomAddress: '',
     territory: '',
     investmentAutomotive: '1000000',
     investmentFourStroke: '200000',
@@ -978,64 +972,101 @@ export default function App() {
         )}
       </main>
 
-      {/* MODAL: COMPLETE AGREEMENT FORM MATCHING PDF */}
+      {/* MODAL: COMPLETE AGREEMENT FORM MATCHING PDF EXACTLY */}
       {isAgreementModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-3xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-4xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="font-bold text-slate-900 text-sm">Official Distributor/Dealer Partnership Agreement Form</h3>
-              <button onClick={() => setIsAgreementModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">USR POWER - DISTRIBUTOR/DEALER AGREEMENT FORM</h3>
+                <p className="text-[11px] text-slate-500">Official PDF form fields matching USR Power Industries Private Limited.</p>
+              </div>
+              <button onClick={() => setIsAgreementModalOpen(false)}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
+            
             <form onSubmit={handleAgreementSubmit} className="space-y-4 text-xs">
+              <div className="bg-slate-50 p-3 rounded-xl border font-bold text-slate-700">I. Basic Information</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold block mb-1">1. Distributor / Firm Name *</label>
+                  <label className="font-semibold block mb-1">1. Name of Distributor (Mr. / Mrs. / Ms.) *</label>
                   <input required type="text" value={newAgreement.distributorName} onChange={e => setNewAgreement({...newAgreement, distributorName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Sahyadri Auto Spares" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">4. Constitution Type *</label>
+                  <label className="font-semibold block mb-1">4. Constitution of Distributor *</label>
                   <select value={newAgreement.constitution} onChange={e => setNewAgreement({...newAgreement, constitution: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
                     <option value="Proprietorship">Proprietorship</option>
                     <option value="Partnership">Partnership</option>
                     <option value="Private Limited Co">Private Limited Co</option>
                     <option value="Public Limited Co">Public Limited Co</option>
+                    <option value="Others">Others</option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="font-semibold block mb-1">Proprietor / Director Name *</label>
-                  <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                  <label className="font-semibold block mb-1">Proprietor / Partner Name *</label>
+                  <input required type="text" value={newAgreement.proprietorName} onChange={e => setNewAgreement({...newAgreement, proprietorName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Suresh Patil" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">Phone / Mobile No *</label>
+                  <label className="font-semibold block mb-1">Mobile No *</label>
                   <input required type="text" value={newAgreement.phone} onChange={e => setNewAgreement({...newAgreement, phone: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="9820012345" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">21. GSTN Number *</label>
+                  <label className="font-semibold block mb-1">21. GSTN No *</label>
                   <input required type="text" value={newAgreement.gstn} onChange={e => setNewAgreement({...newAgreement, gstn: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono uppercase" placeholder="27AAAAA..." />
                 </div>
               </div>
 
               <div>
-                <label className="font-semibold block mb-1">2. Permanent Complete Business Address *</label>
-                <input required type="text" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                <label className="font-semibold block mb-1">2. Permanent Address *</label>
+                <input required type="text" value={newAgreement.proprietorAddress} onChange={e => setNewAgreement({...newAgreement, proprietorAddress: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Complete address with town & PIN" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className="font-semibold block mb-1">3. Details of Immovable Properties (Owned)</label>
-                  <input type="text" value={newAgreement.immovableProperties} onChange={e => setNewAgreement({...newAgreement, immovableProperties: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Commercial Shop / Godown" />
+                  <input type="text" value={newAgreement.immovableProperties} onChange={e => setNewAgreement({...newAgreement, immovableProperties: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Commercial Shop / Godown details" />
                 </div>
                 <div>
-                  <label className="font-semibold block mb-1">6. Sister Concern / Allied Concern Details</label>
-                  <input type="text" value={newAgreement.sisterConcernName} onChange={e => setNewAgreement({...newAgreement, sisterConcernName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Name & Annual Turnover (Lakhs)" />
+                  <label className="font-semibold block mb-1">6. Particulars of Sister Concern / Allied Concern</label>
+                  <input type="text" value={newAgreement.sisterConcernName} onChange={e => setNewAgreement({...newAgreement, sisterConcernName: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Name & Annual Turnover" />
+                </div>
+              </div>
+
+              <div className="bg-slate-50 p-3 rounded-xl border font-bold text-slate-700">III. Manpower & VII. Infrastructure</div>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="font-semibold block mb-1">7. Admin Staff Count</label>
+                  <input type="number" value={newAgreement.adminStaffCount} onChange={e => setNewAgreement({...newAgreement, adminStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">8. Sales Staff Count</label>
+                  <input type="number" value={newAgreement.salesStaffCount} onChange={e => setNewAgreement({...newAgreement, salesStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">9. Technical Staff Count</label>
+                  <input type="number" value={newAgreement.techStaffCount} onChange={e => setNewAgreement({...newAgreement, techStaffCount: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="font-semibold block mb-1">17. Office Space (Sq ft)</label>
+                  <input type="number" value={newAgreement.officeSpaceSqFt} onChange={e => setNewAgreement({...newAgreement, officeSpaceSqFt: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Godown Space (Sq ft)</label>
+                  <input type="number" value={newAgreement.godownSpaceSqFt} onChange={e => setNewAgreement({...newAgreement, godownSpaceSqFt: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">22. Transport Company Name</label>
+                  <input type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="VRL Logistics" />
                 </div>
               </div>
 
               <div className="bg-slate-50 p-4 rounded-xl border space-y-2">
-                <p className="font-bold text-slate-800">27. Initial Investment Breakdown for Stock (₹)</p>
+                <p className="font-bold text-slate-800">X. Investment: 27. Initial Investment Breakdown for Stock (₹)</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   <div>
                     <label className="text-[11px] block mb-1">Automotive Engine Oil</label>
@@ -1059,20 +1090,14 @@ export default function App() {
                   </div>
                 </div>
                 <div className="pt-2 border-t flex justify-between items-center text-xs font-bold text-indigo-900">
-                  <span>Calculated Total Minimum Investment:</span>
-                  <span className="text-sm font-extrabold text-emerald-700">₹{calculatedTotalInvestment.toLocaleString('en-IN')}</span>
+                  <span>Total Initial Minimum Investment:</span>
+                  <span className="text-sm font-extrabold text-emerald-700">₹{calculatedTotalInvestment.toLocaleString('en-IN')} (Fifteen lakh only)</span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <label className="font-semibold block mb-1">26. Allotted Territory (State / Region / Districts) *</label>
-                  <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Navi Mumbai & Thane Region" />
-                </div>
-                <div>
-                  <label className="font-semibold block mb-1">22. Transport Company Name</label>
-                  <input type="text" value={newAgreement.transportCompany} onChange={e => setNewAgreement({...newAgreement, transportCompany: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. VRL Logistics Ltd" />
-                </div>
+              <div>
+                <label className="font-semibold block mb-1">IX. 26. Allotted Territory (Name of State / Region / Districts) *</label>
+                <input required type="text" value={newAgreement.territory} onChange={e => setNewAgreement({...newAgreement, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="e.g. Navi Mumbai & Thane Region" />
               </div>
 
               <div className="pt-3 flex justify-end space-x-2">
