@@ -121,7 +121,6 @@ const loadSavedData = (key, defaultData) => {
 };
 
 export default function App() {
-  // PERSISTENT LOGIN STATE USING LOCALSTORAGE TO PREVENT REFRESH LOGOUT
   const [authRole, setAuthRole] = useState(() => localStorage.getItem('usr_auth_role') || null); 
   const [loggedEmpId, setLoggedEmpId] = useState(() => localStorage.getItem('usr_logged_emp_id') || '');
   
@@ -153,7 +152,6 @@ export default function App() {
   useEffect(() => { localStorage.setItem('usr_dcrs', JSON.stringify(dcrs)); }, [dcrs]);
   useEffect(() => { localStorage.setItem('usr_agreements', JSON.stringify(agreements)); }, [agreements]);
 
-  // SYNC LOGIN STATE TO LOCALSTORAGE
   useEffect(() => {
     if (authRole) {
       localStorage.setItem('usr_auth_role', authRole);
@@ -174,6 +172,9 @@ export default function App() {
 
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
+
+  // NEW STATE FOR EDITING FULL EMPLOYEE PROFILE DATA IN ADMIN PANEL
+  const [editProfileModal, setEditProfileModal] = useState(null);
 
   const [newAgreement, setNewAgreement] = useState({
     distributorName: '',
@@ -359,6 +360,15 @@ export default function App() {
     alert(`Password updated & account unblocked for ${editingEmpModal.name}!`);
     setEditingEmpModal(null);
     setNewPasswordInput('');
+  };
+
+  // HANDLE UPDATING FULL EMPLOYEE DETAILS FROM ADMIN PANEL
+  const handleSaveEmployeeProfile = (e) => {
+    e.preventDefault();
+    if (!editProfileModal) return;
+    setEmployees(employees.map(emp => emp.id === editProfileModal.id ? { ...editProfileModal } : emp));
+    alert(`Employee profile for ${editProfileModal.name} updated successfully!`);
+    setEditProfileModal(null);
   };
 
   const handleAgreementSubmit = (e) => {
@@ -806,7 +816,6 @@ export default function App() {
               <button onClick={() => setIsAgreementModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Fill New Agreement</button>
             </div>
             
-            {/* RESPONSIVE TABLE CONTAINER FOR MOBILE */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse min-w-[650px]">
@@ -843,12 +852,12 @@ export default function App() {
           </div>
         )}
 
-        {/* ADMIN CONTROL PANEL WITH RESPONSIVE SCROLLABLE TABLE FOR MOBILE */}
+        {/* ADMIN CONTROL PANEL WITH EDIT EMPLOYEE DATA & RESET PASSWORD */}
         {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
-              <p className="text-xs text-amber-800">Manage employee accounts, delete obsolete accounts, reset passwords, and approve agreements.</p>
+              <p className="text-xs text-amber-800">Manage employee accounts, edit employee profiles, delete accounts, reset passwords, and approve agreements.</p>
             </div>
             <div className="bg-white p-5 rounded-2xl border shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <h3 className="font-bold text-xs text-slate-800">Employee Master Accounts & Security Status ({employees.length} Total)</h3>
@@ -857,28 +866,35 @@ export default function App() {
             
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse min-w-[650px]">
+                <table className="w-full text-left text-xs border-collapse min-w-[700px]">
                   <thead>
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Employee ID</th>
                       <th className="p-3">Name & Designation</th>
+                      <th className="p-3">Territory & Target</th>
                       <th className="p-3">Password</th>
-                      <th className="p-3">Joining Date</th>
                       <th className="p-3">Status</th>
-                      <th className="p-3">Actions</th>
+                      <th className="p-3">Actions (Edit / Reset / Delete)</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {employees.map(emp => (
                       <tr key={emp.id} className="hover:bg-slate-50">
                         <td className="p-3 font-mono font-bold text-indigo-600">{emp.id}</td>
-                        <td className="p-3 font-bold">{emp.name} <span className="text-[10px] text-slate-500 block font-normal">{emp.designation}</span></td>
+                        <td className="p-3">
+                          <span className="font-bold text-slate-900 block">{emp.name}</span>
+                          <span className="text-[10px] text-slate-500 block font-normal">{emp.designation}</span>
+                        </td>
+                        <td className="p-3">
+                          <span className="font-medium text-slate-800 block">{emp.territory}</span>
+                          <span className="font-mono text-emerald-700 font-bold text-[11px] block">Target: ₹{(emp.target || 0).toLocaleString('en-IN')}</span>
+                        </td>
                         <td className="p-3 font-mono font-bold text-slate-700">{emp.pass}</td>
-                        <td className="p-3 font-mono">{emp.joiningDate}</td>
                         <td className="p-3">{emp.isBlocked ? (<span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-[10px]">BLOCKED</span>) : (<span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active</span>)}</td>
-                        <td className="p-3 flex items-center space-x-2">
-                          <button onClick={() => setEditingEmpModal(emp)} className="bg-amber-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Key className="w-3 h-3" /><span>Reset</span></button>
-                          <button onClick={() => handleDeleteEmployee(emp.id)} className="bg-red-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Trash2 className="w-3 h-3" /><span>Delete</span></button>
+                        <td className="p-3 flex items-center space-x-1.5">
+                          <button onClick={() => setEditProfileModal({ ...emp })} className="bg-indigo-600 hover:bg-indigo-700 text-white px-2.5 py-1.5 rounded font-semibold flex items-center space-x-1"><Edit3 className="w-3 h-3" /><span>Edit</span></button>
+                          <button onClick={() => setEditingEmpModal(emp)} className="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1.5 rounded font-semibold flex items-center space-x-1"><Key className="w-3 h-3" /><span>Pass</span></button>
+                          <button onClick={() => handleDeleteEmployee(emp.id)} className="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1.5 rounded font-semibold flex items-center space-x-1"><Trash2 className="w-3 h-3" /><span>Del</span></button>
                         </td>
                       </tr>
                     ))}
@@ -1049,7 +1065,6 @@ export default function App() {
           </div>
         )}
 
-        {/* DCR TAB WITH ADMIN GPS VERIFICATION AUDIT */}
         {activeTab === 'dcr' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
@@ -1344,6 +1359,59 @@ export default function App() {
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
                 <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Employee ID</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT FULL EMPLOYEE PROFILE DATA IN ADMIN PANEL */}
+      {editProfileModal && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b pb-3">
+              <div>
+                <h3 className="font-bold text-slate-900 text-sm">Edit Employee Profile: {editProfileModal.id}</h3>
+                <p className="text-[11px] text-slate-500">Update name, designation, territory, targets & assigned vertical.</p>
+              </div>
+              <button onClick={() => setEditProfileModal(null)}><X className="w-4 h-4 text-slate-400" /></button>
+            </div>
+            <form onSubmit={handleSaveEmployeeProfile} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold block mb-1">Employee Name *</label>
+                <input required type="text" value={editProfileModal.name} onChange={e => setEditProfileModal({...editProfileModal, name: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Designation *</label>
+                  <input required type="text" value={editProfileModal.designation} onChange={e => setEditProfileModal({...editProfileModal, designation: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Phone Number *</label>
+                  <input required type="text" value={editProfileModal.phone} onChange={e => setEditProfileModal({...editProfileModal, phone: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" />
+                </div>
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Assigned Territory *</label>
+                <input required type="text" value={editProfileModal.territory} onChange={e => setEditProfileModal({...editProfileModal, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Sales Target (₹) *</label>
+                  <input required type="number" value={editProfileModal.target} onChange={e => setEditProfileModal({...editProfileModal, target: Number(e.target.value)})} className="w-full p-2.5 border rounded-xl font-mono font-bold text-emerald-700" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Primary Vertical *</label>
+                  <select value={editProfileModal.primaryVertical} onChange={e => setEditProfileModal({...editProfileModal, primaryVertical: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="USR POWER LUBE">USR POWER LUBE</option>
+                    <option value="TURBO OIL">TURBO OIL</option>
+                    <option value="PUNCHKUTEER">PUNCHKUTEER</option>
+                  </select>
+                </div>
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button type="button" onClick={() => setEditProfileModal(null)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold shadow">Save Changes</button>
               </div>
             </form>
           </div>
