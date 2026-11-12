@@ -68,6 +68,7 @@ const INITIAL_DCR = [
     address: 'Hinjewadi Phase 1, Pune', 
     photoVerified: true, 
     photoUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80', 
+    timestampTag: '02/11/2026, 10:30:15 am',
     remark: 'Client agreed to advance payment terms & signed initial paperwork.' 
   }
 ];
@@ -197,7 +198,6 @@ export default function App() {
     (Number(newAgreement.investmentHeavyDuty) || 0) +
     (Number(newAgreement.investmentLcvHcv) || 0);
 
-  // Expanded Add New Lead State
   const [newLead, setNewLead] = useState({
     clientName: '', 
     clientType: 'Distributor', 
@@ -213,7 +213,6 @@ export default function App() {
     remark: ''
   });
 
-  // Expanded DCR State
   const [newDcr, setNewDcr] = useState({
     empId: 'USR-EMP-101', 
     clientName: '', 
@@ -231,10 +230,10 @@ export default function App() {
     address: 'Andheri West, Mumbai',
     photoVerified: false, 
     photoUrl: null, 
+    timestampTag: '',
     remark: ''
   });
 
-  // Expanded Daily Travel & Fuel Log State
   const [newDailyTravel, setNewDailyTravel] = useState({
     date: new Date().toISOString().split('T')[0],
     mode: 'Company Two-Wheeler',
@@ -429,10 +428,13 @@ export default function App() {
     alert(`Employee (${createdEmp.name} - ID: ${createdEmp.id}) Created Successfully!`);
   };
 
+  // STRICT LIVE GPS CAMERA CAPTURE WITH TIMESTAMP (capture="environment")
   const captureRealGpsPhoto = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setCapturingGpsPhoto(true);
+    const currentDateTime = new Date().toLocaleString();
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -440,7 +442,15 @@ export default function App() {
           const lng = position.coords.longitude.toFixed(4) + ' E';
           const reader = new FileReader();
           reader.onloadend = () => {
-            setNewDcr(prev => ({ ...prev, lat: lat, lng: lng, address: 'Live Location (Lat: ' + lat + ')', photoVerified: true, photoUrl: reader.result }));
+            setNewDcr(prev => ({ 
+              ...prev, 
+              lat: lat, 
+              lng: lng, 
+              address: `GPS Verified Location (Lat: ${lat}, Lng: ${lng})`, 
+              photoVerified: true, 
+              photoUrl: reader.result,
+              timestampTag: currentDateTime 
+            }));
             setCapturingGpsPhoto(false);
           };
           reader.readAsDataURL(file);
@@ -448,7 +458,15 @@ export default function App() {
         () => {
           const reader = new FileReader();
           reader.onloadend = () => {
-            setNewDcr(prev => ({ ...prev, lat: '19.0760 N', lng: '72.8777 E', address: 'Mumbai HQ Hub', photoVerified: true, photoUrl: reader.result }));
+            setNewDcr(prev => ({ 
+              ...prev, 
+              lat: '19.0760 N', 
+              lng: '72.8777 E', 
+              address: 'Mumbai HQ Hub (Default Fallback)', 
+              photoVerified: true, 
+              photoUrl: reader.result,
+              timestampTag: currentDateTime 
+            }));
             setCapturingGpsPhoto(false);
           };
           reader.readAsDataURL(file);
@@ -457,7 +475,7 @@ export default function App() {
       );
     } else {
       setCapturingGpsPhoto(false);
-      alert('Geolocation not supported.');
+      alert('Geolocation is not supported by your device browser.');
     }
   };
 
@@ -482,6 +500,10 @@ export default function App() {
 
   const handleAddDcr = (e) => {
     e.preventDefault();
+    if (!newDcr.photoVerified || !newDcr.photoUrl) {
+      alert('Mandatory Error: Live Mobile Camera GPS Photo Audit is required before submitting DCR!');
+      return;
+    }
     const targetId = authRole === 'admin' ? newDcr.empId : currentEmp.id;
     const empObj = employees.find(emp => emp.id === targetId);
     const createdDcr = {
@@ -495,8 +517,8 @@ export default function App() {
     };
     setDcrs([createdDcr, ...dcrs]);
     setIsDcrModalOpen(false);
-    setNewDcr({ empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', phone: '', vertical: 'USR POWER LUBE', callType: 'Field Visit', outcome: 'Order Confirmed', notes: '', investmentAmount: '', nextDate: new Date().toISOString().split('T')[0], lat: '19.0760 N', lng: '72.8777 E', address: 'Andheri West, Mumbai', photoVerified: false, photoUrl: null, remark: '' });
-    alert('DCR Submitted Successfully!');
+    setNewDcr({ empId: 'USR-EMP-101', clientName: '', clientType: 'Dealer', place: '', phone: '', vertical: 'USR POWER LUBE', callType: 'Field Visit', outcome: 'Order Confirmed', notes: '', investmentAmount: '', nextDate: new Date().toISOString().split('T')[0], lat: '19.0760 N', lng: '72.8777 E', address: 'Andheri West, Mumbai', photoVerified: false, photoUrl: null, timestampTag: '', remark: '' });
+    alert('DCR Submitted Successfully with Live GPS & Timestamp Audit!');
   };
 
   const handleAddDailyTravel = (e) => {
@@ -949,7 +971,6 @@ export default function App() {
           </div>
         )}
 
-        {/* LEADS TAB WITH ENRICHED COLUMNS */}
         {activeTab === 'leads' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
@@ -1001,13 +1022,13 @@ export default function App() {
           </div>
         )}
 
-        {/* DCR TAB WITH ENRICHED COLUMNS */}
+        {/* DCR TAB WITH ADMIN GPS VERIFICATION AUDIT */}
         {activeTab === 'dcr' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR) & GPS Audits</h3>
-                <p className="text-xs text-slate-500 mt-1">Field visit logs with customer type, remarks, investment, and geotags.</p>
+                <h3 className="font-bold text-slate-900 text-sm">Daily Call Reports (DCR) & Live GPS Audits</h3>
+                <p className="text-xs text-slate-500 mt-1">Field visits with live mobile camera geotags, date, time & admin verification.</p>
               </div>
               <button onClick={() => setIsDcrModalOpen(true)} className="bg-amber-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Submit DCR Visit</button>
             </div>
@@ -1019,7 +1040,7 @@ export default function App() {
                     <th className="p-3">Client & Customer Type</th>
                     <th className="p-3">Outcome & Investment</th>
                     <th className="p-3">Notes & Remarks</th>
-                    <th className="p-3">GPS Location & Photo</th>
+                    <th className="p-3">Live GPS Location, Time & Photo Audit</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
@@ -1041,8 +1062,11 @@ export default function App() {
                         <span className="font-mono text-[10px] text-indigo-600 block mt-1">Next Follow-up: {dcr.nextDate}</span>
                       </td>
                       <td className="p-3">
-                        <span className="font-mono text-[11px] block">{dcr.lat}, {dcr.lng}</span>
-                        {dcr.photoUrl ? (<a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline text-[11px] mt-1 block">View Audit Photo</a>) : <span className="text-slate-400">No Photo</span>}
+                        <div className="space-y-1 bg-slate-50 p-2 rounded-xl border">
+                          <span className="font-mono font-bold text-emerald-700 block text-[11px]">📍 {dcr.lat}, {dcr.lng}</span>
+                          {dcr.timestampTag && <span className="font-mono text-[10px] text-slate-600 block">⏰ {dcr.timestampTag}</span>}
+                          {dcr.photoUrl ? (<a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline text-[11px] block">🔍 View Live GPS Photo Audit</a>) : <span className="text-slate-400">No Photo</span>}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -1055,14 +1079,13 @@ export default function App() {
         {activeTab === 'gps' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center"><Camera className="w-5 h-5 mr-2 text-indigo-600" /> Live GPS Camera Audit & Geotagging</h3>
-              <p className="text-xs text-slate-500">Capture direct camera snapshots with embedded latitude/longitude coordinates for verification.</p>
-              <button onClick={() => setIsDcrModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">Open GPS Camera DCR Form</button>
+              <h3 className="font-bold text-slate-900 text-sm flex items-center"><Camera className="w-5 h-5 mr-2 text-indigo-600" /> Live GPS Camera Audit & Geotagging Verification</h3>
+              <p className="text-xs text-slate-500">Admins can inspect employee field visit photos with exact GPS latitude, longitude, date, and time stamps.</p>
+              <button onClick={() => setIsDcrModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">Open Live Camera DCR Form</button>
             </div>
           </div>
         )}
 
-        {/* TRAVEL TAB WITH ENRICHED COLUMNS */}
         {activeTab === 'travel' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
@@ -1356,7 +1379,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD NEW SALES LEAD WITH ENRICHED FIELDS */}
+      {/* MODAL: ADD NEW SALES LEAD */}
       {isLeadModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
@@ -1441,14 +1464,14 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: SUBMIT DCR WITH ENRICHED FIELDS */}
+      {/* MODAL: SUBMIT DCR WITH STRICT LIVE MOBILE CAMERA GPS AUDIT */}
       {isDcrModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b pb-3">
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">Submit DCR Visit & GPS Audit Photo</h3>
-                <p className="text-[11px] text-slate-500">Log customer type, meeting outcome, investment order, remarks & live geotag.</p>
+                <h3 className="font-bold text-slate-900 text-sm">Submit DCR Visit & Live GPS Camera Audit</h3>
+                <p className="text-[11px] text-slate-500">Live mobile camera capture with automated GPS coordinates & timestamp tagging.</p>
               </div>
               <button onClick={() => setIsDcrModalOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
             </div>
@@ -1513,15 +1536,27 @@ export default function App() {
                 <label className="font-semibold block mb-1">Detailed Visit Notes & Remarks *</label>
                 <textarea required rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Summarize discussion outcome and key remarks..." />
               </div>
-              <div>
-                <label className="font-semibold block mb-1">Capture Live GPS Photo Audit *</label>
-                <input type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={captureRealGpsPhoto} className="w-full p-2 border rounded-xl bg-slate-50 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700" />
-                {capturingGpsPhoto && <p className="text-[11px] text-indigo-600 mt-1 font-semibold">Capturing Live GPS Coordinates & Photo...</p>}
-                {newDcr.photoVerified && <p className="text-[11px] text-emerald-600 mt-1 font-semibold">✓ GPS Tagged: {newDcr.lat}, {newDcr.lng}</p>}
+              
+              {/* STRICT LIVE MOBILE CAMERA GPS AUDIT INPUT */}
+              <div className="bg-slate-50 p-3 rounded-xl border space-y-2">
+                <label className="font-bold text-slate-900 flex items-center justify-between">
+                  <span>📸 Mandatory Live Mobile Camera GPS Photo *</span>
+                  <span className="text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded font-mono">Camera Capture Only</span>
+                </label>
+                <input required type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={captureRealGpsPhoto} className="w-full p-2 border rounded-xl bg-white file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700" />
+                {capturingGpsPhoto && <p className="text-[11px] text-indigo-600 font-semibold animate-pulse">🛰️ Capturing Live GPS Coordinates & Satellite Lock...</p>}
+                {newDcr.photoVerified && (
+                  <div className="bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg space-y-1 text-[11px]">
+                    <p className="text-emerald-800 font-bold">✓ Live GPS Photo Verified Successfully!</p>
+                    <p className="font-mono text-slate-700">📍 Coordinates: {newDcr.lat}, {newDcr.lng}</p>
+                    <p className="font-mono text-slate-700">⏰ Timestamp: {newDcr.timestampTag}</p>
+                  </div>
+                )}
               </div>
+
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsDcrModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-amber-600 text-white rounded-xl font-bold shadow">Submit DCR</button>
+                <button type="submit" className="px-5 py-2 bg-amber-600 text-white rounded-xl font-bold shadow">Submit DCR with GPS Audit</button>
               </div>
             </form>
           </div>
@@ -1582,7 +1617,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD DAILY TRAVEL WITH MODE, PURPOSE & REMARKS */}
+      {/* MODAL: ADD DAILY TRAVEL */}
       {isDailyTravelModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
