@@ -849,18 +849,62 @@ export default function App() {
           </div>
         )}
 
+        {/* ADMIN CONTROL PANEL WITH RESPONSIVE MOBILE CARD VIEW & TABLE VIEW */}
         {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
               <p className="text-xs text-amber-800">Manage employee accounts, edit employee profiles, delete accounts, reset passwords, and approve agreements.</p>
             </div>
+            
             <div className="bg-white p-5 rounded-2xl border shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <h3 className="font-bold text-xs text-slate-800">Employee Master Accounts & Security Status ({employees.length} Total)</h3>
               <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow w-full sm:w-auto">+ Create Employee ID</button>
             </div>
             
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            {/* MOBILE RESPONSIVE CARDS FOR SMALL SCREENS & TABLE FOR DESKTOP */}
+            <div className="block md:hidden space-y-3">
+              {employees.map(emp => (
+                <div key={emp.id} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">{emp.id}</span>
+                      <h4 className="font-bold text-slate-900 text-sm mt-1">{emp.name}</h4>
+                      <p className="text-[11px] text-slate-500">{emp.designation}</p>
+                    </div>
+                    {emp.isBlocked ? (<span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-[10px]">BLOCKED</span>) : (<span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active</span>)}
+                  </div>
+
+                  <div className="text-xs grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl border">
+                    <div>
+                      <span className="text-slate-400 block text-[10px]">Territory:</span>
+                      <span className="font-medium text-slate-800">{emp.territory}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block text-[10px]">Primary Vertical:</span>
+                      <span className="font-bold text-indigo-700">{emp.primaryVertical || 'USR POWER LUBE'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block text-[10px]">Password:</span>
+                      <span className="font-mono font-bold text-slate-700">{emp.pass}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block text-[10px]">Target:</span>
+                      <span className="font-mono font-bold text-emerald-700">₹{(emp.target || 0).toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end space-x-2 pt-1 border-t">
+                    <button onClick={() => setEditProfileModal({ ...emp })} className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1"><Edit3 className="w-3 h-3" /><span>Edit</span></button>
+                    <button onClick={() => setEditingEmpModal(emp)} className="bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1"><Key className="w-3 h-3" /><span>Pass</span></button>
+                    <button onClick={() => handleDeleteEmployee(emp.id)} className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1"><Trash2 className="w-3 h-3" /><span>Del</span></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* TABLE VIEW FOR DESKTOP & TABLETS */}
+            <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse min-w-[700px]">
                   <thead>
