@@ -121,8 +121,9 @@ const loadSavedData = (key, defaultData) => {
 };
 
 export default function App() {
-  const [authRole, setAuthRole] = useState(null); 
-  const [loggedEmpId, setLoggedEmpId] = useState('');
+  // PERSISTENT LOGIN STATE USING LOCALSTORAGE TO PREVENT REFRESH LOGOUT
+  const [authRole, setAuthRole] = useState(() => localStorage.getItem('usr_auth_role') || null); 
+  const [loggedEmpId, setLoggedEmpId] = useState(() => localStorage.getItem('usr_logged_emp_id') || '');
   
   const [loginType, setLoginType] = useState('employee');
   const [loginIdInput, setLoginIdInput] = useState('');
@@ -151,6 +152,17 @@ export default function App() {
   useEffect(() => { localStorage.setItem('usr_leads', JSON.stringify(leads)); }, [leads]);
   useEffect(() => { localStorage.setItem('usr_dcrs', JSON.stringify(dcrs)); }, [dcrs]);
   useEffect(() => { localStorage.setItem('usr_agreements', JSON.stringify(agreements)); }, [agreements]);
+
+  // SYNC LOGIN STATE TO LOCALSTORAGE
+  useEffect(() => {
+    if (authRole) {
+      localStorage.setItem('usr_auth_role', authRole);
+      localStorage.setItem('usr_logged_emp_id', loggedEmpId);
+    } else {
+      localStorage.removeItem('usr_auth_role');
+      localStorage.removeItem('usr_logged_emp_id');
+    }
+  }, [authRole, loggedEmpId]);
 
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isDcrModalOpen, setIsDcrModalOpen] = useState(false);
@@ -328,6 +340,8 @@ export default function App() {
   const handleLogout = () => {
     setAuthRole(null);
     setLoggedEmpId('');
+    localStorage.removeItem('usr_auth_role');
+    localStorage.removeItem('usr_logged_emp_id');
     refreshCaptcha();
   };
 
@@ -428,7 +442,6 @@ export default function App() {
     alert(`Employee (${createdEmp.name} - ID: ${createdEmp.id}) Created Successfully!`);
   };
 
-  // STRICT LIVE GPS CAMERA CAPTURE WITH TIMESTAMP (capture="environment")
   const captureRealGpsPhoto = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -792,78 +805,86 @@ export default function App() {
               </div>
               <button onClick={() => setIsAgreementModalOpen(true)} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Fill New Agreement</button>
             </div>
+            
+            {/* RESPONSIVE TABLE CONTAINER FOR MOBILE */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Agreement ID</th>
-                    <th className="p-3">Partner / Firm Name</th>
-                    <th className="p-3">Proprietor</th>
-                    <th className="p-3">Territory</th>
-                    <th className="p-3">Total Investment</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleAgreements.map(agr => (
-                    <tr key={agr.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-indigo-600">{agr.id}</td>
-                      <td className="p-3 font-bold">{agr.distributorName}</td>
-                      <td className="p-3">{agr.proprietorName} (+91 {agr.phone})</td>
-                      <td className="p-3">{agr.territory}</td>
-                      <td className="p-3 font-bold text-emerald-700">₹{(agr.totalInvestment).toLocaleString('en-IN')}</td>
-                      <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">{agr.status}</span></td>
-                      <td className="p-3 flex items-center space-x-2">
-                        <button onClick={() => setViewAgreementDetail(agr)} className="bg-slate-800 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Eye className="w-3.5 h-3.5" /><span>View PDF</span></button>
-                        {authRole === 'admin' && agr.status !== 'Approved & Signed' && (<button onClick={() => handleApproveAgreement(agr.id)} className="bg-emerald-600 text-white px-3 py-1.5 rounded font-semibold">Approve</button>)}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse min-w-[650px]">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Agreement ID</th>
+                      <th className="p-3">Partner / Firm Name</th>
+                      <th className="p-3">Proprietor</th>
+                      <th className="p-3">Territory</th>
+                      <th className="p-3">Total Investment</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleAgreements.map(agr => (
+                      <tr key={agr.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-mono font-bold text-indigo-600">{agr.id}</td>
+                        <td className="p-3 font-bold">{agr.distributorName}</td>
+                        <td className="p-3">{agr.proprietorName} (+91 {agr.phone})</td>
+                        <td className="p-3">{agr.territory}</td>
+                        <td className="p-3 font-bold text-emerald-700">₹{(agr.totalInvestment).toLocaleString('en-IN')}</td>
+                        <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">{agr.status}</span></td>
+                        <td className="p-3 flex items-center space-x-2">
+                          <button onClick={() => setViewAgreementDetail(agr)} className="bg-slate-800 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Eye className="w-3.5 h-3.5" /><span>View PDF</span></button>
+                          {authRole === 'admin' && agr.status !== 'Approved & Signed' && (<button onClick={() => handleApproveAgreement(agr.id)} className="bg-emerald-600 text-white px-3 py-1.5 rounded font-semibold">Approve</button>)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
 
+        {/* ADMIN CONTROL PANEL WITH RESPONSIVE SCROLLABLE TABLE FOR MOBILE */}
         {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
               <h3 className="font-bold text-amber-900 text-sm flex items-center"><ShieldCheck className="w-5 h-5 mr-2 text-amber-700" /> Admin Master Control Center</h3>
               <p className="text-xs text-amber-800">Manage employee accounts, delete obsolete accounts, reset passwords, and approve agreements.</p>
             </div>
-            <div className="bg-white p-5 rounded-2xl border shadow-sm flex items-center justify-between">
-              <h3 className="font-bold text-xs text-slate-800">Employee Master Accounts & Security Status</h3>
-              <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow">+ Create Employee ID & Designation</button>
+            <div className="bg-white p-5 rounded-2xl border shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <h3 className="font-bold text-xs text-slate-800">Employee Master Accounts & Security Status ({employees.length} Total)</h3>
+              <button onClick={() => setIsAddEmpModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow w-full sm:w-auto">+ Create Employee ID</button>
             </div>
+            
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Employee ID</th>
-                    <th className="p-3">Name & Designation</th>
-                    <th className="p-3">Password</th>
-                    <th className="p-3">Joining Date</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {employees.map(emp => (
-                    <tr key={emp.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-indigo-600">{emp.id}</td>
-                      <td className="p-3 font-bold">{emp.name} <span className="text-[10px] text-slate-500 block font-normal">{emp.designation}</span></td>
-                      <td className="p-3 font-mono font-bold text-slate-700">{emp.pass}</td>
-                      <td className="p-3 font-mono">{emp.joiningDate}</td>
-                      <td className="p-3">{emp.isBlocked ? (<span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-[10px]">BLOCKED</span>) : (<span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active</span>)}</td>
-                      <td className="p-3 flex items-center space-x-2">
-                        <button onClick={() => setEditingEmpModal(emp)} className="bg-amber-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Key className="w-3 h-3" /><span>Reset</span></button>
-                        <button onClick={() => handleDeleteEmployee(emp.id)} className="bg-red-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Trash2 className="w-3 h-3" /><span>Delete</span></button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse min-w-[650px]">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Employee ID</th>
+                      <th className="p-3">Name & Designation</th>
+                      <th className="p-3">Password</th>
+                      <th className="p-3">Joining Date</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y">
+                    {employees.map(emp => (
+                      <tr key={emp.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-mono font-bold text-indigo-600">{emp.id}</td>
+                        <td className="p-3 font-bold">{emp.name} <span className="text-[10px] text-slate-500 block font-normal">{emp.designation}</span></td>
+                        <td className="p-3 font-mono font-bold text-slate-700">{emp.pass}</td>
+                        <td className="p-3 font-mono">{emp.joiningDate}</td>
+                        <td className="p-3">{emp.isBlocked ? (<span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-[10px]">BLOCKED</span>) : (<span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active</span>)}</td>
+                        <td className="p-3 flex items-center space-x-2">
+                          <button onClick={() => setEditingEmpModal(emp)} className="bg-amber-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Key className="w-3 h-3" /><span>Reset</span></button>
+                          <button onClick={() => handleDeleteEmployee(emp.id)} className="bg-red-600 text-white px-3 py-1.5 rounded font-semibold flex items-center space-x-1"><Trash2 className="w-3 h-3" /><span>Delete</span></button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -909,28 +930,30 @@ export default function App() {
 
             <div className="bg-white rounded-2xl border overflow-hidden">
               <div className="p-4 border-b font-bold text-xs bg-slate-50 text-slate-700">Submitted Leave Records & Status</div>
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Employee</th>
-                    <th className="p-3">Leave Type</th>
-                    <th className="p-3">From - To Date</th>
-                    <th className="p-3">Reason</th>
-                    <th className="p-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleLeaves.map(l => (
-                    <tr key={l.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold">{l.empName}</td>
-                      <td className="p-3 font-semibold text-indigo-700">{l.leaveType}</td>
-                      <td className="p-3 font-mono">{l.fromDate} to {l.toDate}</td>
-                      <td className="p-3">{l.reason}</td>
-                      <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">{l.status}</span></td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse min-w-[600px]">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Employee</th>
+                      <th className="p-3">Leave Type</th>
+                      <th className="p-3">From - To Date</th>
+                      <th className="p-3">Reason</th>
+                      <th className="p-3">Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleLeaves.map(l => (
+                      <tr key={l.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold">{l.empName}</td>
+                        <td className="p-3 font-semibold text-indigo-700">{l.leaveType}</td>
+                        <td className="p-3 font-mono">{l.fromDate} to {l.toDate}</td>
+                        <td className="p-3">{l.reason}</td>
+                        <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">{l.status}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -945,28 +968,30 @@ export default function App() {
               <button onClick={markTodayAttendance} className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">Mark Today's Attendance</button>
             </div>
             <div className="bg-white rounded-2xl border overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Employee Name</th>
-                    <th className="p-3">Date</th>
-                    <th className="p-3">Check-In Time</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Location</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleAttendance.map(att => (
-                    <tr key={att.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold">{att.empName}</td>
-                      <td className="p-3 font-mono">{att.date}</td>
-                      <td className="p-3 font-mono text-emerald-700 font-bold">{att.checkInTime}</td>
-                      <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">{att.status}</span></td>
-                      <td className="p-3">{att.location}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse min-w-[550px]">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Employee Name</th>
+                      <th className="p-3">Date</th>
+                      <th className="p-3">Check-In Time</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Location</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleAttendance.map(att => (
+                      <tr key={att.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold">{att.empName}</td>
+                        <td className="p-3 font-mono">{att.date}</td>
+                        <td className="p-3 font-mono text-emerald-700 font-bold">{att.checkInTime}</td>
+                        <td className="p-3"><span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">{att.status}</span></td>
+                        <td className="p-3">{att.location}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -981,43 +1006,45 @@ export default function App() {
               <button onClick={() => setIsLeadModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Add New Sales Lead</button>
             </div>
             <div className="bg-white rounded-2xl border overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Client & Customer Type</th>
-                    <th className="p-3">Contact Person</th>
-                    <th className="p-3">Stage & Status</th>
-                    <th className="p-3">Investment (₹)</th>
-                    <th className="p-3">Next Follow-Up & Remarks</th>
-                    <th className="p-3">Assigned To</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleLeads.map(lead => (
-                    <tr key={lead.id} className="hover:bg-slate-50">
-                      <td className="p-3">
-                        <span className="font-bold block text-slate-900">{lead.clientName}</span>
-                        <span className="text-[10px] text-indigo-700 font-semibold bg-indigo-50 px-1.5 py-0.5 rounded mt-0.5 inline-block">{lead.clientType}</span>
-                        <span className="text-[10px] text-slate-500 block">{lead.place}</span>
-                      </td>
-                      <td className="p-3">
-                        <span className="font-medium">{lead.contactPerson}</span>
-                        <span className="font-mono text-slate-600 block">+91 {lead.phone}</span>
-                      </td>
-                      <td className="p-3">
-                        <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold block w-max">{lead.stage}</span>
-                        <span className="text-[10px] text-amber-700 font-semibold mt-1 block">Status: {lead.status}</span>
-                      </td>
-                      <td className="p-3 font-bold text-emerald-700 font-mono text-sm">₹{(lead.investmentAmount || lead.estimatedValue).toLocaleString('en-IN')}</td>
-                      <td className="p-3">
-                        <span className="font-mono text-slate-700 block">📅 {lead.nextFollowup}</span>
-                        <span className="text-[11px] text-slate-600 italic block mt-0.5">"{lead.remark}"</span>
-                      </td>
-                      <td className="p-3 font-medium">{lead.assignedToName}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse min-w-[700px]">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Client & Customer Type</th>
+                      <th className="p-3">Contact Person</th>
+                      <th className="p-3">Stage & Status</th>
+                      <th className="p-3">Investment (₹)</th>
+                      <th className="p-3">Next Follow-Up & Remarks</th>
+                      <th className="p-3">Assigned To</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleLeads.map(lead => (
+                      <tr key={lead.id} className="hover:bg-slate-50">
+                        <td className="p-3">
+                          <span className="font-bold block text-slate-900">{lead.clientName}</span>
+                          <span className="text-[10px] text-indigo-700 font-semibold bg-indigo-50 px-1.5 py-0.5 rounded mt-0.5 inline-block">{lead.clientType}</span>
+                          <span className="text-[10px] text-slate-500 block">{lead.place}</span>
+                        </td>
+                        <td className="p-3">
+                          <span className="font-medium">{lead.contactPerson}</span>
+                          <span className="font-mono text-slate-600 block">+91 {lead.phone}</span>
+                        </td>
+                        <td className="p-3">
+                          <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold block w-max">{lead.stage}</span>
+                          <span className="text-[10px] text-amber-700 font-semibold mt-1 block">Status: {lead.status}</span>
+                        </td>
+                        <td className="p-3 font-bold text-emerald-700 font-mono text-sm">₹{(lead.investmentAmount || lead.estimatedValue).toLocaleString('en-IN')}</td>
+                        <td className="p-3">
+                          <span className="font-mono text-slate-700 block">📅 {lead.nextFollowup}</span>
+                          <span className="text-[11px] text-slate-600 italic block mt-0.5">"{lead.remark}"</span>
+                        </td>
+                        <td className="p-3 font-medium">{lead.assignedToName}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -1033,45 +1060,47 @@ export default function App() {
               <button onClick={() => setIsDcrModalOpen(true)} className="bg-amber-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Submit DCR Visit</button>
             </div>
             <div className="bg-white rounded-2xl border overflow-hidden">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Employee</th>
-                    <th className="p-3">Client & Customer Type</th>
-                    <th className="p-3">Outcome & Investment</th>
-                    <th className="p-3">Notes & Remarks</th>
-                    <th className="p-3">Live GPS Location, Time & Photo Audit</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleDcrs.map(dcr => (
-                    <tr key={dcr.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-bold">{dcr.empName}</td>
-                      <td className="p-3">
-                        <span className="font-bold block text-slate-900">{dcr.clientName}</span>
-                        <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded mt-0.5 inline-block">{dcr.clientType}</span>
-                        <span className="text-[10px] text-slate-500 block">{dcr.place} (+91 {dcr.phone})</span>
-                      </td>
-                      <td className="p-3">
-                        <span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-bold inline-block mb-1">{dcr.outcome}</span>
-                        <span className="font-mono font-bold text-emerald-700 block">₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</span>
-                      </td>
-                      <td className="p-3">
-                        <p className="text-slate-800">{dcr.notes}</p>
-                        <p className="text-slate-500 italic text-[11px] mt-0.5">Remark: {dcr.remark || 'N/A'}</p>
-                        <span className="font-mono text-[10px] text-indigo-600 block mt-1">Next Follow-up: {dcr.nextDate}</span>
-                      </td>
-                      <td className="p-3">
-                        <div className="space-y-1 bg-slate-50 p-2 rounded-xl border">
-                          <span className="font-mono font-bold text-emerald-700 block text-[11px]">📍 {dcr.lat}, {dcr.lng}</span>
-                          {dcr.timestampTag && <span className="font-mono text-[10px] text-slate-600 block">⏰ {dcr.timestampTag}</span>}
-                          {dcr.photoUrl ? (<a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline text-[11px] block">🔍 View Live GPS Photo Audit</a>) : <span className="text-slate-400">No Photo</span>}
-                        </div>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse min-w-[700px]">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Employee</th>
+                      <th className="p-3">Client & Customer Type</th>
+                      <th className="p-3">Outcome & Investment</th>
+                      <th className="p-3">Notes & Remarks</th>
+                      <th className="p-3">Live GPS Location, Time & Photo Audit</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleDcrs.map(dcr => (
+                      <tr key={dcr.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-bold">{dcr.empName}</td>
+                        <td className="p-3">
+                          <span className="font-bold block text-slate-900">{dcr.clientName}</span>
+                          <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded mt-0.5 inline-block">{dcr.clientType}</span>
+                          <span className="text-[10px] text-slate-500 block">{dcr.place} (+91 {dcr.phone})</span>
+                        </td>
+                        <td className="p-3">
+                          <span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-bold inline-block mb-1">{dcr.outcome}</span>
+                          <span className="font-mono font-bold text-emerald-700 block">₹{(dcr.investmentAmount || 0).toLocaleString('en-IN')}</span>
+                        </td>
+                        <td className="p-3">
+                          <p className="text-slate-800">{dcr.notes}</p>
+                          <p className="text-slate-500 italic text-[11px] mt-0.5">Remark: {dcr.remark || 'N/A'}</p>
+                          <span className="font-mono text-[10px] text-indigo-600 block mt-1">Next Follow-up: {dcr.nextDate}</span>
+                        </td>
+                        <td className="p-3">
+                          <div className="space-y-1 bg-slate-50 p-2 rounded-xl border">
+                            <span className="font-mono font-bold text-emerald-700 block text-[11px]">📍 {dcr.lat}, {dcr.lng}</span>
+                            {dcr.timestampTag && <span className="font-mono text-[10px] text-slate-600 block">⏰ {dcr.timestampTag}</span>}
+                            {dcr.photoUrl ? (<a href={dcr.photoUrl} target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline text-[11px] block">🔍 View Live GPS Photo Audit</a>) : <span className="text-slate-400">No Photo</span>}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -1097,37 +1126,39 @@ export default function App() {
             </div>
             <div className="bg-white rounded-2xl border overflow-hidden">
               <div className="p-4 border-b font-bold text-xs bg-slate-50 text-slate-700">Daily Travel & Fuel Expense Logs</div>
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-slate-600 font-bold border-b">
-                    <th className="p-3">Date</th>
-                    <th className="p-3">Mode of Transport & Route</th>
-                    <th className="p-3">Purpose & Remarks</th>
-                    <th className="p-3">Distance & Amount</th>
-                    <th className="p-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {visibleDailyTravel.map(log => (
-                    <tr key={log.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono">{log.date}</td>
-                      <td className="p-3">
-                        <span className="font-bold text-indigo-900 block">{log.mode}</span>
-                        <span className="text-slate-700 block mt-0.5">Route: {log.route}</span>
-                      </td>
-                      <td className="p-3">
-                        <span className="font-medium text-slate-800 block">Purpose: {log.purpose || 'Client Visit'}</span>
-                        <span className="text-slate-500 italic text-[11px] block mt-0.5">Remarks: {log.remarks || 'None'}</span>
-                      </td>
-                      <td className="p-3">
-                        <span className="font-mono block">{log.km} KM</span>
-                        <span className="font-mono font-bold text-emerald-700 block mt-0.5">₹{log.amount}</span>
-                      </td>
-                      <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">{log.status}</span></td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse min-w-[650px]">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 font-bold border-b">
+                      <th className="p-3">Date</th>
+                      <th className="p-3">Mode of Transport & Route</th>
+                      <th className="p-3">Purpose & Remarks</th>
+                      <th className="p-3">Distance & Amount</th>
+                      <th className="p-3">Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y">
+                    {visibleDailyTravel.map(log => (
+                      <tr key={log.id} className="hover:bg-slate-50">
+                        <td className="p-3 font-mono">{log.date}</td>
+                        <td className="p-3">
+                          <span className="font-bold text-indigo-900 block">{log.mode}</span>
+                          <span className="text-slate-700 block mt-0.5">Route: {log.route}</span>
+                        </td>
+                        <td className="p-3">
+                          <span className="font-medium text-slate-800 block">Purpose: {log.purpose || 'Client Visit'}</span>
+                          <span className="text-slate-500 italic text-[11px] block mt-0.5">Remarks: {log.remarks || 'None'}</span>
+                        </td>
+                        <td className="p-3">
+                          <span className="font-mono block">{log.km} KM</span>
+                          <span className="font-mono font-bold text-emerald-700 block mt-0.5">₹{log.amount}</span>
+                        </td>
+                        <td className="p-3"><span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">{log.status}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="p-4 bg-slate-50 border-t flex justify-end">
                 <button onClick={() => submitWeeklyTravelClaim('Nov 01 - Nov 07, 2026')} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">Submit Weekly Claim (Nov 01 - Nov 07)</button>
               </div>
@@ -1537,7 +1568,6 @@ export default function App() {
                 <textarea required rows="2" value={newDcr.notes} onChange={e => setNewDcr({...newDcr, notes: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Summarize discussion outcome and key remarks..." />
               </div>
               
-              {/* STRICT LIVE MOBILE CAMERA GPS AUDIT INPUT */}
               <div className="bg-slate-50 p-3 rounded-xl border space-y-2">
                 <label className="font-bold text-slate-900 flex items-center justify-between">
                   <span>📸 Mandatory Live Mobile Camera GPS Photo *</span>
