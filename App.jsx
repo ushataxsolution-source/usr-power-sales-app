@@ -172,8 +172,6 @@ export default function App() {
 
   const [editingEmpModal, setEditingEmpModal] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
-
-  // NEW STATE FOR EDITING FULL EMPLOYEE PROFILE DATA IN ADMIN PANEL
   const [editProfileModal, setEditProfileModal] = useState(null);
 
   const [newAgreement, setNewAgreement] = useState({
@@ -362,7 +360,6 @@ export default function App() {
     setNewPasswordInput('');
   };
 
-  // HANDLE UPDATING FULL EMPLOYEE DETAILS FROM ADMIN PANEL
   const handleSaveEmployeeProfile = (e) => {
     e.preventDefault();
     if (!editProfileModal) return;
@@ -852,7 +849,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ADMIN CONTROL PANEL WITH EDIT EMPLOYEE DATA & RESET PASSWORD */}
         {activeTab === 'admin-manage' && authRole === 'admin' && (
           <div className="space-y-6">
             <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl space-y-2">
@@ -871,7 +867,7 @@ export default function App() {
                     <tr className="bg-slate-100 text-slate-600 font-bold border-b">
                       <th className="p-3">Employee ID</th>
                       <th className="p-3">Name & Designation</th>
-                      <th className="p-3">Territory & Target</th>
+                      <th className="p-3">Territory & Vertical</th>
                       <th className="p-3">Password</th>
                       <th className="p-3">Status</th>
                       <th className="p-3">Actions (Edit / Reset / Delete)</th>
@@ -887,7 +883,7 @@ export default function App() {
                         </td>
                         <td className="p-3">
                           <span className="font-medium text-slate-800 block">{emp.territory}</span>
-                          <span className="font-mono text-emerald-700 font-bold text-[11px] block">Target: ₹{(emp.target || 0).toLocaleString('en-IN')}</span>
+                          <span className="text-[10px] text-indigo-700 font-bold block">Vertical: {emp.primaryVertical || 'USR POWER LUBE'}</span>
                         </td>
                         <td className="p-3 font-mono font-bold text-slate-700">{emp.pass}</td>
                         <td className="p-3">{emp.isBlocked ? (<span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-[10px]">BLOCKED</span>) : (<span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold text-[10px]">Active</span>)}</td>
@@ -1319,7 +1315,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: ADD EMPLOYEE */}
+      {/* MODAL: ADD EMPLOYEE WITH VERTICAL OPTIONS */}
       {isAddEmpModalOpen && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
@@ -1352,9 +1348,19 @@ export default function App() {
                   <input required type="text" value={newEmp.pass} onChange={e => setNewEmp({...newEmp, pass: e.target.value})} className="w-full p-2.5 border rounded-xl font-mono" placeholder="1055" />
                 </div>
               </div>
-              <div>
-                <label className="font-semibold block mb-1">Assigned Territory *</label>
-                <input required type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Pune & PCMC" />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Assigned Territory *</label>
+                  <input required type="text" value={newEmp.territory} onChange={e => setNewEmp({...newEmp, territory: e.target.value})} className="w-full p-2.5 border rounded-xl" placeholder="Pune & PCMC" />
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">Primary Vertical *</label>
+                  <select value={newEmp.primaryVertical} onChange={e => setNewEmp({...newEmp, primaryVertical: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                    <option value="USR POWER LUBE">USR POWER LUBE</option>
+                    <option value="TURBO OIL">TURBO OIL</option>
+                    <option value="PUNCHKUTEER">PUNCHKUTEER</option>
+                  </select>
+                </div>
               </div>
               <div className="pt-2 flex justify-end space-x-2">
                 <button type="button" onClick={() => setIsAddEmpModalOpen(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-bold">Cancel</button>
@@ -1402,7 +1408,7 @@ export default function App() {
                 </div>
                 <div>
                   <label className="font-semibold block mb-1">Primary Vertical *</label>
-                  <select value={editProfileModal.primaryVertical} onChange={e => setEditProfileModal({...editProfileModal, primaryVertical: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
+                  <select value={editProfileModal.primaryVertical || 'USR POWER LUBE'} onChange={e => setEditProfileModal({...editProfileModal, primaryVertical: e.target.value})} className="w-full p-2.5 border rounded-xl bg-white font-medium">
                     <option value="USR POWER LUBE">USR POWER LUBE</option>
                     <option value="TURBO OIL">TURBO OIL</option>
                     <option value="PUNCHKUTEER">PUNCHKUTEER</option>
